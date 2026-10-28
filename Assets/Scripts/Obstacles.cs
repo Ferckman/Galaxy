@@ -6,8 +6,8 @@ public abstract class Obstacles : MonoBehaviour
 {
     [SerializeField] private protected int _health = 100;
     [SerializeField] private protected int _damage = 10;
-    [SerializeField] private int _speed = 4;
-    [SerializeField] private int _score = 10;
+    [SerializeField] private protected float _speed = 4;
+    [SerializeField] private protected int _score = 10;
 
     [SerializeField] private GameObject _explosionPrefab;
 
@@ -23,11 +23,23 @@ public abstract class Obstacles : MonoBehaviour
     private void Update()
     {
         Movement();
+        CheckBounds();
     }
 
-    private void Movement()
+    protected virtual void Movement()
     {
         transform.Translate(_speed * Time.deltaTime * Vector3.down);
+    }
+
+    protected virtual void CheckBounds()
+    {
+        if (transform.position.y < -9.0f || transform.position.y > 9.0f || 
+            transform.position.x < -13.0f || transform.position.x > 13.0f)
+        {
+            if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
+
+            Destroy(gameObject);
+        }
     }
 
     public virtual void IncreaseScore()

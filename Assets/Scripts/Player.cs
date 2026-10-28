@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
     [Header("References")]
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private GameManager _gameManager;
-    [SerializeField] private SpriteRenderer _thrusterSprite;
+    [SerializeField] private SpriteRenderer[] _thrusterSprites;
     [SerializeField] private PlayerAnimation _playerAnimation;
 
     private float _canFire;
@@ -107,7 +107,11 @@ public class Player : MonoBehaviour
 
             _disabled = false;
             if (_spriteRenderer != null) _spriteRenderer.enabled = true;
-            if (_thrusterSprite != null) _thrusterSprite.enabled = true;
+            
+            foreach (var thruster in _thrusterSprites)
+            {
+                if (thruster != null) thruster.enabled = true;
+            }
         }
     }
 
@@ -116,7 +120,11 @@ public class Player : MonoBehaviour
         while (_disabled)
         {
             if (_spriteRenderer != null) _spriteRenderer.enabled = !_spriteRenderer.enabled;
-            if (_thrusterSprite != null) _thrusterSprite.enabled = !_thrusterSprite.enabled;
+            
+            foreach (var thruster in _thrusterSprites)
+            {
+                if (thruster != null) thruster.enabled = !thruster.enabled;
+            }
 
             yield return new WaitForSeconds(0.2f);
         }
@@ -220,7 +228,11 @@ public class Player : MonoBehaviour
             else
             {
                 if (_spriteRenderer != null) _spriteRenderer.enabled = false;
-                if (_thrusterSprite != null) _thrusterSprite.enabled = false;
+                
+                foreach (var thruster in _thrusterSprites)
+                {
+                    if (thruster != null) thruster.enabled = false;
+                }
 
                 StartCoroutine(EndGame());
             }

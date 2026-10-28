@@ -26,7 +26,7 @@ public class PowerUp : MonoBehaviour
                 break;
                 
             case "SpeedBoost":
-                player.Speed = 12;
+                player.Speed = 16;
                 player.SpeedBoostPowerupOn();
                 break;
                 

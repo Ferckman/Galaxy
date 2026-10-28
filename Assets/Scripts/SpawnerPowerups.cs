@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnerPowerups : Spawner
 {
     [SerializeField] private GameObject[] _type;
-    [SerializeField] private List<GameObject> _powerups = new List<GameObject>();
+    private List<GameObject> _powerups = new List<GameObject>();
 
     protected override List<GameObject> list 
     { 

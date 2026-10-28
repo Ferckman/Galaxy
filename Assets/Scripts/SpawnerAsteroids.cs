@@ -7,7 +7,7 @@ public class SpawnerAsteroids : Spawner
     private const int MaxAsteroids = 60;
 
     [SerializeField] private GameObject _type;
-    [SerializeField] private List<GameObject> _asteroids = new List<GameObject>();
+    private List<GameObject> _asteroids = new List<GameObject>();
 
     protected override List<GameObject> list 
     { 
@@ -27,7 +27,7 @@ public class SpawnerAsteroids : Spawner
 
         GameObject asteroid = null;
         int posIni = Random.Range(1, 5);
-        float scale = Random.Range(0.5f, 1f);
+        float scale = Random.Range(0.40f, 1.2f);
 
         switch (posIni)
         {
@@ -50,7 +50,7 @@ public class SpawnerAsteroids : Spawner
 
         if (asteroid != null)
         {
-            asteroid.transform.localScale = new Vector3(scale, scale, scale);
+            if (asteroid.TryGetComponent<Asteroid>(out var asteroidScript)) asteroidScript.SetAsteroidProperties(scale);
 
             _asteroids.Add(asteroid);
         }

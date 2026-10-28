@@ -3,7 +3,7 @@ using UnityEngine;
 public class Missile : Shots
 {
     [SerializeField] private Transform _limit;
-    [SerializeField] private float _rotateSpeed = 200f;
+    [SerializeField] private float _rotateSpeed = 300f;
     
     private Rigidbody2D _rb;
     private GameManager _gameManager;
@@ -47,6 +47,7 @@ public class Missile : Shots
         else _targetEnemy = null;
     }
 
+    /*
     public override void Movement()
     {
         if (_targetEnemy != null) _target = _targetEnemy;
@@ -64,6 +65,26 @@ public class Missile : Shots
         float rotateAmount = Vector3.Cross(direction, transform.up).z;
         
         _rb.angularVelocity = -rotateAmount * _rotateSpeed;
+        _rb.velocity = (Vector2)(transform.up * _speed);
+    }
+    */
+
+    public override void Movement()
+    {
+        if (_targetEnemy == null || !_targetEnemy.gameObject.activeInHierarchy) LookForNearestEnemy();
+
+        if (_targetEnemy != null) _target = _targetEnemy;
+        else _target = _limit;
+
+        if (_target == null) return;
+
+        Vector2 direction = (Vector2)_target.position - _rb.position;
+        direction.Normalize();
+        
+        float rotateAmount = Vector3.Cross(direction, transform.up).z;
+        
+        _rb.angularVelocity = -rotateAmount * _rotateSpeed;
+        
         _rb.velocity = (Vector2)(transform.up * _speed);
     }
 }

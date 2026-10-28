@@ -124,8 +124,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 200
   _speed: 8
-  limit: {fileID: 0}
-  _rotateSpeed: 400
+  _limit: {fileID: 0}
+  _rotateSpeed: 300
 --- !u!50 &5950725787981565552
 Rigidbody2D:
   serializedVersion: 4

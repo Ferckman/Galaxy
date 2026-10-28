@@ -7,7 +7,7 @@ public class SpawnerEnemies : Spawner
     private const int MaxEnemies = 60;
 
     [SerializeField] private GameObject _type;
-    [SerializeField] private List<GameObject> _enemies = new List<GameObject>();
+    private List<GameObject> _enemies = new List<GameObject>();
 
     protected override List<GameObject> list 
     { 

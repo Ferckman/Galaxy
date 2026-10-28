@@ -11,11 +11,7 @@ public class Limit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
-        {
-            if (other.TryGetComponent<Enemy>(out var enemy)) enemy.Limit();
-        }
-        else if (other.CompareTag("Shots"))
+        if (other.CompareTag("Shots"))
         {
             if (other.TryGetComponent<Shots>(out var shot)) Destroy(other.gameObject);
         }
