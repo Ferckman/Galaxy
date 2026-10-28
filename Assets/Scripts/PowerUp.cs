@@ -1,17 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
     [SerializeField] private string _type;
-    [SerializeField] private int _speed;
+    [SerializeField] private int _speed = 4;
     [SerializeField] private AudioClip _powerupSound;
 
-    public PowerUp(string type, int speed)
+    private void Update()
     {
-        _type = type;
-        _speed = speed;
+        Movement();
     }
 
     private void Movement()
@@ -21,52 +18,41 @@ public class PowerUp : MonoBehaviour
 
     private void TypePowerUp(Player player)
     {
-        switch(_type)
+        switch (_type)
         {
             case "TripleShoot":
-                //Enable triple shot
-                player.SetCanTripleShoot(true);
+                player.CanTripleShoot = true;
                 player.TripleShotPowerupOn();
-            break;
+                break;
+                
             case "SpeedBoost":
-                //Speed boost
-                player.SetSpeed(10);
+                player.Speed = 12;
                 player.SpeedBoostPowerupOn();
-            break;
+                break;
+                
             case "Shield":
-                //Activate shield
-                player.SetShieldActivated(true);
+                player.ShieldActivated = true;
                 player.ShieldPowerupOn();
-            break;
+                break;
         }
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        Movement();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            //Access the player
-            if(other.TryGetComponent<Player>(out var player))
+            if (other.TryGetComponent<Player>(out var player))
             {
-                //If player is not desactivated
-                if(!player.GetDisabled())
+                if (!player.IsDisabled)
                 {
                     TypePowerUp(player);
 
-                    AudioSource.PlayClipAtPoint(_powerupSound, Camera.main.transform.position, 1f);
+                    if (_powerupSound != null && Camera.main != null) AudioSource.PlayClipAtPoint(_powerupSound, Camera.main.transform.position, 1f);
 
-                    //Delete from generator list
-                    GameManager gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-                    gameManager.DestroyConcreteElement(this.gameObject);
+                    GameManager gameManager = Object.FindFirstObjectByType<GameManager>();
+                    if (gameManager != null) gameManager.DestroyConcreteElement(gameObject);
 
-                    //Destroy ourself
-                    Destroy(this.gameObject);
+                    Destroy(gameObject);
                 }
             }
         }

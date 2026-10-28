@@ -1,21 +1,25 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Animations;
 
 public class Shield : MonoBehaviour
 {
-    [SerializeField] private float _timeLife;
+    [SerializeField] private float _timeLife = 10f;
 
-    public Shield(float timeLife)
-    {
-        _timeLife = timeLife;
-    }
+    private SpriteRenderer _spriteRenderer;
+    private Player _player;
 
     private void Awake()
     {
-        StartCoroutine(Blink());
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (transform.parent != null) transform.parent.TryGetComponent(out _player);
+
+        StartCoroutine(BlinkRoutine());
+    }
+
+    private void Update()
+    {
+        CheckTimeLife();
     }
 
     public void SetTimeLife(float timeLife)
@@ -23,21 +27,19 @@ public class Shield : MonoBehaviour
         _timeLife = timeLife;
     }
 
-
     private void CheckTimeLife()
     {
         _timeLife -= Time.deltaTime;
-        if(_timeLife <= 0f)
+        if (_timeLife <= 0f)
         {
             DisableShield();
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
     private void DisableShield()
     {
-        Player player = transform.parent.gameObject.GetComponent<Player>();
-        player.SetShieldActivated(false);
+        if (_player != null) _player.ShieldActivated = false;
     }
 
     public void WeakenShield()
@@ -45,25 +47,15 @@ public class Shield : MonoBehaviour
         _timeLife -= 3.0f;
     }
 
-    private IEnumerator Blink()
+    private IEnumerator BlinkRoutine()
     {
-        while(true)
-        {
-            if(_timeLife <= 10.0f && _timeLife > 0f)
-            {
-                SpriteRenderer _sprite = this.gameObject.GetComponent<SpriteRenderer>();
-                _sprite.enabled = !_sprite.enabled;
-            }
+        WaitForSeconds waitTime = new WaitForSeconds(0.2f);
 
-            yield return new WaitForSeconds(0.2f);
+        while (true)
+        {
+            if (_timeLife <= 10.0f && _timeLife > 0f && _spriteRenderer != null) _spriteRenderer.enabled = !_spriteRenderer.enabled;
+
+            yield return waitTime;
         }
     }
-
-    
-    // Update is called once per frame
-    private void Update()
-    {
-        CheckTimeLife();
-    }
-    
 }

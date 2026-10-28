@@ -1,115 +1,122 @@
-using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int _health;
-    [SerializeField] private int _speed;
-    [SerializeField] private int _numLives;
-    [SerializeField]  private bool _shieldActivated;
+    [Header("Player Stats")]
+    [SerializeField] private int _health = 100;
+    [SerializeField] private int _speed = 8;
+    [SerializeField] private int _numLives = 3;
+    [SerializeField] private bool _shieldActivated;
     [SerializeField] private bool _canTripleShoot;
     [SerializeField] private bool _disabled;
+
+    public int Speed 
+    { 
+        get => _speed; 
+        set => _speed = value; 
+    }
+
+    public bool ShieldActivated 
+    { 
+        get => _shieldActivated; 
+        set => _shieldActivated = value; 
+    }
+
+    public bool CanTripleShoot 
+    { 
+        get => _canTripleShoot; 
+        set => _canTripleShoot = value; 
+    }
+
+    public bool IsDisabled 
+    { 
+        get => _disabled; 
+        set => _disabled = value; 
+    }
+
+    [Header("Power-up Cooldowns")]
     [SerializeField] private float _cooldownTripleShoot;
     [SerializeField] private float _cooldownMoreSpeed;
-    [SerializeField] private GameObject[] _engines;
 
+    [Header("Visuals & Prefabs")]
+    [SerializeField] private GameObject[] _engines;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _missilePrefab;
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private GameObject _shieldPrefab;
 
+    [Header("Audio")]
     [SerializeField] private AudioSource _audioLaser;
     [SerializeField] private AudioSource _audioMissile;
 
+    [Header("References")]
+    [SerializeField] private UIManager _uiManager;
+    [SerializeField] private GameManager _gameManager;
+    [SerializeField] private SpriteRenderer _thrusterSprite;
+    [SerializeField] private PlayerAnimation _playerAnimation;
+
     private float _canFire;
     private float _canBigFire;
+    private SpriteRenderer _spriteRenderer;
 
-    public Player(int health, int speed, int numLives, bool shieldActivated, bool canTripleShoot, bool disabled, float cooldownTripleShoot, float cooldownMoreSpeed)
+    private void Awake()
     {
-        _health = health;
-        _speed = speed;
-        _numLives = numLives;
-        _shieldActivated = shieldActivated;
-        _canTripleShoot = canTripleShoot;
-        _disabled = disabled;
-        _cooldownTripleShoot = cooldownTripleShoot;
-        _cooldownMoreSpeed = cooldownMoreSpeed;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (_uiManager == null) _uiManager = Object.FindFirstObjectByType<UIManager>();
+        if (_gameManager == null) _gameManager = Object.FindFirstObjectByType<GameManager>();
+
+        StartCoroutine(StartGame());
+        StartCoroutine(Blink());
+    }
+
+    private void Update()
+    {
+        Movement();
+        Limit();
+        ShootLaser();
+        CheckMeters();
     }
 
     private void ResetValues()
     {
         _health = 100;
-        _speed = 3;
+        _speed = 8;
         _shieldActivated = false;
         _canTripleShoot = false;
         _disabled = true;
         _cooldownTripleShoot = 0f;
         _cooldownMoreSpeed = 0f;
-        _engines[0].SetActive(false);
-        _engines[1].SetActive(false);
+
+        if (_engines.Length >= 2)
+        {
+            _engines[0].SetActive(false);
+            _engines[1].SetActive(false);
+        }
     }
 
-    private void Awake()
-    {
-        StartCoroutine(StartGame());
-        StartCoroutine(Blink());
-    }
-
-    public void SetSpeed(int speed)
-    {
-        _speed = speed;
-    }
-
-    public bool GetShieldActivated()
-    {
-        return _shieldActivated;
-    }
-
-    public void SetShieldActivated(bool shieldActivated)
-    {
-        _shieldActivated = shieldActivated;
-    }
-
-    public void SetCanTripleShoot(bool canTripleShoot)
-    {
-        _canTripleShoot = canTripleShoot;
-    }
-
-    public bool GetDisabled()
-    {
-        return _disabled;
-    }
-    
     private IEnumerator StartGame()
     {
-        while(_disabled)
+        while (_disabled)
         {
-            //Start position
             transform.position = new Vector3(0, -4.0f, 0);
 
             yield return new WaitForSeconds(4.0f);
 
-            //When the immune seconds of the start end
             _disabled = false;
-            SpriteRenderer _sprite = this.gameObject.GetComponent<SpriteRenderer>();
-            _sprite.enabled = true;
-
-            SpriteRenderer _spriteThrusters = GameObject.Find("Thruster").GetComponent<SpriteRenderer>();
-            _spriteThrusters.enabled = true;
+            if (_spriteRenderer != null) _spriteRenderer.enabled = true;
+            if (_thrusterSprite != null) _thrusterSprite.enabled = true;
         }
     }
 
     private IEnumerator Blink()
     {
-        while(_disabled)
+        while (_disabled)
         {
-            SpriteRenderer _sprite = this.gameObject.GetComponent<SpriteRenderer>();
-            _sprite.enabled = !_sprite.enabled;
-
-            SpriteRenderer _spriteThrusters = GameObject.Find("Thruster").GetComponent<SpriteRenderer>();
-            _spriteThrusters.enabled = !_spriteThrusters.enabled;
+            if (_spriteRenderer != null) _spriteRenderer.enabled = !_spriteRenderer.enabled;
+            if (_thrusterSprite != null) _thrusterSprite.enabled = !_thrusterSprite.enabled;
 
             yield return new WaitForSeconds(0.2f);
         }
@@ -117,149 +124,146 @@ public class Player : MonoBehaviour
 
     private IEnumerator EndGame()
     {
-        while(true)
-        {
-            yield return new WaitForSeconds(4.0f);
+        yield return new WaitForSeconds(4.0f);
 
-            UIManager uIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-            uIManager.ShowMainMenu();
-            GameManager gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-            gameManager.SetGameStart(false);
-            gameManager.DestroyElements();
-            Destroy(this.gameObject);
-            break;
+        if (_uiManager != null) _uiManager.ShowMainMenu();
+        if (_gameManager != null)
+        {
+            _gameManager.SetGameStarted(false);
+            _gameManager.DestroyElements();
         }
+
+        Destroy(gameObject);
     }
-    
 
     private void Movement()
     {
-        float _horizontalInput = Input.GetAxis("Horizontal");
-        float _verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
 
-        transform.Translate(_speed * _horizontalInput * Time.deltaTime * Vector3.right);
-        transform.Translate(_speed * _verticalInput * Time.deltaTime * Vector3.up);
+        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0f);
+        transform.Translate(_speed * Time.deltaTime * direction);
+
+        if (_playerAnimation != null) _playerAnimation.UpdateAnimation(horizontalInput);
     }
 
     private void Limit()
     {
-        //Límite vertical
-        if(transform.position.y > 4.2f)
-            transform.position = new Vector3(transform.position.x, 4.2f, 0);
-        else if(transform.position.y < -4.2f)
-            transform.position = new Vector3(transform.position.x, -4.2f, 0);
+        Vector3 pos = transform.position;
 
-        //Límite horizontal
-        if(transform.position.x > 8.2f)
-            transform.position = new Vector3(8.2f, transform.position.y, 0);
-        else if(transform.position.x < -8.2f)
-            transform.position = new Vector3(-8.2f, transform.position.y, 0);
+        if (pos.y > 4.2f) pos.y = 4.2f;
+        else if (pos.y < -4.2f) pos.y = -4.2f;
+
+        if (pos.x > 8.2f) pos.x = 8.2f;
+        else if (pos.x < -8.2f) pos.x = -8.2f;
+
+        transform.position = pos;
     }
 
     private void ShootLaser()
     {
-        if(!_disabled)
+        if (_disabled) return;
+
+        float fireRate = 0.25f;
+        float bigFireRate = 10.0f;
+
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
-            float _fireRate = 0.25f, _bigFireRate = 10.0f;
-
-            //Space or Left Click
-            if(Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+            if (Time.time > _canFire)
             {
-                if(Time.time > _canFire)
+                if (_canTripleShoot)
                 {
-                    if(_canTripleShoot)
-                    {
-                        //Left laser
-                        Instantiate(_laserPrefab, transform.position + new Vector3(-0.56f, 0, 0), Quaternion.identity);
-                        //Right laser
-                        Instantiate(_laserPrefab, transform.position + new Vector3(0.56f, 0, 0), Quaternion.identity);
-                    }
-
-                    //Center laser
-                    Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.86f, 0), Quaternion.identity);
-
-                    //Audio laser
-                    _audioLaser.Play();
-
-                    _canFire = Time.time + _fireRate;
+                    Instantiate(_laserPrefab, transform.position + new Vector3(-0.56f, 0, 0), Quaternion.identity);
+                    Instantiate(_laserPrefab, transform.position + new Vector3(0.56f, 0, 0), Quaternion.identity);
                 }
+
+                Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.86f, 0), Quaternion.identity);
+
+                if (_audioLaser != null) _audioLaser.Play();
+
+                _canFire = Time.time + fireRate;
             }
-            //Enter or Right Click
-            if(Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(1))
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(1))
+        {
+            if (Time.time > _canBigFire)
             {
-                if(Time.time > _canBigFire)
-                {
-                    Instantiate(_missilePrefab, transform.position + new Vector3(-0.56f, -1.2f, 0), Quaternion.identity);
-                    Instantiate(_missilePrefab, transform.position + new Vector3(0.14f, 0, 0), Quaternion.identity);
-                    Instantiate(_missilePrefab, transform.position + new Vector3(-0.14f, 0, 0), Quaternion.identity);
-                    Instantiate(_missilePrefab, transform.position + new Vector3(0.56f, -1.2f, 0), Quaternion.identity);
+                Instantiate(_missilePrefab, transform.position + new Vector3(-0.56f, -1.2f, 0), Quaternion.identity);
+                Instantiate(_missilePrefab, transform.position + new Vector3(0.14f, 0, 0), Quaternion.identity);
+                Instantiate(_missilePrefab, transform.position + new Vector3(-0.14f, 0, 0), Quaternion.identity);
+                Instantiate(_missilePrefab, transform.position + new Vector3(0.56f, -1.2f, 0), Quaternion.identity);
 
-                    //Audio missile
-                    _audioMissile.Play();
+                if (_audioMissile != null) _audioMissile.Play();
 
-                    _canBigFire = Time.time + _bigFireRate;
-                }
+                _canBigFire = Time.time + bigFireRate;
             }
         }
     }
 
     public void CheckLife()
     {
-        if(_health <= 0)
+        if (_health <= 0)
         {
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
 
             _numLives--;
-            //Reset values
             ResetValues();
 
-            if(GameObject.Find("Canvas").TryGetComponent<UIManager>(out var uIManager))
-                uIManager.UpdateLives(_numLives);
-            
-            if(_numLives > 0)
+            if (_uiManager != null) _uiManager.UpdateLives(_numLives);
+
+            if (_numLives > 0)
             {
                 StartCoroutine(StartGame());
                 StartCoroutine(Blink());
             }
             else
             {
-                //Ship and thrusters not visible
-                SpriteRenderer _spriteShip = gameObject.GetComponent<SpriteRenderer>();
-                _spriteShip.enabled = false;
-                
-                SpriteRenderer _spriteThrusters = GameObject.Find("Thruster").GetComponent<SpriteRenderer>();
-                _spriteThrusters.enabled = false;
+                if (_spriteRenderer != null) _spriteRenderer.enabled = false;
+                if (_thrusterSprite != null) _thrusterSprite.enabled = false;
 
                 StartCoroutine(EndGame());
             }
         }
-        else if(_health <= 40)
+        else if (_health <= 40)
         {
-            //Visible failure of both engines
-            _engines[0].SetActive(true);
-            _engines[1].SetActive(true);
+            if (_engines.Length >= 2)
+            {
+                _engines[0].SetActive(true);
+                _engines[1].SetActive(true);
+            }
         }
-        else if(_health <= 60)
+        else if (_health <= 60)
         {
-            //Engine failure
-            _engines[Random.Range(0, 2)].SetActive(true);
+            if (_engines.Length > 0) _engines[Random.Range(0, _engines.Length)].SetActive(true);
         }
     }
 
     private void CheckMeters()
     {
-        _cooldownTripleShoot -= Time.deltaTime;
-        _cooldownTripleShoot = Mathf.Clamp(_cooldownTripleShoot, 0f, 10.0f);
-        _cooldownMoreSpeed -= Time.deltaTime;
-        _cooldownMoreSpeed = Mathf.Clamp(_cooldownMoreSpeed, 0f, 10.0f);
+        if (_cooldownTripleShoot <= 0f && _cooldownMoreSpeed <= 0f) return;
+
+        if (_cooldownTripleShoot > 0f)
+        {
+            _cooldownTripleShoot -= Time.deltaTime;
+            if (_cooldownTripleShoot <= 0f)
+            {
+                _cooldownTripleShoot = 0f;
+                _canTripleShoot = false;
+            }
+        }
+
+        if (_cooldownMoreSpeed > 0f)
+        {
+            _cooldownMoreSpeed -= Time.deltaTime;
+            if (_cooldownMoreSpeed <= 0f)
+            {
+                _cooldownMoreSpeed = 0f;
+                _speed = 8;
+            }
+        }
 
         _numLives = Mathf.Clamp(_numLives, 0, 3);
-
-        if(_cooldownTripleShoot == 0f)
-            _canTripleShoot = false;
-
-        if(_cooldownMoreSpeed == 0f)
-            _speed = 6;
     }
 
     public void TripleShotPowerupOn()
@@ -276,33 +280,25 @@ public class Player : MonoBehaviour
     {
         Transform shieldTransform = transform.Find("Shield");
 
-        //If shield doesn't exist
-        if(shieldTransform == null)
+        if (shieldTransform == null)
         {
             GameObject shield = Instantiate(_shieldPrefab, transform.position, Quaternion.identity);
             shield.name = "Shield";
-            shield.transform.parent = this.gameObject.transform;
+            shield.transform.parent = transform;
         }
         else
         {
-            //Reset shield life time
-            Shield shield = GameObject.Find("Shield").GetComponent<Shield>();
-            shield.SetTimeLife(20.0f);
-            SpriteRenderer spriteShield = GameObject.Find("Shield").GetComponent<SpriteRenderer>();
-            spriteShield.enabled = true;
+            Shield shieldComponent = shieldTransform.GetComponent<Shield>();
+            if (shieldComponent != null) shieldComponent.SetTimeLife(20.0f);
+
+            SpriteRenderer shieldSprite = shieldTransform.GetComponent<SpriteRenderer>();
+            if (shieldSprite != null) shieldSprite.enabled = true;
         }
     }
 
     public void GetDamage(int damage)
     {
         _health -= damage;
-    }
-
-    private void Update()
-    {
-        Movement();
-        Limit();
-        ShootLaser();
-        CheckMeters();
+        CheckLife();
     }
 }

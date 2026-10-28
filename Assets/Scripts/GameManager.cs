@@ -4,109 +4,86 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private bool _gameStart;
+    [Header("Prefabs")]
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private GameObject _spawnerEnemiesPrefab;
     [SerializeField] private GameObject _spawnerPowerupsPrefab;
     [SerializeField] private GameObject _spawnerAsteroidsPrefab;
 
-    private GameObject spawnerEnemies;
-    private GameObject spawnerPowerups;
-    private GameObject spawnerAsteroids;
+    [Header("References")]
+    [SerializeField] private UIManager _uiManager;
+
+    public bool _isGameStarted { get; private set; }
+
+    private Spawner _spawnerEnemies;
+    private Spawner _spawnerPowerups;
+    private Spawner _spawnerAsteroids;
+
+    public Spawner SpawnerEnemies => _spawnerEnemies;
+    public Spawner SpawnerAsteroids => _spawnerAsteroids;
+
+    public void SetGameStarted(bool status)
+    {
+        _isGameStarted = status;
+    }
+
+    private void Update()
+    {
+        if (!_isGameStarted && Input.GetKeyDown(KeyCode.Space)) StartGame();
+    }
 
     private void StartGame()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        _isGameStarted = true;
+
+        Instantiate(_playerPrefab, Vector3.zero, Quaternion.identity);
+
+        _spawnerEnemies = Instantiate(_spawnerEnemiesPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
+        _spawnerPowerups = Instantiate(_spawnerPowerupsPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
+        _spawnerAsteroids = Instantiate(_spawnerAsteroidsPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
+
+        if (_uiManager != null)
         {
-            _gameStart = true;
-
-            //Create ship and spawners
-            Instantiate(_playerPrefab, Vector3.zero, Quaternion.identity);
-            spawnerEnemies = Instantiate(_spawnerEnemiesPrefab, Vector3.zero, Quaternion.identity);
-            spawnerPowerups = Instantiate(_spawnerPowerupsPrefab, Vector3.zero, Quaternion.identity);
-            spawnerAsteroids = Instantiate(_spawnerAsteroidsPrefab, Vector3.zero, Quaternion.identity);
-
-            UIManager uIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-            uIManager.HideMainMenu();
-            uIManager.UpdateLives(3);
-            uIManager.ResetScore();
-
-            StartCoroutine(IncreaseDifficulty(spawnerEnemies.GetComponent<Spawner>()));
-            StartCoroutine(IncreaseDifficulty(spawnerPowerups.GetComponent<Spawner>()));
-            StartCoroutine(IncreaseDifficulty(spawnerAsteroids.GetComponent<Spawner>()));
+            _uiManager.HideMainMenu();
+            _uiManager.UpdateLives(3);
+            _uiManager.ResetScore();
         }
-    }
 
-    public bool GetGameStart()
-    {
-        return _gameStart;
-    }
-
-    public void SetGameStart(bool gameStart)
-    {
-        _gameStart = gameStart;
-    }
-
-    public GameObject GetSpawnerEnemies()
-    {
-        return spawnerEnemies;
-    }
-
-    public GameObject GetSpawnerAsteroids()
-    {
-        return spawnerAsteroids;
+        StartCoroutine(IncreaseDifficulty(_spawnerEnemies));
+        StartCoroutine(IncreaseDifficulty(_spawnerPowerups));
+        StartCoroutine(IncreaseDifficulty(_spawnerAsteroids));
     }
 
     public void DestroyConcreteElement(GameObject element)
     {
-        Spawner spawner;
+        Spawner targetSpawner = null;
 
-        if(element.tag == "Enemy")
-        {
-            spawner = spawnerEnemies.GetComponent<Spawner>();
-        }
-        else if(element.tag == "Powerup")
-        {
-            spawner = spawnerPowerups.GetComponent<Spawner>();
-        }
-        else    //Asteroid
-        {
-            spawner = spawnerAsteroids.GetComponent<Spawner>();
-        }
+        if (element.CompareTag("Enemy")) targetSpawner = _spawnerEnemies;
+        else if (element.CompareTag("Powerup")) targetSpawner = _spawnerPowerups;
+        else if (element.CompareTag("Asteroid")) targetSpawner = _spawnerAsteroids;
 
-        spawner.DestroyConcreteObstacle(element);
+        if (targetSpawner != null) targetSpawner.DestroyConcreteObstacle(element);
     }
 
     public void DestroyElements()
     {
-        Spawner spawnerEnemy = spawnerEnemies.GetComponent<Spawner>();
-        Spawner spawnerPowerup = spawnerPowerups.GetComponent<Spawner>();
-        Spawner spawnerAsteroid = spawnerAsteroids.GetComponent<Spawner>();
+        if (_spawnerEnemies != null) _spawnerEnemies.DestroyObstacles();
+        if (_spawnerPowerups != null) _spawnerPowerups.DestroyObstacles();
+        if (_spawnerAsteroids != null) _spawnerAsteroids.DestroyObstacles();
 
-        spawnerEnemy.DestroyObstacles();
-        spawnerPowerup.DestroyObstacles();
-        spawnerAsteroid.DestroyObstacles();
-
-        Destroy(spawnerEnemies);
-        Destroy(spawnerPowerups);
-        Destroy(spawnerAsteroids);
+        if (_spawnerEnemies != null) Destroy(_spawnerEnemies.gameObject);
+        if (_spawnerPowerups != null) Destroy(_spawnerPowerups.gameObject);
+        if (_spawnerAsteroids != null) Destroy(_spawnerAsteroids.gameObject);
     }
 
     private IEnumerator IncreaseDifficulty(Spawner spawner)
     {
-        while(spawner.GetCooldown() > 0.75f)
-        {
-            spawner.SetCooldown(spawner.GetCooldown() - 0.25f);
+        if (spawner == null) yield break;
 
+        while (spawner.Cooldown > 0.75f)
+        {
+            spawner.Cooldown -= 0.25f;
             yield return new WaitForSeconds(10.0f);
         }
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        if(!_gameStart)
-            StartGame();
-        //
     }
 }

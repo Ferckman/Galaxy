@@ -10,21 +10,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _livesImage;
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private Image _mainMenu;
+    
     private int _score;
 
-    private void Awake()
+    private void ShowScore()
     {
-        Cursor.visible = false;
+        _scoreText.text = $"Score: {_score}";
     }
 
     public void UpdateLives(int currentLives)
     {
         _livesImage.sprite = _lives[currentLives];
-    }
-
-    private void ShowScore()
-    {
-        _scoreText.text = "Score: " + _score;
     }
 
     public void UpdateScore(int score)
@@ -42,10 +38,12 @@ public class UIManager : MonoBehaviour
     public void HideMainMenu()
     {
         _mainMenu.gameObject.SetActive(false);
+        Cursor.visible = false;
     }
 
     public void ShowMainMenu()
     {
         _mainMenu.gameObject.SetActive(true);
+        Cursor.visible = true;
     }
 }

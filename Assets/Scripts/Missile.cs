@@ -1,77 +1,69 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class Missile : Shots
 {
-    [SerializeField] private Transform limit;
-    [SerializeField] private float _rotateSpeed;
+    [SerializeField] private Transform _limit;
+    [SerializeField] private float _rotateSpeed = 200f;
     
     private Rigidbody2D _rb;
-    private GameManager gameManager;
-    private Transform _target;
-    private Transform _targetEnemy;
-
-    public Missile(int damage, int speed): base(damage, speed)
-    {
-
-    }
+    private GameManager _gameManager;
+    private Transform _target = null;
+    private Transform _targetEnemy = null;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-        limit = GameObject.Find("LimitShots").GetComponent<Transform>();
+        
+        _gameManager = Object.FindFirstObjectByType<GameManager>();
+        
+        Limit limitComponent = Object.FindFirstObjectByType<Limit>();
+        if (limitComponent != null)
+        {
+            _limit = limitComponent.transform;
+        }
+
         LookForNearestEnemy();
-        //poner target_enemy empezando null aqui????
     }
 
     private void LookForNearestEnemy()
     {
-        GameObject spawnerEnemies = gameManager.GetSpawnerEnemies();
-        GameObject spawnerAsteroids = gameManager.GetSpawnerAsteroids();
+        if (_gameManager == null) return;
 
-        Transform enemyNearest = spawnerEnemies.GetComponent<Spawner>().LookForNearest(this.transform);
-        Transform asteroidNearest = spawnerAsteroids.GetComponent<Spawner>().LookForNearest(this.transform);
+        Spawner spawnerEnemies = _gameManager.SpawnerEnemies;
+        Spawner spawnerAsteroids = _gameManager.SpawnerAsteroids;
 
-        float distanceEnemyNearest, distanceAsteroidNearest;
+        Transform enemyNearest = spawnerEnemies != null ? spawnerEnemies.LookForNearest(transform) : null;
+        Transform asteroidNearest = spawnerAsteroids != null ? spawnerAsteroids.LookForNearest(transform) : null;
 
-
-        if(enemyNearest != null && asteroidNearest != null)
+        if (enemyNearest != null && asteroidNearest != null)
         {
-            distanceEnemyNearest = Vector3.Distance(transform.position, enemyNearest.position);
-            distanceAsteroidNearest = Vector3.Distance(transform.position, asteroidNearest.position);
-            _targetEnemy = enemyNearest;
-            if(distanceAsteroidNearest < distanceEnemyNearest)
-                _targetEnemy = asteroidNearest;
+            float distanceEnemyNearest = Vector3.Distance(transform.position, enemyNearest.position);
+            float distanceAsteroidNearest = Vector3.Distance(transform.position, asteroidNearest.position);
+            
+            _targetEnemy = distanceAsteroidNearest < distanceEnemyNearest ? asteroidNearest : enemyNearest;
         }
-        else if(enemyNearest != null)   //Empty asteroid list
-        {
-            distanceEnemyNearest = Vector3.Distance(transform.position, enemyNearest.position);
-            _targetEnemy = enemyNearest;
-        }
-        else if(asteroidNearest != null)   //Empty enemy list
-        {
-            distanceAsteroidNearest = Vector3.Distance(transform.position, asteroidNearest.position);
-            _targetEnemy = asteroidNearest;
-        }
+        else if (enemyNearest != null) _targetEnemy = enemyNearest;
+        else if (asteroidNearest != null) _targetEnemy = asteroidNearest;
+        else _targetEnemy = null;
     }
 
     public override void Movement()
     {
-        if(_targetEnemy != null)
-            _target = _targetEnemy;
+        if (_targetEnemy != null) _target = _targetEnemy;
         else
         {
-            _target = limit;
+            _target = _limit;
             LookForNearestEnemy();
         }
 
-        Vector2 _direction = (Vector2)_target.position - _rb.position;
-        _direction.Normalize();
-        float _rotateAmount = Vector3.Cross(_direction, transform.up).z;
-        _rb.angularVelocity = -_rotateAmount * _rotateSpeed;
-        _rb.velocity = transform.up * _speed;
+        if (_target == null) return;
+
+        Vector2 direction = (Vector2)_target.position - _rb.position;
+        direction.Normalize();
+        
+        float rotateAmount = Vector3.Cross(direction, transform.up).z;
+        
+        _rb.angularVelocity = -rotateAmount * _rotateSpeed;
+        _rb.velocity = (Vector2)(transform.up * _speed);
     }
 }

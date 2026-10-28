@@ -5,14 +5,12 @@ using UnityEngine;
 public class SpawnerPowerups : Spawner
 {
     [SerializeField] private GameObject[] _type;
-    [SerializeField] private List<GameObject> _powerups;
+    [SerializeField] private List<GameObject> _powerups = new List<GameObject>();
 
-    protected override List<GameObject> list { get => _powerups; set => _powerups = value; }
-
-    public SpawnerPowerups(float cooldown, GameObject[] type, List<GameObject> powerups) : base(cooldown)
-    {
-        _type = type;
-        _powerups = powerups;
+    protected override List<GameObject> list 
+    { 
+        get => _powerups; 
+        set => _powerups = value; 
     }
 
     private void Awake()
@@ -23,23 +21,23 @@ public class SpawnerPowerups : Spawner
 
     private IEnumerator SpawnRoutinePowerups()
     {
-        while(gameManager.GetGameStart())
+        yield return new WaitForSeconds(1f);
+
+        while (gameManager != null && gameManager._isGameStarted)
         {
-            int _random = Random.Range(0,3);
-            GameObject powerup = Instantiate(_type[_random], new Vector3(Random.Range(-7.5f, 7.5f), 7, 0), Quaternion.identity);
-            _powerups.Add(powerup);
-            
-            yield return new WaitForSeconds(GetCooldown());
+            if (_type != null && _type.Length > 0)
+            {
+                int randomIndex = Random.Range(0, _type.Length);
+                
+                if (_type[randomIndex] != null)
+                {
+                    Vector3 spawnPos = new Vector3(Random.Range(-7.5f, 7.5f), 7f, 0f);
+                    GameObject powerup = Instantiate(_type[randomIndex], spawnPos, Quaternion.identity);
+                    _powerups.Add(powerup);
+                }
+            }
+
+            yield return new WaitForSeconds(Cooldown);
         }
-    }
-
-    public override void DestroyConcreteObstacle(GameObject obstacle)
-    {
-        base.DestroyConcreteObstacle(obstacle);
-    }
-
-    public override void DestroyObstacles()
-    {
-        base.DestroyObstacles();
     }
 }

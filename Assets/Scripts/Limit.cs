@@ -1,44 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Limit : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
-
-    public Limit()
-    {
-
-    }
+    [SerializeField] private GameManager _gameManager;
 
     private void Awake()
     {
-        gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        if (_gameManager == null) _gameManager = Object.FindFirstObjectByType<GameManager>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
-            if(other.TryGetComponent<Enemy>(out var enemy))
-                enemy.Limit();
+            if (other.TryGetComponent<Enemy>(out var enemy)) enemy.Limit();
         }
-        else if(other.CompareTag("Shots"))
+        else if (other.CompareTag("Shots"))
         {
-            if(other.TryGetComponent<Laser>(out var laser))
-                Destroy(other.gameObject);
+            if (other.TryGetComponent<Shots>(out var shot)) Destroy(other.gameObject);
         }
-        else if(other.CompareTag("Powerup"))
+        else if (other.CompareTag("Powerup"))
         {
-            //Delete from generator list
-            gameManager.DestroyConcreteElement(other.gameObject);
+            if (_gameManager != null) _gameManager.DestroyConcreteElement(other.gameObject);
             Destroy(other.gameObject);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if(other.CompareTag("Shots"))
-            Destroy(other.gameObject);
+        if (other.CompareTag("Shots")) Destroy(other.gameObject);
     }
 }

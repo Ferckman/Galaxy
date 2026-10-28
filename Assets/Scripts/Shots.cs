@@ -1,30 +1,20 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Shots : MonoBehaviour
 {
-    [SerializeField] private int _damage;
-    [SerializeField] private protected int _speed;
+    [SerializeField] private int _damage = 1;
+    [SerializeField] private protected int _speed = 10;
 
-    public Shots(int damage, int speed)
-    {
-        _damage = damage;
-        _speed = speed;
-    }
+    public int Damage => _damage;
 
-    public int GetDamage()
+    private void Update()
     {
-        return _damage;
+        Movement();
     }
 
     public virtual void Movement()
     {
 
-    }
-
-    private void Update()
-    {
-        Movement();
     }
 }

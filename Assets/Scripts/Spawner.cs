@@ -1,56 +1,51 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class Spawner : MonoBehaviour
 {
     [SerializeField] private float _cooldown;
     [SerializeField] private protected GameManager gameManager;
+    
+    public float Cooldown
+    {
+        get => _cooldown;
+        set => _cooldown = value;
+    }
+
     protected abstract List<GameObject> list { get; set; }
-
-    public Spawner(float cooldown)
-    {
-        _cooldown = cooldown;
-    }
-
-    public void SetCooldown(float cooldown)
-    {
-        _cooldown = cooldown;
-    }
-
-    public float GetCooldown()
-    {
-        return _cooldown;
-    }
 
     private protected void FindGameManager()
     {
-        gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+        if (gameManager == null) gameManager = Object.FindFirstObjectByType<GameManager>();
     }
 
     public virtual void DestroyConcreteObstacle(GameObject obstacle)
     {
-        list.Remove(obstacle);
+        if (obstacle != null && list.Contains(obstacle)) list.Remove(obstacle);
     }
 
     public virtual void DestroyObstacles()
     {
-        for(int i = 0; i < list.Count; i++)
+        for (int i = list.Count - 1; i >= 0; i--)
         {
-            Destroy(list[i].gameObject);
+            if (list[i] != null) Destroy(list[i].gameObject);
         }
+        list.Clear();
     }
 
     public Transform LookForNearest(Transform target)
     {
-        Transform trans = null;
-        float distNearest = 999999;
+        if (target == null || list == null || list.Count == 0) return null;
 
-        for(int i = 0; i < list.Count; i++)
+        Transform trans = null;
+        float distNearest = Mathf.Infinity;
+
+        for (int i = 0; i < list.Count; i++)
         {
-            float distance = Vector3.Distance(list[i].transform.position, target.transform.position);
-            if(distance < distNearest)
+            if (list[i] == null) continue;
+
+            float distance = Vector3.Distance(list[i].transform.position, target.position);
+            if (distance < distNearest)
             {
                 trans = list[i].transform;
                 distNearest = distance;

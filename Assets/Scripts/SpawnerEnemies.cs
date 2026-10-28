@@ -1,19 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpawnerEnemies : Spawner
 {
+    private const int MaxEnemies = 60;
+
     [SerializeField] private GameObject _type;
-    [SerializeField] private List<GameObject> _enemies;
+    [SerializeField] private List<GameObject> _enemies = new List<GameObject>();
 
-    protected override List<GameObject> list { get => _enemies; set => _enemies = value; }
-
-    public SpawnerEnemies(float cooldown, GameObject type, List<GameObject> enemies) : base(cooldown)
-    {
-        _type = type;
-        _enemies = enemies;
+    protected override List<GameObject> list 
+    { 
+        get => _enemies; 
+        set => _enemies = value; 
     }
 
     private void Awake()
@@ -24,25 +23,18 @@ public class SpawnerEnemies : Spawner
 
     private IEnumerator SpawnRoutineEnemies()
     {
-        while(gameManager.GetGameStart())
+        yield return new WaitForSeconds(1f);
+
+        while (gameManager != null && gameManager._isGameStarted)
         {
-            if(_enemies.Count < 60)    //Enemy limit
+            if (_enemies.Count < MaxEnemies && _type != null)
             {
-                GameObject enemy = Instantiate(_type, new Vector3(Random.Range(-7.5f, 7.5f), 7, 0), Quaternion.identity);
+                Vector3 spawnPos = new Vector3(Random.Range(-7.5f, 7.5f), 7f, 0f);
+                GameObject enemy = Instantiate(_type, spawnPos, Quaternion.identity);
                 _enemies.Add(enemy);
             }
 
-            yield return new WaitForSeconds(GetCooldown());
+            yield return new WaitForSeconds(Cooldown);
         }
-    }
-
-    public override void DestroyConcreteObstacle(GameObject obstacle)
-    {
-        base.DestroyConcreteObstacle(obstacle);
-    }
-
-    public override void DestroyObstacles()
-    {
-        base.DestroyObstacles();
     }
 }

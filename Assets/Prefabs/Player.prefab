@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 100
-  _speed: 6
+  _speed: 8
   _numLives: 3
   _shieldActivated: 0
   _canTripleShoot: 0
@@ -337,6 +337,10 @@ MonoBehaviour:
   _shieldPrefab: {fileID: 4698021216099563794, guid: 73da00e6450403445aa9babdad311dff, type: 3}
   _audioLaser: {fileID: -453926088739910669}
   _audioMissile: {fileID: 665575046932046068}
+  _uiManager: {fileID: 0}
+  _gameManager: {fileID: 0}
+  _thrusterSprite: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
+  _playerAnimation: {fileID: 0}
 --- !u!60 &8041751350003267464
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -737,6 +741,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d440fbda70a7a7842adc16b9190b6ca1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _anim: {fileID: 0}
 --- !u!1001 &6403065832541900266
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -796,6 +801,10 @@ PrefabInstance:
     - target: {fileID: 3233376829627339133, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_SortingLayer

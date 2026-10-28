@@ -4,18 +4,25 @@ using UnityEngine;
 
 public abstract class Obstacles : MonoBehaviour
 {
-    [SerializeField] private protected int _health;
-    [SerializeField] private protected int _damage;
-    [SerializeField] private int _speed;
-    [SerializeField] private int _score;
+    [SerializeField] private protected int _health = 100;
+    [SerializeField] private protected int _damage = 10;
+    [SerializeField] private int _speed = 4;
+    [SerializeField] private int _score = 10;
 
     [SerializeField] private GameObject _explosionPrefab;
 
-    public Obstacles(int health, int damage, int speed)
+    private UIManager _uiManager;
+    private GameManager _gameManager;
+
+    protected virtual void Awake()
     {
-        _health = health;
-        _damage = damage;
-        _speed = speed;
+        _uiManager = Object.FindFirstObjectByType<UIManager>();
+        _gameManager = Object.FindFirstObjectByType<GameManager>();
+    }
+
+    private void Update()
+    {
+        Movement();
     }
 
     private void Movement()
@@ -23,45 +30,31 @@ public abstract class Obstacles : MonoBehaviour
         transform.Translate(_speed * Time.deltaTime * Vector3.down);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        Movement();
-    }
-
     public virtual void IncreaseScore()
     {
-        //Increase score
-        UIManager UIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        UIManager.UpdateScore(_score);
+        if (_uiManager != null) _uiManager.UpdateScore(_score);
     }
 
     public virtual void DestroyMyself()
     {
         IncreaseScore();
 
-        //Explosion animation in my position
-        Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        if (_explosionPrefab != null) Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
 
-        //Delete from generator list
-        GameManager gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
-        gameManager.DestroyConcreteElement(this.gameObject);
+        if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
 
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            //Access the player
-            if(other.TryGetComponent<Player>(out var player))
+            if (other.TryGetComponent<Player>(out var player))
             {
-                //If player is not desactivated
-                if(!player.GetDisabled())
+                if (!player.IsDisabled)
                 {
-                    //If player's shield is not activated
-                    if(!player.GetShieldActivated())
+                    if (!player.ShieldActivated)
                     {
                         player.GetDamage(_damage);
                         player.CheckLife();
@@ -69,28 +62,23 @@ public abstract class Obstacles : MonoBehaviour
                     else
                     {
                         Transform shieldTransform = other.transform.Find("Shield");
-                        if(shieldTransform != null)
+                        if (shieldTransform != null)
                         {
-                            //Weaken shield
-                            GameObject shieldPlayer = other.transform.Find("Shield").gameObject;
-                            Shield shield = shieldPlayer.GetComponent<Shield>();
-                            shield.WeakenShield();
+                            Shield shield = shieldTransform.GetComponent<Shield>();
+                            if (shield != null) shield.WeakenShield();
                         }
                     }
 
-                    //Destroy myself
                     DestroyMyself();
                 }
             }
         }
-        else if(other.CompareTag("Shots"))
+        else if (other.CompareTag("Shots"))
         {
-            //Access the shot
-            if(other.TryGetComponent<Shots>(out var shot))
+            if (other.TryGetComponent<Shots>(out var shot))
             {
-                _health -= shot.GetDamage();
-                if(_health <= 0)
-                    DestroyMyself();
+                _health -= shot.Damage;
+                if (_health <= 0) DestroyMyself();
             }
 
             Destroy(other.gameObject);

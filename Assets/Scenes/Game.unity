@@ -226,11 +226,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a69b1441d31513548ab643fdf578e9c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameStart: 0
   _playerPrefab: {fileID: 4020655129601044511, guid: b6666bed090568a43b70df0b432c4e88, type: 3}
   _spawnerEnemiesPrefab: {fileID: 7377965531099496437, guid: 85c908d0913cadc4ea810afe1a1fbdbf, type: 3}
   _spawnerPowerupsPrefab: {fileID: 7629400451229761066, guid: 1b04561f3b139bc42b9d92b9413f6f16, type: 3}
   _spawnerAsteroidsPrefab: {fileID: 7374251947519438185, guid: 178b488555f746040a91f1c01aee66ef, type: 3}
+  _uiManager: {fileID: 1860812889}
 --- !u!4 &387955029
 Transform:
   m_ObjectHideFlags: 0
@@ -266,6 +266,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LimitShots
       objectReference: {fileID: 0}
+    - target: {fileID: 7096966871262786890, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
+      propertyPath: _gameManager
+      value: 
+      objectReference: {fileID: 387955028}
     - target: {fileID: 7820837828551863853, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1394,6 +1398,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Limit
       objectReference: {fileID: 0}
+    - target: {fileID: 7096966871262786890, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
+      propertyPath: _gameManager
+      value: 
+      objectReference: {fileID: 387955028}
     - target: {fileID: 7820837828551863853, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
