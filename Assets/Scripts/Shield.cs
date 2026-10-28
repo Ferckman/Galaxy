@@ -12,7 +12,9 @@ public class Shield : MonoBehaviour
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (transform.parent != null) transform.parent.TryGetComponent(out _player);
+        _player = Object.FindFirstObjectByType<Player>();
+
+        if (_player == null) Debug.LogError("Player component not found in the scene!", this);
 
         StartCoroutine(BlinkRoutine());
     }

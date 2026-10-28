@@ -68,7 +68,6 @@ public abstract class Obstacles : MonoBehaviour
                             if (shield != null) shield.WeakenShield();
                         }
                     }
-
                     DestroyMyself();
                 }
             }

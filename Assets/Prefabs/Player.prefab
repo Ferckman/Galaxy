@@ -339,8 +339,8 @@ MonoBehaviour:
   _audioMissile: {fileID: 665575046932046068}
   _uiManager: {fileID: 0}
   _gameManager: {fileID: 0}
-  _thrusterSprite: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
-  _playerAnimation: {fileID: 0}
+  _thrusterSprite: {fileID: 696194555348720215}
+  _playerAnimation: {fileID: 1552975383025721539}
 --- !u!60 &8041751350003267464
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -823,6 +823,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
+--- !u!212 &696194555348720215 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
+  m_PrefabInstance: {fileID: 6403065832541900266}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8359526893693918359 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3233376829627339133, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
