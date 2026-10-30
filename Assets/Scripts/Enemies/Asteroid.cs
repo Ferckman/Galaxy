@@ -20,7 +20,7 @@ public class Asteroid : Obstacles
 
         _health = Mathf.RoundToInt(scale * 125f);
 
-        _damage = Mathf.RoundToInt(scale * 15f);
+        _damage = Mathf.RoundToInt(scale * 60f);
 
         _score = Mathf.RoundToInt(scale * 20f);
     }

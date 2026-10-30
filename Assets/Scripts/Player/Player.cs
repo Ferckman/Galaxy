@@ -36,20 +36,18 @@ public class Player : MonoBehaviour
         set => _disabled = value; 
     }
 
+    [Header("Missile Settings")]
+    [SerializeField] private float _bigFireRate;
+    [SerializeField] private float _canBigFire;
+    
     [Header("Power-up Cooldowns")]
     [SerializeField] private float _cooldownTripleShoot;
     [SerializeField] private float _cooldownMoreSpeed;
 
-    [Header("Visuals & Prefabs")]
+    [Header("Visuals")]
     [SerializeField] private GameObject[] _engines;
-    [SerializeField] private GameObject _laserPrefab;
-    [SerializeField] private GameObject _missilePrefab;
     [SerializeField] private GameObject _explosionPrefab;
     [SerializeField] private GameObject _shieldPrefab;
-
-    [Header("Audio")]
-    [SerializeField] private AudioSource _audioLaser;
-    [SerializeField] private AudioSource _audioMissile;
 
     [Header("References")]
     [SerializeField] private UIManager _uiManager;
@@ -57,9 +55,9 @@ public class Player : MonoBehaviour
     [SerializeField] private SpriteRenderer[] _thrusterSprites;
     [SerializeField] private PlayerAnimation _playerAnimation;
 
-    private float _canFire;
-    private float _canBigFire;
     private SpriteRenderer _spriteRenderer;
+    private MissileSpawner _missileSpawner;
+    private LaserSpawner _laserSpawner;
 
     private void Awake()
     {
@@ -67,6 +65,11 @@ public class Player : MonoBehaviour
 
         if (_uiManager == null) _uiManager = Object.FindFirstObjectByType<UIManager>();
         if (_gameManager == null) _gameManager = Object.FindFirstObjectByType<GameManager>();
+
+        _missileSpawner = GetComponent<MissileSpawner>();
+        _laserSpawner = GetComponent<LaserSpawner>();
+        
+        if (_missileSpawner == null) Debug.LogError("Falta el componente MissileSpawner en el Player.", this);
 
         StartCoroutine(StartGame());
         StartCoroutine(Blink());
@@ -180,44 +183,20 @@ public class Player : MonoBehaviour
 
         transform.position = pos;
     }
-
+    
     private void ShootLaser()
     {
         if (_disabled) return;
 
-        float fireRate = 0.25f;
-        float bigFireRate = 10.0f;
-
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
-        {
-            if (Time.time > _canFire)
-            {
-                if (_canTripleShoot)
-                {
-                    Instantiate(_laserPrefab, transform.position + new Vector3(-0.56f, 0, 0), Quaternion.identity);
-                    Instantiate(_laserPrefab, transform.position + new Vector3(0.56f, 0, 0), Quaternion.identity);
-                }
-
-                Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.86f, 0), Quaternion.identity);
-
-                if (_audioLaser != null) _audioLaser.Play();
-
-                _canFire = Time.time + fireRate;
-            }
-        }
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) _laserSpawner?.FireLaser();
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(1))
         {
             if (Time.time > _canBigFire)
             {
-                Instantiate(_missilePrefab, transform.position + new Vector3(-0.56f, -1.2f, 0), Quaternion.identity);
-                Instantiate(_missilePrefab, transform.position + new Vector3(0.14f, 0, 0), Quaternion.identity);
-                Instantiate(_missilePrefab, transform.position + new Vector3(-0.14f, 0, 0), Quaternion.identity);
-                Instantiate(_missilePrefab, transform.position + new Vector3(0.56f, -1.2f, 0), Quaternion.identity);
+                if (_missileSpawner != null) _missileSpawner.FireMissileSalvo();
 
-                if (_audioMissile != null) _audioMissile.Play();
-
-                _canBigFire = Time.time + bigFireRate;
+                _canBigFire = Time.time + _bigFireRate;
             }
         }
     }
@@ -308,7 +287,7 @@ public class Player : MonoBehaviour
 
     public void TripleShotPowerupOn()
     {
-        _cooldownTripleShoot = 10.0f;
+        if (_laserSpawner != null) _laserSpawner.SetTripleShoot(true);
     }
 
     public void SpeedBoostPowerupOn()
@@ -338,7 +317,39 @@ public class Player : MonoBehaviour
 
     public void GetDamage(int damage)
     {
-        _health -= damage;
-        CheckLife();
+        if (_disabled) return;
+
+        if (_shieldActivated)
+        {
+            Debug.Log("¡El escudo ha absorbido el impacto!");
+            
+            Transform shieldTransform = transform.Find("Shield");
+            if (shieldTransform != null)
+            {
+                if (shieldTransform.TryGetComponent<Shield>(out var shield)) shield.WeakenShield();
+            }
+        }
+        else
+        {
+            _health -= damage;
+            CheckLife();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!_disabled)
+        {
+            if (other.CompareTag("Shots")) 
+            {
+                if (other.TryGetComponent<Shots>(out var shot))
+                {
+                    Debug.Log($"El jugador recibió {shot.Damage} de daño. Vida restante: {_health}");
+                    GetDamage(shot.Damage);
+                }
+
+                Destroy(other.gameObject);
+            }
+        }
     }
 }

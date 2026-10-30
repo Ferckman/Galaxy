@@ -34,8 +34,6 @@ public class Kamikaze : Enemy
         {
             if (obstacle.gameObject != this.gameObject)
             {
-                Debug.Log("El Kamikaze ha arrollado a: " + other.gameObject.name);
-                obstacle.DestroyMyself();
                 return;
             }
         }

@@ -61,7 +61,7 @@ public abstract class Obstacles : MonoBehaviour
 
     public virtual void DestroyMyself()
     {
-        IncreaseScore();
+        //IncreaseScore();
         
         SpawnExplosion();
 
@@ -88,37 +88,36 @@ public abstract class Obstacles : MonoBehaviour
             {
                 if (!player.IsDisabled)
                 {
-                    if (!player.ShieldActivated)
-                    {
-                        player.GetDamage(_damage);
-                        player.CheckLife();
-                    }
-                    else
-                    {
-                        Transform shieldTransform = other.transform.Find("Shield");
-                        if (shieldTransform != null)
-                        {
-                            Shield shield = shieldTransform.GetComponent<Shield>();
-                            if (shield != null) shield.WeakenShield();
-                        }
-                    }
-
+                    player.GetDamage(_damage);
                     if (ShouldDestroyOnPlayerHit)
                     {
                         DestroyMyself();
+                        IncreaseScore();
                     }
                 }
             }
         }
+
         else if (other.CompareTag("Shots"))
         {
+            Debug.Log("me dio");
             if (other.TryGetComponent<Shots>(out var shot))
             {
+                Debug.Log("el shot");
                 _health -= shot.Damage;
-                if (_health <= 0) DestroyMyself();
+                if (_health <= 0)
+                {
+                    DestroyMyself();
+                    IncreaseScore();
+                }
             }
 
             Destroy(other.gameObject);
+        }
+
+        else if (other.TryGetComponent<Obstacles>(out var otherObstacle))
+        {
+            DestroyMyself();
         }
     }
 }
