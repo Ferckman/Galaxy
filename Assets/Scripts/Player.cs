@@ -5,9 +5,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Player Stats")]
-    [SerializeField] private int _health = 100;
-    [SerializeField] private int _speed = 8;
-    [SerializeField] private int _numLives = 3;
+    [SerializeField] private int _health;
+    [SerializeField] private int _speed;
+    [SerializeField] private int _numLives;
     [SerializeField] private bool _shieldActivated;
     [SerializeField] private bool _canTripleShoot;
     [SerializeField] private bool _disabled;
@@ -95,6 +95,14 @@ public class Player : MonoBehaviour
             _engines[0].SetActive(false);
             _engines[1].SetActive(false);
         }
+
+        if (_thrusterSprites != null)
+        {
+            foreach (var thrusterSprite in _thrusterSprites)
+            {
+                if (thrusterSprite != null) thrusterSprite.enabled = true;
+            }
+        }
     }
 
     private IEnumerator StartGame()
@@ -159,11 +167,16 @@ public class Player : MonoBehaviour
     {
         Vector3 pos = transform.position;
 
-        if (pos.y > 4.2f) pos.y = 4.2f;
-        else if (pos.y < -4.2f) pos.y = -4.2f;
+        float verticalLimit = Camera.main.orthographicSize;
+        float horizontalLimit = verticalLimit * Camera.main.aspect;
 
-        if (pos.x > 8.2f) pos.x = 8.2f;
-        else if (pos.x < -8.2f) pos.x = -8.2f;
+        float marginX = 0.6f; 
+        
+        float bottomMargin = 1.2f;
+        float topMargin = 1.0f;
+
+        pos.y = Mathf.Clamp(pos.y, -verticalLimit + bottomMargin, verticalLimit - topMargin);
+        pos.x = Mathf.Clamp(pos.x, -horizontalLimit + marginX, horizontalLimit - marginX);
 
         transform.position = pos;
     }
@@ -243,11 +256,26 @@ public class Player : MonoBehaviour
             {
                 _engines[0].SetActive(true);
                 _engines[1].SetActive(true);
+
+                if (_thrusterSprites != null)
+                {
+                    if (_thrusterSprites.Length > 0 && _thrusterSprites[0] != null) 
+                        _thrusterSprites[0].enabled = false;
+                    if (_thrusterSprites.Length > 1 && _thrusterSprites[1] != null) 
+                        _thrusterSprites[1].enabled = false;
+                }
             }
         }
         else if (_health <= 60)
         {
-            if (_engines.Length > 0) _engines[Random.Range(0, _engines.Length)].SetActive(true);
+            if (_engines.Length > 0)
+            {
+                int randomIndex = Random.Range(0, _engines.Length);
+                
+                _engines[randomIndex].SetActive(true);
+                
+                if (_thrusterSprites != null && randomIndex < _thrusterSprites.Length && _thrusterSprites[randomIndex] != null) _thrusterSprites[randomIndex].enabled = false;
+            }
         }
     }
 

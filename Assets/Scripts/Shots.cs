@@ -3,8 +3,8 @@ using UnityEngine;
 
 public abstract class Shots : MonoBehaviour
 {
-    [SerializeField] private int _damage = 1;
-    [SerializeField] private protected int _speed = 10;
+    [SerializeField] private int _damage;
+    [SerializeField] private protected int _speed;
 
     public int Damage => _damage;
 

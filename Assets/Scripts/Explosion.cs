@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    [SerializeField] private float _lifeTime = 5.0f;
+    [SerializeField] private float _lifeTime;
 
     private void Awake()
     {

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
-    [SerializeField] private float _timeLife = 10f;
+    [SerializeField] private float _timeLife;
 
     private SpriteRenderer _spriteRenderer;
     private Player _player;

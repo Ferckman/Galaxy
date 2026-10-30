@@ -4,15 +4,17 @@ using UnityEngine;
 
 public abstract class Obstacles : MonoBehaviour
 {
-    [SerializeField] private protected int _health = 100;
-    [SerializeField] private protected int _damage = 10;
-    [SerializeField] private protected float _speed = 4;
-    [SerializeField] private protected int _score = 10;
+    [SerializeField] private protected int _health;
+    [SerializeField] private protected int _damage;
+    [SerializeField] private protected float _speed;
+    [SerializeField] private protected int _score;
 
-    [SerializeField] private GameObject _explosionPrefab;
+    [SerializeField] private protected GameObject _explosionPrefab;
 
     private UIManager _uiManager;
-    private GameManager _gameManager;
+    private protected GameManager _gameManager;
+
+    protected virtual bool ShouldDestroyOnPlayerHit => true;
 
     protected virtual void Awake()
     {
@@ -33,8 +35,18 @@ public abstract class Obstacles : MonoBehaviour
 
     protected virtual void CheckBounds()
     {
-        if (transform.position.y < -9.0f || transform.position.y > 9.0f || 
-            transform.position.x < -13.0f || transform.position.x > 13.0f)
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        float screenHeight = cam.orthographicSize;
+        float screenWidth = cam.orthographicSize * cam.aspect;
+
+        float margin = 5.0f; 
+
+        if (transform.position.y < (-screenHeight - margin) || 
+            transform.position.y > (screenHeight + margin) || 
+            transform.position.x < (-screenWidth - margin) || 
+            transform.position.x > (screenWidth + margin))
         {
             if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
 
@@ -50,15 +62,25 @@ public abstract class Obstacles : MonoBehaviour
     public virtual void DestroyMyself()
     {
         IncreaseScore();
-
-        if (_explosionPrefab != null) Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        
+        SpawnExplosion();
 
         if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
 
-        Destroy(gameObject);
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
+        enabled = false;
+
+        float explosionDuration = 1.0f;
+        Destroy(gameObject, explosionDuration);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected virtual void SpawnExplosion()
+    {
+        if (_explosionPrefab != null)  Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
@@ -80,7 +102,11 @@ public abstract class Obstacles : MonoBehaviour
                             if (shield != null) shield.WeakenShield();
                         }
                     }
-                    DestroyMyself();
+
+                    if (ShouldDestroyOnPlayerHit)
+                    {
+                        DestroyMyself();
+                    }
                 }
             }
         }

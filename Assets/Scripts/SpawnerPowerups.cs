@@ -27,16 +27,28 @@ public class SpawnerPowerups : Spawner
         {
             if (_type != null && _type.Length > 0)
             {
-                int randomIndex = Random.Range(0, _type.Length);
-                
-                if (_type[randomIndex] != null)
+                Camera cam = Camera.main;
+                if (cam != null)
                 {
-                    Vector3 spawnPos = new Vector3(Random.Range(-7.5f, 7.5f), 7f, 0f);
-                    GameObject powerup = Instantiate(_type[randomIndex], spawnPos, Quaternion.identity);
-                    _powerups.Add(powerup);
+                    float screenHeight = cam.orthographicSize;
+                    float screenWidth = cam.orthographicSize * cam.aspect;
+                    
+                    float margin = 1.0f;
+                    float randomX = Random.Range(-screenWidth + margin, screenWidth - margin);
+                
+                    float spawnY = screenHeight + 1.5f;
+
+                    Vector3 spawnPos = new Vector3(randomX, spawnY, 0f);
+
+                    int randomIndex = Random.Range(0, _type.Length);
+                    if (_type[randomIndex] != null)
+                    {
+                        GameObject powerup = Instantiate(_type[randomIndex], spawnPos, Quaternion.identity);
+                        _powerups.Add(powerup);
+                    }
                 }
             }
-
+            
             yield return new WaitForSeconds(Cooldown);
         }
     }

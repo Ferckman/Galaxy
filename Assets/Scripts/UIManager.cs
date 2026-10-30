@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Sprite[] _lives;
-    [SerializeField] private Image _livesImage;
+    [SerializeField] private GameObject[] _lifeIcons;
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private Image _mainMenu;
     
@@ -20,7 +19,10 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int currentLives)
     {
-        _livesImage.sprite = _lives[currentLives];
+        for (int i = 0; i < _lifeIcons.Length; i++)
+        {
+            if (_lifeIcons[i] != null) _lifeIcons[i].SetActive(i < currentLives);
+        }
     }
 
     public void UpdateScore(int score)

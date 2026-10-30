@@ -25,32 +25,39 @@ public class SpawnerAsteroids : Spawner
     {
         if (_type == null) return;
 
-        GameObject asteroid = null;
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        float screenHeight = cam.orthographicSize;
+        float screenWidth = cam.orthographicSize * cam.aspect;
+        float spawnOffset = 2.5f;
+
         int posIni = Random.Range(1, 5);
         float scale = Random.Range(0.40f, 1.2f);
+        Vector3 spawnPos = Vector3.zero;
 
         switch (posIni)
         {
             case 1:
-                asteroid = Instantiate(_type, new Vector3(Random.Range(-7.5f, 7.5f), 6.5f, 0f), Quaternion.identity);
+                spawnPos = new Vector3(Random.Range(-screenWidth, screenWidth), screenHeight + spawnOffset, 0f);
                 break;
             case 2:
-                asteroid = Instantiate(_type, new Vector3(Random.Range(-7.5f, 7.5f), -6.5f, 0f), Quaternion.identity);
+                spawnPos = new Vector3(Random.Range(-screenWidth, screenWidth), -screenHeight - spawnOffset, 0f);
                 break;
             case 3:
-                asteroid = Instantiate(_type, new Vector3(-10.2f, Random.Range(-3.5f, 3.5f), 0f), Quaternion.identity);
+                spawnPos = new Vector3(-screenWidth - spawnOffset, Random.Range(-screenHeight, screenHeight), 0f);
                 break;
             case 4:
-                asteroid = Instantiate(_type, new Vector3(10.2f, Random.Range(-3.5f, 3.5f), 0f), Quaternion.identity);
-                break;
-            default:
-                asteroid = Instantiate(_type, new Vector3(Random.Range(-7.5f, 7.5f), 7f, 0f), Quaternion.identity);
+                spawnPos = new Vector3(screenWidth + spawnOffset, Random.Range(-screenHeight, screenHeight), 0f);
                 break;
         }
 
+        GameObject asteroid = Instantiate(_type, spawnPos, Quaternion.identity);
+
         if (asteroid != null)
         {
-            if (asteroid.TryGetComponent<Asteroid>(out var asteroidScript)) asteroidScript.SetAsteroidProperties(scale);
+            if (asteroid.TryGetComponent<Asteroid>(out var asteroidScript)) 
+                asteroidScript.SetAsteroidProperties(scale);
 
             _asteroids.Add(asteroid);
         }

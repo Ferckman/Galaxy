@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damage: 50
   _speed: 15
+  _direction: {x: 0, y: 1, z: 0}
 --- !u!61 &3945156397861652921
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -145,7 +146,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 3}
+  m_Size: {x: 0.760154, y: 3}
   m_EdgeRadius: 0
 --- !u!50 &6686784237724184116
 Rigidbody2D:

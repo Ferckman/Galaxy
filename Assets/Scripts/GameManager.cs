@@ -13,6 +13,11 @@ public class GameManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private UIManager _uiManager;
 
+    [Header("Difficulty Settings")]
+    [SerializeField] private float _difficultyInterval;
+    [SerializeField] private float _cooldownDecreaseStep;
+    [SerializeField] private float _minCooldown;
+
     public bool _isGameStarted { get; private set; }
 
     private Spawner _spawnerEnemies;
@@ -50,7 +55,6 @@ public class GameManager : MonoBehaviour
         }
 
         StartCoroutine(IncreaseDifficulty(_spawnerEnemies));
-        StartCoroutine(IncreaseDifficulty(_spawnerPowerups));
         StartCoroutine(IncreaseDifficulty(_spawnerAsteroids));
     }
 
@@ -80,10 +84,12 @@ public class GameManager : MonoBehaviour
     {
         if (spawner == null) yield break;
 
-        while (spawner.Cooldown > 0.75f)
+        WaitForSeconds waitTime = new WaitForSeconds(_difficultyInterval);
+
+        while (spawner.Cooldown > _minCooldown)
         {
-            spawner.Cooldown -= 0.25f;
-            yield return new WaitForSeconds(10.0f);
+            yield return waitTime;
+            spawner.Cooldown = Mathf.Max(_minCooldown, spawner.Cooldown - _cooldownDecreaseStep);
         }
     }
 }
