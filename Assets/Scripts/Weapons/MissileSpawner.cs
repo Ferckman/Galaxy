@@ -9,6 +9,27 @@ public class MissileSpawner : MonoBehaviour
     private List<Transform> _leftSpawnPoints = new List<Transform>();
     private List<Transform> _rightSpawnPoints = new List<Transform>();
 
+    private void Awake()
+    {
+        Transform[] allChildren = GetComponentsInChildren<Transform>();
+        foreach (Transform child in allChildren)
+        {
+            if (child == transform) continue;
+
+            if (child.name.Contains("Spawn"))
+            {
+                if (child.localPosition.x < 0f)
+                {
+                    _leftSpawnPoints.Add(child);
+                }
+                else
+                {
+                    _rightSpawnPoints.Add(child);
+                }
+            }
+        }
+    }
+
     public void FireMissileSalvo()
     {
         if (_missilePrefab == null) return;
@@ -27,11 +48,15 @@ public class MissileSpawner : MonoBehaviour
     {
         if (spawnPoints == null || target == null) return;
 
+        // Obtenemos el contenedor de misiles de forma instantánea y segura
+        Transform containerTransform = MissilesContainer.Instance != null ? MissilesContainer.Instance.transform : null;
+
         foreach (Transform sp in spawnPoints)
         {
             if (sp == null) continue;
 
-            GameObject missileInstance = Instantiate(_missilePrefab, sp.position, sp.rotation);
+            // Instanciamos el misil dentro de su contenedor correspondiente
+            GameObject missileInstance = Instantiate(_missilePrefab, sp.position, sp.rotation, containerTransform);
             
             if (missileInstance.TryGetComponent<Missile>(out Missile missileScript))
             {
@@ -56,27 +81,5 @@ public class MissileSpawner : MonoBehaviour
         }
 
         return validTargets;
-    }
-
-    private void Awake()
-    {
-        Transform[] allChildren = GetComponentsInChildren<Transform>();
-
-        foreach (Transform child in allChildren)
-        {
-            if (child == transform) continue;
-
-            if (child.name.Contains("Spawn") || child.name.Contains("Missile"))
-            {
-                if (child.localPosition.x < 0f)
-                {
-                    _leftSpawnPoints.Add(child);
-                }
-                else
-                {
-                    _rightSpawnPoints.Add(child);
-                }
-            }
-        }
     }
 }

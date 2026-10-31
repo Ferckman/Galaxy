@@ -26,7 +26,7 @@ public class LaserSpawner : MonoBehaviour
         {
             if (child == transform) continue;
 
-            if (child.name.Contains("Laser") || child.name.Contains("Shoot"))
+            if (child.name.Contains("Laser"))
             {
                 if (child.name.Contains("Center") || child.name.Contains("Middle") || Mathf.Abs(child.localPosition.x) < 0.1f)
                 {

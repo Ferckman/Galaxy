@@ -289,10 +289,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1170bb948e8e8a45a1eca06fbf78fd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 200
+  _damage: 400
   _speed: 20
-  _rotateSpeed: 180
-  _lifespanTime: 4
+  _rotateSpeed: 360
+  _lifespanTime: 8
+  _reticlePrefab: {fileID: 7836628673186502384, guid: 6ef7ae50e591962479562cf7f8566a5b, type: 3}
 --- !u!82 &2288189252925865185
 AudioSource:
   m_ObjectHideFlags: 0

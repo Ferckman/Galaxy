@@ -33,7 +33,7 @@ public abstract class Spawner : MonoBehaviour
         list.Clear();
     }
 
-    public Transform LookForNearest(Transform target)
+    /*public Transform LookForNearest(Transform target)
     {
         if (target == null || list == null || list.Count == 0) return null;
 
@@ -54,4 +54,5 @@ public abstract class Spawner : MonoBehaviour
         
         return trans;
     }
+    */
 }

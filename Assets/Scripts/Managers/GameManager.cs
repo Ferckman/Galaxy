@@ -6,17 +6,20 @@ public class GameManager : MonoBehaviour
 {
     [Header("Prefabs")]
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private GameObject _spawnerEnemiesPrefab;
-    [SerializeField] private GameObject _spawnerPowerupsPrefab;
-    [SerializeField] private GameObject _spawnerAsteroidsPrefab;
+    //[SerializeField] private GameObject _spawnerEnemiesPrefab;
+    //[SerializeField] private GameObject _spawnerPowerupsPrefab;
+    //[SerializeField] private GameObject _spawnerAsteroidsPrefab;
 
     [Header("References")]
     [SerializeField] private UIManager _uiManager;
 
-    [Header("Difficulty Settings")]
-    [SerializeField] private float _difficultyInterval;
-    [SerializeField] private float _cooldownDecreaseStep;
-    [SerializeField] private float _minCooldown;
+    [Header("Systems")]
+    [SerializeField] private WaveManager _waveManager;
+
+    //[Header("Difficulty Settings")]
+    //[SerializeField] private float _difficultyInterval;
+    //[SerializeField] private float _cooldownDecreaseStep;
+    //[SerializeField] private float _minCooldown;
 
     public bool _isGameStarted { get; private set; }
 
@@ -43,9 +46,9 @@ public class GameManager : MonoBehaviour
 
         Instantiate(_playerPrefab, Vector3.zero, Quaternion.identity);
 
-        _spawnerEnemies = Instantiate(_spawnerEnemiesPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
-        _spawnerPowerups = Instantiate(_spawnerPowerupsPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
-        _spawnerAsteroids = Instantiate(_spawnerAsteroidsPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
+        //_spawnerEnemies = Instantiate(_spawnerEnemiesPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
+        //_spawnerPowerups = Instantiate(_spawnerPowerupsPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
+        //_spawnerAsteroids = Instantiate(_spawnerAsteroidsPrefab, Vector3.zero, Quaternion.identity).GetComponent<Spawner>();
 
         if (_uiManager != null)
         {
@@ -54,8 +57,14 @@ public class GameManager : MonoBehaviour
             _uiManager.ResetScore();
         }
 
-        StartCoroutine(IncreaseDifficulty(_spawnerEnemies));
-        StartCoroutine(IncreaseDifficulty(_spawnerAsteroids));
+        //StartCoroutine(IncreaseDifficulty(_spawnerEnemies));
+        //StartCoroutine(IncreaseDifficulty(_spawnerAsteroids));
+
+        // 3. ¡Disparamos las oleadas!
+        if (_waveManager != null)
+        {
+            _waveManager.StartWaves();
+        }
     }
 
     public void DestroyConcreteElement(GameObject element)
@@ -80,6 +89,7 @@ public class GameManager : MonoBehaviour
         if (_spawnerAsteroids != null) Destroy(_spawnerAsteroids.gameObject);
     }
 
+    /*
     private IEnumerator IncreaseDifficulty(Spawner spawner)
     {
         if (spawner == null) yield break;
@@ -92,4 +102,5 @@ public class GameManager : MonoBehaviour
             spawner.Cooldown = Mathf.Max(_minCooldown, spawner.Cooldown - _cooldownDecreaseStep);
         }
     }
+    */
 }

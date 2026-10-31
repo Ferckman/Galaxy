@@ -47,6 +47,5 @@ MonoBehaviour:
   _cooldown: 5
   gameManager: {fileID: 0}
   _enemyPrefabs:
-  - {fileID: 8914735942681161970, guid: 3edc691bfe6ecd944b512f09ccede16b, type: 3}
   - {fileID: 8914735942681161970, guid: b99eb31088500cc4fbad7eea49915a13, type: 3}
   _warningIndicatorPrefab: {fileID: 7221447311367440422, guid: 297116ad00b6b8d4ea7724a37b288698, type: 3}

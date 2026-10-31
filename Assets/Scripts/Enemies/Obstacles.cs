@@ -100,10 +100,8 @@ public abstract class Obstacles : MonoBehaviour
 
         else if (other.CompareTag("Shots"))
         {
-            Debug.Log("me dio");
             if (other.TryGetComponent<Shots>(out var shot))
             {
-                Debug.Log("el shot");
                 _health -= shot.Damage;
                 if (_health <= 0)
                 {

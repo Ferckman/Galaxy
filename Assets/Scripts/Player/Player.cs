@@ -157,13 +157,16 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        if(!_disabled)
+        {
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
 
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0f);
-        transform.Translate(_speed * Time.deltaTime * direction);
+            Vector3 direction = new Vector3(horizontalInput, verticalInput, 0f);
+            transform.Translate(_speed * Time.deltaTime * direction);
 
-        if (_playerAnimation != null) _playerAnimation.UpdateAnimation(horizontalInput);
+            if (_playerAnimation != null) _playerAnimation.UpdateAnimation(horizontalInput);
+        }
     }
 
     private void Limit()
