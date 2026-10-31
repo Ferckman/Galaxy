@@ -48,6 +48,9 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   _normalEnemyPrefabs:
   - {fileID: 8914735942681161970, guid: b99eb31088500cc4fbad7eea49915a13, type: 3}
+  - {fileID: 8914735942681161970, guid: b725a6c9176b71641a6baa74893af090, type: 3}
+  _tankEnemyPrefabs:
+  - {fileID: 8914735942681161970, guid: dd710cd67a2c54b42a20b48953e8d070, type: 3}
   _kamikazePrefab: {fileID: 8914735942681161970, guid: 3edc691bfe6ecd944b512f09ccede16b, type: 3}
   _warningIndicatorPrefab: {fileID: 7221447311367440422, guid: 297116ad00b6b8d4ea7724a37b288698, type: 3}
   _rowSpawnY: 4

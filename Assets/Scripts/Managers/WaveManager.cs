@@ -7,14 +7,31 @@ public class WaveManager : MonoBehaviour
     [System.Serializable]
     public class Wave
     {
-        [Header("Configuración General")]
+        [Header("Información General")]
         public string waveName = "Oleada 1";
-        public int normalEnemyCount = 8; 
 
-        [Header("Configuración de Kamikazes")]
+        [Header("1. Composición del Bloque (Fila)")]
+        [Tooltip("Cantidad de enemigos comunes en el bloque.")]
+        public int normalEnemyCount = 6;
+        [Tooltip("Cantidad de enemigos Tanque (más vida, disparo lento) en el bloque.")]
+        public int tankEnemyCount = 2;
+
+        [Header("2. Configuración de Kamikazes")]
         public bool enableKamikazes = false;
         public int kamikazeCount = 3;             
         public float kamikazeSpawnInterval = 4f;  
+        public int minKamikazesPerSpawn = 1;
+        public int maxKamikazesPerSpawn = 1;
+
+        [Header("3. Patrón de Movimiento del Bloque")]
+        [Tooltip("Si está activo, el bloque se moverá haciendo una onda senoidal vertical mientras va de lado a lado.")]
+        public bool useSineWave = false;
+
+        [Header("3. Eventos Especiales (Opcionales por Oleada)")]
+        [Tooltip("¿Esta oleada incluye un Emisor de Drones pesado que baja del cielo?")]
+        public bool spawnDroneCarrier = false;
+        [Tooltip("¿Esta oleada es un combate contra el Jefe Final?")]
+        public bool isBossWave = false;
     }
 
     [Header("Settings")]
@@ -29,7 +46,6 @@ public class WaveManager : MonoBehaviour
     {
         if (_isWaveActive) return; 
 
-        // Si es un prefab del proyecto, lo instanciamos en la escena y lo activamos al instante
         if (_activeSpawnerInstance == null && _enemySpawnerPrefab != null)
         {
             GameObject spawnedObj = Instantiate(_enemySpawnerPrefab.gameObject);
@@ -52,12 +68,8 @@ public class WaveManager : MonoBehaviour
 
             if (_activeSpawnerInstance != null)
             {
-                yield return StartCoroutine(_activeSpawnerInstance.RunCompleteWaveSequenceRoutine(
-                    currentWave.normalEnemyCount, 
-                    currentWave.enableKamikazes, 
-                    currentWave.kamikazeCount, 
-                    currentWave.kamikazeSpawnInterval
-                ));
+                // Delegamos toda la ejecución compleja al Spawner pasando la configuración completa de la oleada
+                yield return StartCoroutine(_activeSpawnerInstance.RunCompleteWaveSequenceRoutine(currentWave));
             }
 
             _isWaveActive = false;
@@ -69,6 +81,6 @@ public class WaveManager : MonoBehaviour
             _currentWaveIndex++;
         }
 
-        Debug.Log("¡Todas las oleadas completadas! Preparando Boss...");
+        Debug.Log("¡Todas las oleadas completadas! ¡Victoria!");
     }
 }

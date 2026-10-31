@@ -271,16 +271,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waves:
-  - waveName: Primera
-    normalEnemyCount: 3
-    enableKamikazes: 1
-    kamikazeCount: 6
-    kamikazeSpawnInterval: 4
-  - waveName: Segunda
-    normalEnemyCount: 10
+  - waveName: 1
+    normalEnemyCount: 2
+    tankEnemyCount: 2
     enableKamikazes: 0
     kamikazeCount: 0
     kamikazeSpawnInterval: 0
+    minKamikazesPerSpawn: 0
+    maxKamikazesPerSpawn: 0
+    useSineWave: 0
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 2
+    normalEnemyCount: 3
+    tankEnemyCount: 2
+    enableKamikazes: 1
+    kamikazeCount: 1
+    kamikazeSpawnInterval: 0
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 1
+    useSineWave: 1
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 3
+    normalEnemyCount: 6
+    tankEnemyCount: 2
+    enableKamikazes: 1
+    kamikazeCount: 6
+    kamikazeSpawnInterval: 0
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 2
+    useSineWave: 1
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 4
+    normalEnemyCount: 8
+    tankEnemyCount: 2
+    enableKamikazes: 1
+    kamikazeCount: 10
+    kamikazeSpawnInterval: 4
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 3
+    useSineWave: 1
+    spawnDroneCarrier: 0
+    isBossWave: 0
   _enemySpawnerPrefab: {fileID: 6385797332734183782, guid: 85c908d0913cadc4ea810afe1a1fbdbf, type: 3}
 --- !u!4 &330818993
 Transform:

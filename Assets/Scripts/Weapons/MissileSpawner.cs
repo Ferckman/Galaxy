@@ -70,13 +70,13 @@ public class MissileSpawner : MonoBehaviour
     {
         List<Transform> validTargets = new List<Transform>();
 
-        Obstacles[] foundObstacles = FindObjectsByType<Obstacles>(FindObjectsSortMode.None);
+        Enemy[] foundEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
 
-        foreach (Obstacles obstacle in foundObstacles)
+        foreach (Enemy enemy in foundEnemies)
         {
-            if (obstacle != null && obstacle.gameObject.activeInHierarchy)
+            if (enemy != null && enemy.gameObject.activeInHierarchy)
             {
-                validTargets.Add(obstacle.transform);
+                validTargets.Add(enemy.transform);
             }
         }
 

@@ -199,9 +199,9 @@ public class Enemy : MonoBehaviour
 
             Destroy(other.gameObject);
         }
-        else if (other.TryGetComponent<Obstacles>(out var otherObstacle))
+        else if (other.TryGetComponent<Kamikaze>(out var kamikaze))
         {
-            DestroyMyself();
+            //DestroyMyself();
         }
     }
 }
