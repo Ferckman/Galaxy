@@ -134,11 +134,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 435d0f8aa8d002742bf58c7b326be590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 80
+  _health: 50
   _damage: 20
-  _speed: 3.5
-  _score: 15
+  _score: 100
+  _shouldDestroyOnPlayerHit: 1
   _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
+  _formationSpeed: 5
   _enemyBulletPrefab: {fileID: 2412712189689930603, guid: 45f2bd8c8ba20cc438be54cc1cc9c574, type: 3}
   _firePoint: {fileID: 8409003648034495450}
   _fireRate: 2

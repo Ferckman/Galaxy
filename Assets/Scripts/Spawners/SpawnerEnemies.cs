@@ -6,61 +6,161 @@ public class SpawnerEnemies : Spawner
 {
     private const int MaxEnemies = 60;
 
-    [Header("Enemy Prefabs")]
-    [SerializeField] private GameObject[] _enemyPrefabs;
-    
-    [Header("Warnings")]
+    [Header("Prefabs")]
+    [SerializeField] private GameObject[] _normalEnemyPrefabs; 
+    [SerializeField] private GameObject _kamikazePrefab;       
     [SerializeField] private GameObject _warningIndicatorPrefab;
 
     [Header("Formation Settings")]
-    [SerializeField] private float _rowSpawnY = 4f;      // Altura fija donde se forma la fila arriba
-    [SerializeField] private float _totalRowWidth = 8f; // Ancho total que ocupará la formación en pantalla
+    [SerializeField] private float _rowSpawnY = 4f;              
+    [SerializeField] private float _spacingBetweenEnemies = 1.8f; 
 
-    private List<GameObject> _enemies = new List<GameObject>();
+    private List<GameObject> _blockEnemies = new List<GameObject>();
+    private List<GameObject> _kamikazeEnemies = new List<GameObject>();
+
+    private bool _isWaveSpawningInProgress = false;
+    private int _kamikazesRemainingToSpawn = 0;
 
     protected override List<GameObject> list 
     { 
-        get => _enemies; 
-        set => _enemies = value; 
+        get => _blockEnemies; 
+        set => _blockEnemies = value; 
     }
 
     private void Awake()
     {
-        FindGameManager(); // Tu método existente
+        FindGameManager();
     }
 
-    // Método individual por si lo llamas de forma suelta en alguna otra parte
-    public void SpawnSingleEnemy()
+    public IEnumerator RunCompleteWaveSequenceRoutine(int normalCount, bool enableKamikazes, int kamikazeCount, float kamikazeInterval)
     {
-        StartCoroutine(SpawnSingleEnemyRoutine());
+        // SEGURIDAD: Forzamos que el objeto esté activo para evitar errores de StartCoroutine
+        gameObject.SetActive(true);
+
+        _isWaveSpawningInProgress = true;
+        _blockEnemies.Clear();
+        _kamikazeEnemies.Clear();
+
+        // 1. Lanzamos las naves normales en fila
+        yield return StartCoroutine(SpawnWaveInRowRoutine(normalCount));
+
+        // 2. Programamos los kamikazes si procede
+        if (enableKamikazes && kamikazeCount > 0)
+        {
+            StartCoroutine(SpawnKamikazesOverTimeRoutine(kamikazeCount, kamikazeInterval));
+        }
+        else
+        {
+            _isWaveSpawningInProgress = false;
+            _kamikazesRemainingToSpawn = 0;
+        }
+
+        // 3. Esperamos a que terminen de spawnear todos los kamikazes de la oleada
+        yield return new WaitUntil(() => !_isWaveSpawningInProgress && _kamikazesRemainingToSpawn <= 0);
+
+        // 4. Esperamos a que no quede ningún enemigo vivo en pantalla
+        yield return new WaitUntil(() => GetActiveEnemyCount() == 0);
     }
 
-    // Corrutina individual (mantiene tu lógica de kamikazes y advertencias intacta)
-    public IEnumerator SpawnSingleEnemyRoutine()
+    public IEnumerator SpawnWaveInRowRoutine(int enemyCount)
     {
-        if (_enemyPrefabs.Length == 0) yield break;
-        if (_enemies.Count >= MaxEnemies) yield break;
+        if (_normalEnemyPrefabs.Length == 0) yield break;
 
         Camera cam = Camera.main;
         if (cam == null) yield break;
 
-        float spawnY = cam.orthographicSize + 1.0f; 
+        float offScreenY = cam.orthographicSize + 2.0f;
+        List<Enemy> currentWaveEnemyScripts = new List<Enemy>();
+        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
 
+        float totalWidth = (enemyCount - 1) * _spacingBetweenEnemies;
+        float startX = -totalWidth / 2f;
+
+        for (int i = 0; i < enemyCount; i++)
+        {
+            if (_blockEnemies.Count >= MaxEnemies) break;
+
+            float posX = startX + (i * _spacingBetweenEnemies);
+            Vector3 targetPosition = new Vector3(posX, _rowSpawnY, 0f);
+            Vector3 spawnPos = new Vector3(posX, offScreenY, 0f);
+
+            int randomIndex = Random.Range(0, _normalEnemyPrefabs.Length);
+            GameObject selectedPrefab = _normalEnemyPrefabs[randomIndex];
+
+            if (selectedPrefab == null) continue;
+
+            GameObject enemyObj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, container);
+            
+            if (enemyObj != null) 
+            {
+                _blockEnemies.Add(enemyObj);
+
+                if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
+                {
+                    enemyScript.SetupFormation(targetPosition);
+                    currentWaveEnemyScripts.Add(enemyScript);
+                }
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return new WaitForSeconds(1.5f); 
+
+        if (currentWaveEnemyScripts.Count > 0)
+        {
+            GameObject formationObj = new GameObject("WaveFormationBlock");
+            formationObj.transform.position = Vector3.zero;
+            FormationController controller = formationObj.AddComponent<FormationController>();
+            
+            List<Enemy> activeEnemiesForBlock = new List<Enemy>();
+            foreach (Enemy enemy in currentWaveEnemyScripts)
+            {
+                if (enemy != null)
+                {
+                    enemy.transform.SetParent(formationObj.transform, true);
+                    activeEnemiesForBlock.Add(enemy);
+                    enemy.ActivateCombatBehavior();
+                }
+            }
+            controller.Initialize(activeEnemiesForBlock, 2.5f, 7f);
+        }
+    }
+
+    private IEnumerator SpawnKamikazesOverTimeRoutine(int count, float interval)
+    {
+        _isWaveSpawningInProgress = true;
+        _kamikazesRemainingToSpawn = count;
+
+        if (_kamikazePrefab == null) 
+        {
+            _isWaveSpawningInProgress = false;
+            yield break;
+        }
+
+        Camera cam = Camera.main;
+        if (cam == null) 
+        {
+            _isWaveSpawningInProgress = false;
+            yield break;
+        }
+
+        float spawnY = cam.orthographicSize + 1.0f;
         Vector3 leftLimit = cam.ViewportToWorldPoint(new Vector3(0f, 0f, cam.nearClipPlane));
         Vector3 rightLimit = cam.ViewportToWorldPoint(new Vector3(1f, 0f, cam.nearClipPlane));
+        float margin = 1.5f;
 
-        float margin = 1.5f; 
-        float randomX = Random.Range(leftLimit.x + margin, rightLimit.x - margin);
-        Vector3 spawnPos = new Vector3(randomX, spawnY, 0f);
+        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
 
-        int randomIndex = Random.Range(0, _enemyPrefabs.Length);
-        GameObject selectedEnemyPrefab = _enemyPrefabs[randomIndex];
+        yield return new WaitForSeconds(2.0f); 
 
-        if (selectedEnemyPrefab == null) yield break;
-
-        // Si es Kamikaze, lanzamos la advertencia y ESPERAMOS antes de instanciarlo
-        if (selectedEnemyPrefab.name.Contains("Kamikaze"))
+        for (int i = 0; i < count; i++)
         {
+            if (_blockEnemies.Count + _kamikazeEnemies.Count >= MaxEnemies) break;
+
+            float randomX = Random.Range(leftLimit.x + margin, rightLimit.x - margin);
+            Vector3 spawnPos = new Vector3(randomX, spawnY, 0f);
+
             if (_warningIndicatorPrefab != null)
             {
                 Vector3 warningPos = new Vector3(randomX, spawnY - 1.5f, 0f);
@@ -71,107 +171,30 @@ public class SpawnerEnemies : Spawner
             }
 
             yield return new WaitForSeconds(1.0f); 
-        }
 
-        // Obtenemos el contenedor de forma ultra rápida y segura mediante el Singleton
-        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
-
-        // Instanciamos al enemigo dentro de su contenedor
-        GameObject enemy = Instantiate(selectedEnemyPrefab, spawnPos, Quaternion.identity, container);
-        
-        if (enemy != null) 
-        {
-            _enemies.Add(enemy);
-        }
-    }
-
-    public IEnumerator SpawnWaveInRowRoutine(int enemyCount)
-    {
-        if (_enemyPrefabs.Length == 0) yield break;
-
-        Camera cam = Camera.main;
-        if (cam == null) yield break;
-
-        // Altura inicial por encima de la pantalla (fuera de vista)
-        float offScreenY = cam.orthographicSize + 2.0f;
-
-        List<Enemy> currentWaveEnemyScripts = new List<Enemy>();
-        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
-
-        // Calculamos el espacio simétrico entre cada enemigo de la fila
-        float spacing = enemyCount > 1 ? _totalRowWidth / (enemyCount - 1) : 0f;
-        float startX = -(_totalRowWidth / 2f);
-
-        for (int i = 0; i < enemyCount; i++)
-        {
-            if (_enemies.Count >= MaxEnemies) break;
-
-            // Posición final donde se detendrán en la fila
-            float posX = startX + (i * spacing);
-            Vector3 targetPosition = new Vector3(posX, _rowSpawnY, 0f);
-
-            // Posición de nacimiento (arriba del todo, fuera de pantalla)
-            Vector3 spawnPos = new Vector3(posX, offScreenY, 0f);
-
-            int randomIndex = Random.Range(0, _enemyPrefabs.Length);
-            GameObject selectedEnemyPrefab = _enemyPrefabs[randomIndex];
-
-            if (selectedEnemyPrefab == null) continue;
-
-            // Advertencia visual si el prefab es Kamikaze (la ponemos en su destino final de la fila)
-            if (selectedEnemyPrefab.name.Contains("Kamikaze") && _warningIndicatorPrefab != null)
-            {
-                Vector3 warningPos = new Vector3(posX, _rowSpawnY - 1.5f, 0f);
-                GameObject warning = Instantiate(_warningIndicatorPrefab, warningPos, Quaternion.identity);
-                
-                WarningIndicator indicatorScript = warning.GetComponent<WarningIndicator>();
-                if (indicatorScript != null) indicatorScript.Initialize(0.8f);
-                
-                yield return new WaitForSeconds(0.3f);
-            }
-
-            // Instanciamos al enemigo arriba fuera de pantalla
-            GameObject enemyObj = Instantiate(selectedEnemyPrefab, spawnPos, Quaternion.identity, container);
+            GameObject kamikazeObj = Instantiate(_kamikazePrefab, spawnPos, Quaternion.identity, container);
             
-            if (enemyObj != null) 
+            if (kamikazeObj != null)
             {
-                _enemies.Add(enemyObj);
-
-                if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
-                {
-                    // Le indicamos a dónde tiene que bajar para formar la fila
-                    enemyScript.SetupFormation(targetPosition);
-                    currentWaveEnemyScripts.Add(enemyScript);
-                }
+                _kamikazeEnemies.Add(kamikazeObj);
             }
 
-            // Pequeño retardo escalonado para que no aparezcan todos a la vez de golpe
-            yield return new WaitForSeconds(0.1f);
-        }
+            _kamikazesRemainingToSpawn--; 
 
-        // Esperamos un momento prudencial a que todos terminen de descender y tomar posiciones en la fila
-        yield return new WaitUntil(() => {
-            // Opcional: podrías verificar si todos llegaron, pero con una pausa de 1.5s suele bastar para este tamaño
-            return true; 
-        });
-        yield return new WaitForSeconds(1.5f); 
-
-        // Damos la orden global de inicio de combate a toda la formación ya colocada
-        foreach (Enemy enemy in currentWaveEnemyScripts)
-        {
-            if (enemy != null)
+            if (i < count - 1)
             {
-                enemy.ActivateCombatBehavior();
+                yield return new WaitForSeconds(interval);
             }
         }
+
+        _isWaveSpawningInProgress = false; 
     }
-    
+
     public int GetActiveEnemyCount()
     {
-        // Limpiamos de la lista los elementos que ya se hayan destruido (null)
-        _enemies.RemoveAll(enemy => enemy == null);
+        _blockEnemies.RemoveAll(enemy => enemy == null);
+        _kamikazeEnemies.RemoveAll(enemy => enemy == null);
         
-        // Devolvemos cuántos enemigos siguen vivos en la pantalla
-        return _enemies.Count;
+        return _blockEnemies.Count + _kamikazeEnemies.Count;
     }
 }

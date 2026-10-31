@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpawnerAsteroids : Spawner
 {
+    
     private const int MaxAsteroids = 60;
 
     [SerializeField] private GameObject _type;

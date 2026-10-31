@@ -104,10 +104,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _health: 400
   _damage: 100
-  _speed: 16
   _score: 40
+  _shouldDestroyOnPlayerHit: 1
+  _enemyBulletPrefab: {fileID: 0}
+  _firePoint: {fileID: 0}
+  _fireRate: 2
   _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
-  _explosionScaleMultiplier: 2
+  _formationSpeed: 5
+  _explosionScaleMultiplier: 1.5
+  _diveSpeed: 20
 --- !u!60 &5402265300397123139
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -7,23 +7,35 @@ public class WaveManager : MonoBehaviour
     [System.Serializable]
     public class Wave
     {
-        [Header("Configuración de la Oleada")]
+        [Header("Configuración General")]
         public string waveName = "Oleada 1";
-        public int enemyCount = 10;
-        // Ya no necesitamos 'spawnInterval' aquí si van a salir en formación de golpe, 
-        // pero puedes dejarlo o usarlo si quieres cambiar pausas.
+        public int normalEnemyCount = 8; 
+
+        [Header("Configuración de Kamikazes")]
+        public bool enableKamikazes = false;
+        public int kamikazeCount = 3;             
+        public float kamikazeSpawnInterval = 4f;  
     }
 
     [Header("Settings")]
     [SerializeField] private List<Wave> _waves;
-    [SerializeField] private SpawnerEnemies _enemySpawner;
+    [SerializeField] private SpawnerEnemies _enemySpawnerPrefab; 
 
+    private SpawnerEnemies _activeSpawnerInstance; 
     private int _currentWaveIndex = 0;
     private bool _isWaveActive = false;
 
     public void StartWaves()
     {
         if (_isWaveActive) return; 
+
+        // Si es un prefab del proyecto, lo instanciamos en la escena y lo activamos al instante
+        if (_activeSpawnerInstance == null && _enemySpawnerPrefab != null)
+        {
+            GameObject spawnedObj = Instantiate(_enemySpawnerPrefab.gameObject);
+            _activeSpawnerInstance = spawnedObj.GetComponent<SpawnerEnemies>();
+            _activeSpawnerInstance.gameObject.SetActive(true);
+        }
 
         _currentWaveIndex = 0;
         StartCoroutine(RunWavesSequence());
@@ -38,26 +50,25 @@ public class WaveManager : MonoBehaviour
 
             Debug.Log($"Iniciando: {currentWave.waveName}");
 
-            // 1. Lanzamos la formación en fila y esperamos a que el spawner coloque a todos y active la señal
-            if (_enemySpawner != null)
+            if (_activeSpawnerInstance != null)
             {
-                yield return StartCoroutine(_enemySpawner.SpawnWaveInRowRoutine(currentWave.enemyCount));
+                yield return StartCoroutine(_activeSpawnerInstance.RunCompleteWaveSequenceRoutine(
+                    currentWave.normalEnemyCount, 
+                    currentWave.enableKamikazes, 
+                    currentWave.kamikazeCount, 
+                    currentWave.kamikazeSpawnInterval
+                ));
             }
-
-            // 2. Esperamos aquí bloqueados hasta que TODOS los enemigos de la oleada mueran
-            yield return new WaitUntil(() => _enemySpawner == null || _enemySpawner.GetActiveEnemyCount() == 0);
 
             _isWaveActive = false;
             
             Debug.Log($"¡Oleada {currentWave.waveName} superada! Dando un respiro...");
 
-            // 3. Pausa de descanso antes de arrancar la siguiente oleada
             yield return new WaitForSeconds(3f);
 
             _currentWaveIndex++;
         }
 
         Debug.Log("¡Todas las oleadas completadas! Preparando Boss...");
-        // Aquí puedes activar a tu Jefe Final cuando toque
     }
 }

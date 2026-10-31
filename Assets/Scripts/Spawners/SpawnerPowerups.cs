@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpawnerPowerups : Spawner
 {
+    
     [SerializeField] private GameObject[] _type;
     private List<GameObject> _powerups = new List<GameObject>();
 
@@ -52,4 +53,5 @@ public class SpawnerPowerups : Spawner
             yield return new WaitForSeconds(Cooldown);
         }
     }
+    
 }

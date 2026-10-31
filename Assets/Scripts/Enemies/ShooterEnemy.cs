@@ -3,11 +3,14 @@ using System.Collections;
 
 public class ShooterEnemy : Enemy
 {
+    /*
     [Header("Combat Settings")]
     [SerializeField] private GameObject _enemyBulletPrefab;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private float _fireRate;
+    */
 
+    /*
     protected override void Awake()
     {
         base.Awake();
@@ -16,14 +19,14 @@ public class ShooterEnemy : Enemy
         _score = 15;
     }
 
-    private void Start()
-    {
-        StartCoroutine(ShootRoutine());
-    }
-
     protected override void Movement()
     {
         transform.Translate(_speed * Time.deltaTime * Vector3.down);
+    }
+
+    private void Start()
+    {
+        StartCoroutine(ShootRoutine());
     }
 
     private IEnumerator ShootRoutine()
@@ -46,4 +49,5 @@ public class ShooterEnemy : Enemy
             yield return new WaitForSeconds(_fireRate);
         }
     }
+    */
 }
