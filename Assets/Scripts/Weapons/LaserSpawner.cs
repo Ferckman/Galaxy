@@ -5,7 +5,6 @@ public class LaserSpawner : MonoBehaviour
 {
     [Header("Prefabs & Audio")]
     [SerializeField] private GameObject _laserPrefab;
-    [SerializeField] private AudioSource _audioLaser;
 
     [Header("Power-Up Settings")]
     [SerializeField] private bool _canTripleShoot = false;
@@ -76,11 +75,6 @@ public class LaserSpawner : MonoBehaviour
                     SpawnSingleLaser(sp, playerCollider);
                 }
             }
-        }
-
-        if (_audioLaser != null && !_audioLaser.isPlaying)
-        {
-            _audioLaser.Play();
         }
     }
 

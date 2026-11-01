@@ -15,7 +15,7 @@ public class Limit : MonoBehaviour
         {
             if (other.TryGetComponent<Shots>(out var shot)) Destroy(other.gameObject);
         }
-        else if (other.CompareTag("Powerup"))
+        else if (other.CompareTag("Collectible"))
         {
             if (_gameManager != null) _gameManager.DestroyConcreteElement(other.gameObject);
             Destroy(other.gameObject);

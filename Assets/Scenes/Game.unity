@@ -272,13 +272,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waves:
   - waveName: 1
-    normalEnemyCount: 2
-    tankEnemyCount: 2
-    enableKamikazes: 0
-    kamikazeCount: 0
-    kamikazeSpawnInterval: 0
-    minKamikazesPerSpawn: 0
-    maxKamikazesPerSpawn: 0
+    normalEnemyCount: 0
+    tankEnemyCount: 0
+    enableKamikazes: 1
+    kamikazeCount: 10
+    kamikazeSpawnInterval: 3
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 2
     useSineWave: 0
     spawnDroneCarrier: 0
     isBossWave: 0
@@ -454,7 +454,10 @@ PrefabInstance:
     - {fileID: -5679898209152102408, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2746898132733632424, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1721808382}
   m_SourcePrefab: {fileID: 100100000, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
 --- !u!1 &519420028
 GameObject:
@@ -561,7 +564,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 5b17a0088dcdf924fa92da5af1e1be07, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6b8b8c1935b128b48887b06213cbf292, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -1409,6 +1412,38 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!1 &1721808377 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2746898132733632424, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
+  m_PrefabInstance: {fileID: 422648694}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &1721808382
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721808377}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &1755008151
 GameObject:
   m_ObjectHideFlags: 0

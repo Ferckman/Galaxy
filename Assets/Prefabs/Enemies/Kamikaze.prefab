@@ -111,6 +111,10 @@ MonoBehaviour:
   _fireRate: 2
   _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _formationSpeed: 5
+  _missileAmmoPrefab: {fileID: 5220409471985605202, guid: 6d7d32bf6ef37994799d5b63925c1a6f, type: 3}
+  _generalPowerUpPrefabs:
+  - {fileID: 5220409471985605202, guid: dca54250a0a7521418dde29a4b1ce1b6, type: 3}
+  - {fileID: 724511469982859614, guid: d5d7000cf9ce8474c9a78a86d8787afd, type: 3}
   _explosionScaleMultiplier: 1.5
   _diveSpeed: 20
 --- !u!60 &5402265300397123139

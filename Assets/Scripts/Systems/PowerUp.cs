@@ -1,22 +1,10 @@
 using UnityEngine;
 
-public class PowerUp : MonoBehaviour
+public class PowerUp : Collectible
 {
-    [SerializeField] private string _type;
-    [SerializeField] private int _speed;
-    [SerializeField] private AudioClip _powerupSound;
+    [SerializeField] private string _type; // "TripleShoot", "SpeedBoost", "Shield"
 
-    private void Update()
-    {
-        Movement();
-    }
-
-    private void Movement()
-    {
-        transform.Translate(_speed * Time.deltaTime * Vector3.down);
-    }
-
-    private void TypePowerUp(Player player)
+    protected override void ApplyEffect(Player player)
     {
         switch (_type)
         {
@@ -34,27 +22,6 @@ public class PowerUp : MonoBehaviour
                 player.ShieldActivated = true;
                 player.ShieldPowerupOn();
                 break;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (other.TryGetComponent<Player>(out var player))
-            {
-                if (!player.IsDisabled)
-                {
-                    TypePowerUp(player);
-
-                    if (_powerupSound != null && Camera.main != null) AudioSource.PlayClipAtPoint(_powerupSound, Camera.main.transform.position, 1f);
-
-                    GameManager gameManager = Object.FindFirstObjectByType<GameManager>();
-                    if (gameManager != null) gameManager.DestroyConcreteElement(gameObject);
-
-                    Destroy(gameObject);
-                }
-            }
         }
     }
 }

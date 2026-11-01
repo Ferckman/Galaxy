@@ -21,6 +21,10 @@ public class Enemy : MonoBehaviour
     [Header("Movement & Formation")]
     [SerializeField] private float _formationSpeed = 5f;
 
+    [Header("Loot Drop Settings")]
+    [SerializeField] private protected GameObject _missileAmmoPrefab;        // Prefab del power-up de munición
+    [SerializeField] private GameObject[] _generalPowerUpPrefabs;   // Prefabs de power-ups (Triple, Speed, Shield)
+
     private Vector3 _targetFormationPos;
     private bool _isMovingToFormation = false;
     private bool _isCombatActive = false;
@@ -79,7 +83,7 @@ public class Enemy : MonoBehaviour
     public virtual void ActivateCombatBehavior()
     {
         _isCombatActive = true;
-        Debug.Log($"{gameObject.name}: ¡Señal de combate recibida! Abriendo fuego.");
+        //Debug.Log($"{gameObject.name}: ¡Señal de combate recibida! Abriendo fuego.");
         
         // ¡Aquí lanzamos los disparos de forma sincronizada!
         StartCoroutine(ShootRoutine());
@@ -161,9 +165,41 @@ public class Enemy : MonoBehaviour
 
             // OPCIONAL EXTRA: Si tu explosión usa un SpriteRenderer, puedes forzar 
             // un Order in Layer dinámico para evitar parpadeos de orden.
-            if (explosion.TryGetComponent<SpriteRenderer>(out SpriteRenderer sr))
+            if (explosion.TryGetComponent<SpriteRenderer>(out SpriteRenderer sr)) sr.sortingOrder = 10; // Ponlo por encima de los enemigos normales
+            DropLoot();
+        }
+    }
+
+    // Marcamos el método como virtual para permitir polimorfismo
+    protected virtual void DropLoot()
+    {
+        float roll = Random.Range(0f, 100f);
+
+        if (roll < 50f) return; // 50%: Nada
+        else if (roll < 85f)
+        {
+            // 35%: Munición de misil
+            if (_missileAmmoPrefab != null) Instantiate(_missileAmmoPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            // 15%: Power-up general
+            SpawnRandomGeneralPowerUp();
+        }
+    }
+
+    // Método auxiliar protegido para que las clases hijas también puedan usarlo
+    protected void SpawnRandomGeneralPowerUp()
+    {
+        if (_generalPowerUpPrefabs != null && _generalPowerUpPrefabs.Length > 0)
+        {
+            int randomIndex = Random.Range(0, _generalPowerUpPrefabs.Length);
+            GameObject selectedPowerUp = _generalPowerUpPrefabs[randomIndex];
+
+            if (selectedPowerUp != null)
             {
-                sr.sortingOrder = 10; // Ponlo por encima de los enemigos normales
+                Debug.Log("instancie");
+                Instantiate(selectedPowerUp, transform.position, Quaternion.identity);
             }
         }
     }

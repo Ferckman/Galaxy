@@ -35,10 +35,6 @@ public class Player : MonoBehaviour
         get => _disabled; 
         set => _disabled = value; 
     }
-
-    [Header("Missile Settings")]
-    [SerializeField] private float _bigFireRate;
-    [SerializeField] private float _canBigFire;
     
     [Header("Power-up Cooldowns")]
     [SerializeField] private float _cooldownTripleShoot;
@@ -149,7 +145,7 @@ public class Player : MonoBehaviour
         if (_gameManager != null)
         {
             _gameManager.SetGameStarted(false);
-            _gameManager.DestroyElements();
+            //_gameManager.DestroyElements();
         }
 
         Destroy(gameObject);
@@ -195,12 +191,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(1))
         {
-            if (Time.time > _canBigFire)
-            {
-                if (_missileSpawner != null) _missileSpawner.FireMissileSalvo();
-
-                _canBigFire = Time.time + _bigFireRate;
-            }
+            if (_missileSpawner != null) _missileSpawner.TryFireSalvo();
         }
     }
 

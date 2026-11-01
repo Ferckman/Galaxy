@@ -72,12 +72,12 @@ public class GameManager : MonoBehaviour
         Spawner targetSpawner = null;
 
         if (element.CompareTag("Enemy")) targetSpawner = _spawnerEnemies;
-        else if (element.CompareTag("Powerup")) targetSpawner = _spawnerPowerups;
+        else if (element.CompareTag("Collectible")) targetSpawner = _spawnerPowerups;
         else if (element.CompareTag("Asteroid")) targetSpawner = _spawnerAsteroids;
 
         if (targetSpawner != null) targetSpawner.DestroyConcreteObstacle(element);
     }
-
+/*
     public void DestroyElements()
     {
         if (_spawnerEnemies != null) _spawnerEnemies.DestroyObstacles();
@@ -87,20 +87,5 @@ public class GameManager : MonoBehaviour
         if (_spawnerEnemies != null) Destroy(_spawnerEnemies.gameObject);
         if (_spawnerPowerups != null) Destroy(_spawnerPowerups.gameObject);
         if (_spawnerAsteroids != null) Destroy(_spawnerAsteroids.gameObject);
-    }
-
-    /*
-    private IEnumerator IncreaseDifficulty(Spawner spawner)
-    {
-        if (spawner == null) yield break;
-
-        WaitForSeconds waitTime = new WaitForSeconds(_difficultyInterval);
-
-        while (spawner.Cooldown > _minCooldown)
-        {
-            yield return waitTime;
-            spawner.Cooldown = Mathf.Max(_minCooldown, spawner.Cooldown - _cooldownDecreaseStep);
-        }
-    }
-    */
+    }*/
 }

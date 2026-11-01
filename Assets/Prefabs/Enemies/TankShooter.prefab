@@ -41,9 +41,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3570880124264357680}
   - component: {fileID: 8772852344939117599}
-  - component: {fileID: -3359171521187681328}
   - component: {fileID: -8538439939280276718}
   - component: {fileID: 7822400957671073955}
+  - component: {fileID: 7025162025191703599}
   m_Layer: 0
   m_Name: TankShooter
   m_TagString: Enemy
@@ -122,27 +122,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &-3359171521187681328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8914735942681161970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 435d0f8aa8d002742bf58c7b326be590, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _health: 200
-  _damage: 40
-  _score: 400
-  _shouldDestroyOnPlayerHit: 1
-  _enemyBulletPrefab: {fileID: 2412712189689930603, guid: 45f2bd8c8ba20cc438be54cc1cc9c574, type: 3}
-  _firePoint: {fileID: 8409003648034495450}
-  _fireRate: 2
-  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
-  _formationSpeed: 5
 --- !u!50 &-8538439939280276718
 Rigidbody2D:
   serializedVersion: 4
@@ -374,6 +353,32 @@ PolygonCollider2D:
       - {x: -0.22999999, y: -2.44}
       - {x: -0.22, y: -2.44}
   m_UseDelaunayMesh: 0
+--- !u!114 &7025162025191703599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914735942681161970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc5bd0648f41531408e98a2559014471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 200
+  _damage: 60
+  _score: 400
+  _shouldDestroyOnPlayerHit: 1
+  _enemyBulletPrefab: {fileID: 2412712189689930603, guid: 45f2bd8c8ba20cc438be54cc1cc9c574, type: 3}
+  _firePoint: {fileID: 8409003648034495450}
+  _fireRate: 2
+  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
+  _formationSpeed: 5
+  _missileAmmoPrefab: {fileID: 5220409471985605202, guid: 6d7d32bf6ef37994799d5b63925c1a6f, type: 3}
+  _generalPowerUpPrefabs:
+  - {fileID: 724511469982859614, guid: 41caeb75911d1be4d9d038fbc4d1efdc, type: 3}
+  - {fileID: 5220409471985605202, guid: dca54250a0a7521418dde29a4b1ce1b6, type: 3}
+  - {fileID: 724511469982859614, guid: d5d7000cf9ce8474c9a78a86d8787afd, type: 3}
 --- !u!1001 &5739540848504456077
 PrefabInstance:
   m_ObjectHideFlags: 0

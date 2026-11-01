@@ -64,7 +64,7 @@ public class WaveManager : MonoBehaviour
             Wave currentWave = _waves[_currentWaveIndex];
             _isWaveActive = true;
 
-            Debug.Log($"Iniciando: {currentWave.waveName}");
+            //Debug.Log($"Iniciando: {currentWave.waveName}");
 
             if (_activeSpawnerInstance != null)
             {

@@ -19,20 +19,6 @@ public class Kamikaze : Enemy
         }
     }
 
-    /*
-    // Sobrescribimos esto para que no haga nada de la lógica de filas estáticas
-    public override void SetupFormation(Vector3 targetPos)
-    {
-        // El kamikaze ignora la posición de la fila; su posición inicial la decide el Spawner al instanciarlo arriba.
-    }
-
-    // Sobrescribimos esto para que la señal de combate global no le afecte o dispare cosas extrañas
-    public override void ActivateCombatBehavior()
-    {
-        // Ya está buceando hacia abajo por sí mismo
-    }
-    */
-
     protected override void SpawnExplosion()
     {
         if (_explosionPrefab != null) 
@@ -43,6 +29,7 @@ public class Kamikaze : Enemy
             
             explosion.transform.localScale *= _explosionScaleMultiplier;
         }
+        DropLoot();
     }
 
     protected override bool ShouldDestroyOnPlayerHit
@@ -51,6 +38,26 @@ public class Kamikaze : Enemy
         {
             Player player = Object.FindAnyObjectByType<Player>();
             return player != null && player.ShieldActivated;
+        }
+    }
+
+    protected override void DropLoot()
+    {
+        // Tiramos los dados de 0 a 100, pero adaptado para el Kamikaze (100% de premio seguro)
+        float roll = Random.Range(0f, 100f);
+
+        // 50% de probabilidad para la munición de misiles
+        if (roll < 50f)
+        {
+            if (_missileAmmoPrefab != null)
+            {
+                Instantiate(_missileAmmoPrefab, transform.position, Quaternion.identity);
+            }
+        }
+        else
+        {
+            // 50% restante para un power-up general (Triple, Speed, Shield)
+            SpawnRandomGeneralPowerUp();
         }
     }
 

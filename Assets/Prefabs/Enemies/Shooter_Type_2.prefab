@@ -169,6 +169,11 @@ MonoBehaviour:
   _fireRate: 1
   _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _formationSpeed: 5
+  _missileAmmoPrefab: {fileID: 5220409471985605202, guid: 6d7d32bf6ef37994799d5b63925c1a6f, type: 3}
+  _generalPowerUpPrefabs:
+  - {fileID: 724511469982859614, guid: 41caeb75911d1be4d9d038fbc4d1efdc, type: 3}
+  - {fileID: 5220409471985605202, guid: dca54250a0a7521418dde29a4b1ce1b6, type: 3}
+  - {fileID: 724511469982859614, guid: d5d7000cf9ce8474c9a78a86d8787afd, type: 3}
 --- !u!60 &6207940862696778256
 PolygonCollider2D:
   m_ObjectHideFlags: 0
