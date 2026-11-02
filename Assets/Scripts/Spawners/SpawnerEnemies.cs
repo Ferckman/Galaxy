@@ -13,8 +13,9 @@ public class SpawnerEnemies : Spawner
     [SerializeField] private GameObject _warningIndicatorPrefab;
 
     [Header("Formation Settings")]
-    [SerializeField] private float _rowSpawnY = 4f;              
-    [SerializeField] private float _spacingBetweenEnemies = 1.8f; 
+    [SerializeField] private float _rowSpawnY;              
+    [SerializeField] private float _spacingBetweenEnemies; 
+    [SerializeField] private float _rowSpacingY;
 
     private List<GameObject> _blockEnemies = new List<GameObject>();
     private List<GameObject> _kamikazeEnemies = new List<GameObject>();
@@ -68,104 +69,6 @@ public class SpawnerEnemies : Spawner
         yield return new WaitUntil(() => GetActiveEnemyCount() == 0);
     }
 
-    /*
-    public IEnumerator SpawnWaveInRowRoutine(int normalCount, int tankCount)
-    {
-        // Si ambos arrays están vacíos, salimos
-        if (_normalEnemyPrefabs.Length == 0 && _tankEnemyPrefabs.Length == 0) yield break;
-
-        Camera cam = Camera.main;
-        if (cam == null) yield break;
-
-        float offScreenY = cam.orthographicSize + 2.0f;
-        List<Enemy> currentWaveEnemyScripts = new List<Enemy>();
-        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
-
-        int totalEnemiesInRow = normalCount + tankCount;
-        float totalWidth = (totalEnemiesInRow - 1) * _spacingBetweenEnemies;
-        float startX = -totalWidth / 2f;
-
-        // 1. CREAMOS UNA LISTA TEMPORAL CON LOS PREFABS QUE VAN A SALIR EN ESTA FILA
-        List<GameObject> rowPrefabsToSpawn = new List<GameObject>();
-
-        // Añadimos los normales elegidos al azar de su array
-        for (int i = 0; i < normalCount; i++)
-        {
-            if (_normalEnemyPrefabs.Length > 0)
-            {
-                int randomIndex = Random.Range(0, _normalEnemyPrefabs.Length);
-                rowPrefabsToSpawn.Add(_normalEnemyPrefabs[randomIndex]);
-            }
-        }
-
-        // Añadimos los tanques elegidos al azar de su array
-        for (int i = 0; i < tankCount; i++)
-        {
-            if (_tankEnemyPrefabs.Length > 0)
-            {
-                int randomIndex = Random.Range(0, _tankEnemyPrefabs.Length);
-                rowPrefabsToSpawn.Add(_tankEnemyPrefabs[randomIndex]);
-            }
-        }
-
-        // 2. BARAJAMOS LA LISTA (Algoritmo Fisher-Yates para distribución 100% aleatoria)
-        for (int i = 0; i < rowPrefabsToSpawn.Count; i++)
-        {
-            GameObject temp = rowPrefabsToSpawn[i];
-            int randomIndex = Random.Range(i, rowPrefabsToSpawn.Count);
-            rowPrefabsToSpawn[i] = rowPrefabsToSpawn[randomIndex];
-            rowPrefabsToSpawn[randomIndex] = temp;
-        }
-
-        // 3. INSTANCIAMOS LA FILA CON LOS PREFABS YA BARAJADOS
-        for (int i = 0; i < rowPrefabsToSpawn.Count; i++)
-        {
-            if (_blockEnemies.Count >= MaxEnemies) break;
-
-            float posX = startX + (i * _spacingBetweenEnemies);
-            Vector3 targetPosition = new Vector3(posX, _rowSpawnY, 0f);
-            Vector3 spawnPos = new Vector3(posX, offScreenY, 0f);
-
-            GameObject selectedPrefab = rowPrefabsToSpawn[i];
-
-            if (selectedPrefab != null)
-            {
-                GameObject enemyObj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, container);
-                _blockEnemies.Add(enemyObj);
-
-                if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
-                {
-                    enemyScript.SetupFormation(targetPosition);
-                    currentWaveEnemyScripts.Add(enemyScript);
-                }
-            }
-
-            yield return new WaitForSeconds(0.05f);
-        }
-
-        yield return new WaitForSeconds(1.5f); 
-
-        // Creamos el bloque de movimiento lateral con todos mezclados
-        if (currentWaveEnemyScripts.Count > 0)
-        {
-            GameObject formationObj = new GameObject("WaveFormationBlock");
-            formationObj.transform.position = Vector3.zero;
-            FormationController controller = formationObj.AddComponent<FormationController>();
-            
-            List<Enemy> activeEnemiesForBlock = new List<Enemy>();
-            foreach (Enemy enemy in currentWaveEnemyScripts)
-            {
-                if (enemy != null)
-                {
-                    enemy.transform.SetParent(formationObj.transform, true);
-                    activeEnemiesForBlock.Add(enemy);
-                    enemy.ActivateCombatBehavior();
-                }
-            }
-            controller.Initialize(activeEnemiesForBlock, 2.5f, 7f);
-        }
-    }
-    */
     public IEnumerator SpawnWaveInRowRoutine(WaveManager.Wave wave)
     {
         // Si ambos arrays están vacíos, salimos
@@ -178,11 +81,7 @@ public class SpawnerEnemies : Spawner
         List<Enemy> currentWaveEnemyScripts = new List<Enemy>();
         Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
 
-        int totalEnemiesInRow = wave.normalEnemyCount + wave.tankEnemyCount;
-        float totalWidth = (totalEnemiesInRow - 1) * _spacingBetweenEnemies;
-        float startX = -totalWidth / 2f;
-
-        // 1. Creamos la lista temporal de prefabs a spawnear
+        // 1. Creamos la lista temporal de todos los prefabs a spawnear
         List<GameObject> rowPrefabsToSpawn = new List<GameObject>();
 
         for (int i = 0; i < wave.normalEnemyCount; i++)
@@ -203,7 +102,7 @@ public class SpawnerEnemies : Spawner
             }
         }
 
-        // 2. Barajamos la lista (Fisher-Yates) para que los tanques salgan mezclados
+        // 2. Barajamos la lista completa (Fisher-Yates) para que los tanques y normales queden mezclados
         for (int i = 0; i < rowPrefabsToSpawn.Count; i++)
         {
             GameObject temp = rowPrefabsToSpawn[i];
@@ -212,35 +111,59 @@ public class SpawnerEnemies : Spawner
             rowPrefabsToSpawn[randomIndex] = temp;
         }
 
-        // 3. Instanciamos la fila
-        for (int i = 0; i < rowPrefabsToSpawn.Count; i++)
+        // 3. Distribuimos los enemigos en múltiples filas (Grid)
+        int numRows = Mathf.Max(1, wave.rowCount);
+        int totalEnemies = rowPrefabsToSpawn.Count;
+        int enemiesPerBaseRow = Mathf.CeilToInt((float)totalEnemies / numRows);
+        //float spacingY = 1.4f; // Distancia vertical entre cada fila
+        int prefabIndex = 0;
+
+        for (int r = 0; r < numRows; r++)
         {
-            if (_blockEnemies.Count >= MaxEnemies) break;
+            // Calculamos cuántos enemigos van en esta fila concreta
+            int enemiesInThisRow = Mathf.Min(enemiesPerBaseRow, totalEnemies - prefabIndex);
+            if (enemiesInThisRow <= 0) break;
 
-            float posX = startX + (i * _spacingBetweenEnemies);
-            Vector3 targetPosition = new Vector3(posX, _rowSpawnY, 0f);
-            Vector3 spawnPos = new Vector3(posX, offScreenY, 0f);
+            float totalWidth = (enemiesInThisRow - 1) * _spacingBetweenEnemies;
+            float startX = -totalWidth / 2f;
+            
+            // Posición Y de destino y de entrada (fuera de pantalla) para esta fila específica
+            //float currentTargetY = _rowSpawnY - (r * spacingY);
+            //float currentOffScreenY = offScreenY + (r * spacingY);
+            float currentTargetY = _rowSpawnY - (r * _rowSpacingY);
+            float currentOffScreenY = offScreenY - (r * _rowSpacingY);
 
-            GameObject selectedPrefab = rowPrefabsToSpawn[i];
-
-            if (selectedPrefab != null)
+            for (int i = 0; i < enemiesInThisRow; i++)
             {
-                GameObject enemyObj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, container);
-                _blockEnemies.Add(enemyObj);
+                if (_blockEnemies.Count >= MaxEnemies) break;
+                if (prefabIndex >= totalEnemies) break;
 
-                if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
+                float posX = startX + (i * _spacingBetweenEnemies);
+                Vector3 targetPosition = new Vector3(posX, currentTargetY, 0f);
+                Vector3 spawnPos = new Vector3(posX, currentOffScreenY, 0f);
+
+                GameObject selectedPrefab = rowPrefabsToSpawn[prefabIndex];
+                prefabIndex++;
+
+                if (selectedPrefab != null)
                 {
-                    enemyScript.SetupFormation(targetPosition);
-                    currentWaveEnemyScripts.Add(enemyScript);
-                }
-            }
+                    GameObject enemyObj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, container);
+                    _blockEnemies.Add(enemyObj);
 
-            yield return new WaitForSeconds(0.05f);
+                    if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
+                    {
+                        enemyScript.SetupFormation(targetPosition);
+                        currentWaveEnemyScripts.Add(enemyScript);
+                    }
+                }
+
+                yield return new WaitForSeconds(0.02f);
+            }
         }
 
         yield return new WaitForSeconds(1.5f); 
 
-        // 4. Creamos el bloque de formación pasándole el booleano de la onda de la oleada
+        // 4. Creamos el bloque de formación global que moverá a todos los enemigos como una unidad
         if (currentWaveEnemyScripts.Count > 0)
         {
             GameObject formationObj = new GameObject("WaveFormationBlock");
@@ -258,12 +181,9 @@ public class SpawnerEnemies : Spawner
                 }
             }
             
-            // Aquí pasamos el parámetro wave.useSineWave que configuraste en el WaveManager
             controller.Initialize(activeEnemiesForBlock, 2.5f, 7f, wave.useSineWave);
         }
     }
-
-
 
     private IEnumerator SpawnKamikazesOverTimeRoutine(int totalCount, float interval, int minBatch, int maxBatch)
     {

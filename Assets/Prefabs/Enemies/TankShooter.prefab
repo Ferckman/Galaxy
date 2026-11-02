@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8409003648034495450}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Fire_Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,8 @@ GameObject:
   - component: {fileID: -8538439939280276718}
   - component: {fileID: 7822400957671073955}
   - component: {fileID: 7025162025191703599}
-  m_Layer: 0
+  - component: {fileID: 4982223297995351155}
+  m_Layer: 9
   m_Name: TankShooter
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -369,7 +370,7 @@ MonoBehaviour:
   _damage: 60
   _score: 400
   _shouldDestroyOnPlayerHit: 1
-  _enemyBulletPrefab: {fileID: 2412712189689930603, guid: 45f2bd8c8ba20cc438be54cc1cc9c574, type: 3}
+  _enemyBulletPrefab: {fileID: 2412712189689930603, guid: 5a4e78238f9bbfc4d960dd20c546f760, type: 3}
   _firePoint: {fileID: 8409003648034495450}
   _fireRate: 2
   _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
@@ -379,6 +380,29 @@ MonoBehaviour:
   - {fileID: 724511469982859614, guid: 41caeb75911d1be4d9d038fbc4d1efdc, type: 3}
   - {fileID: 5220409471985605202, guid: dca54250a0a7521418dde29a4b1ce1b6, type: 3}
   - {fileID: 724511469982859614, guid: d5d7000cf9ce8474c9a78a86d8787afd, type: 3}
+  _animator: {fileID: 4982223297995351155}
+--- !u!95 &4982223297995351155
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914735942681161970}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0da5a8660d0be68438182ec5d473d621, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &5739540848504456077
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -450,6 +474,10 @@ PrefabInstance:
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Name
       value: Thruster (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -533,6 +561,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Thruster (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -614,6 +646,10 @@ PrefabInstance:
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Name
       value: Thruster
+      objectReference: {fileID: 0}
+    - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

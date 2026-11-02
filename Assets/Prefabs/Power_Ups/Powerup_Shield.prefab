@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a368e78168add44880ccab37b7f5e3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3
+  _speed: 4
   _pickupSound: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
   _type: Shield
 --- !u!60 &7649725188864586206

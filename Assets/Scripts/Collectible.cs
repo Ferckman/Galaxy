@@ -10,6 +10,7 @@ public abstract class Collectible : MonoBehaviour
         transform.Translate(_speed * Time.deltaTime * Vector3.down);
     }
 
+    // En tu Collectible.cs base
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -18,22 +19,26 @@ public abstract class Collectible : MonoBehaviour
             {
                 if (!player.IsDisabled)
                 {
-                    // Aplicamos el efecto específico de cada objeto hijo
-                    ApplyEffect(player);
-
-                    // Reproducimos sonido si existe
-                    if (_pickupSound != null && Camera.main != null)
+                    // Intentamos aplicar el efecto. Solo si devuelve true se destruye.
+                    if (ApplyEffect(player))
                     {
-                        AudioSource.PlayClipAtPoint(_pickupSound, Camera.main.transform.position, 1f);
-                    }
+                        // Reproducimos sonido si existe
+                        if (_pickupSound != null && Camera.main != null)
+                        {
+                            AudioSource.PlayClipAtPoint(_pickupSound, Camera.main.transform.position, 1f);
+                        }
 
-                    // Destrucción del objeto
-                    Destroy(gameObject);
+                        // Destrucción del objeto
+                        Destroy(gameObject);
+                    }
                 }
             }
         }
     }
 
-    // Método abstracto que cada tipo de objeto implementará a su manera
-    protected abstract void ApplyEffect(Player player);
+    // Cambiamos el tipo de retorno a bool en el base (por defecto devuelve true para otros coleccionables como PowerUps)
+    protected virtual bool ApplyEffect(Player player)
+    {
+        return true;
+    }
 }

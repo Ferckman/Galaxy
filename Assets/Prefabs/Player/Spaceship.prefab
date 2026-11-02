@@ -734,7 +734,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _laserPrefab: {fileID: 2412712189689930603, guid: 45f2bd8c8ba20cc438be54cc1cc9c574, type: 3}
-  _audioLaser: {fileID: 0}
   _canTripleShoot: 0
   _tripleShootDuration: 10
 --- !u!1 &5355299249700631904

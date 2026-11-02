@@ -69,6 +69,23 @@ public class MissileSpawner : MonoBehaviour
         Debug.Log("¡Munición recargada! Total: " + _currentMissileAmmo);
     }
 
+    public bool TryAddAmmo(int amount)
+    {
+        // Si ya estamos al máximo, no recogemos nada y devolvemos false
+        if (_currentMissileAmmo >= _maxMissileAmmo) 
+        {
+            return false; 
+        }
+
+        // Si no está al máximo, sumamos (sin pasarnos del límite) y devolvemos true
+        _currentMissileAmmo = Mathf.Min(_currentMissileAmmo + amount, _maxMissileAmmo);
+        
+        // Aquí actualizas tu UI de munición si la tienes...
+        //UpdateAmmoUI(); 
+
+        return true;
+    }
+
     private int FireMissileSalvoLogic(List<Transform> activeTargets)
     {
         if (_missilePrefab == null) return 0;

@@ -24,6 +24,8 @@ public class Enemy : MonoBehaviour
     [Header("Loot Drop Settings")]
     [SerializeField] private protected GameObject _missileAmmoPrefab;        // Prefab del power-up de munición
     [SerializeField] private GameObject[] _generalPowerUpPrefabs;   // Prefabs de power-ups (Triple, Speed, Shield)
+    
+    [SerializeField] private Animator _animator;
 
     private Vector3 _targetFormationPos;
     private bool _isMovingToFormation = false;
@@ -201,6 +203,16 @@ public class Enemy : MonoBehaviour
                 Debug.Log("instancie");
                 Instantiate(selectedPowerUp, transform.position, Quaternion.identity);
             }
+        }
+    }
+
+    public void SetFacingDirection(int direction)
+    {
+        Debug.Log("entro");
+        if (_animator != null)
+        {
+            Debug.Log("cambio direccion");
+            _animator.SetInteger("TurnDir", direction);
         }
     }
 

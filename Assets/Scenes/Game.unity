@@ -272,8 +272,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waves:
   - waveName: 1
-    normalEnemyCount: 0
-    tankEnemyCount: 0
+    rowCount: 3
+    normalEnemyCount: 6
+    tankEnemyCount: 2
     enableKamikazes: 1
     kamikazeCount: 10
     kamikazeSpawnInterval: 3
@@ -283,6 +284,7 @@ MonoBehaviour:
     spawnDroneCarrier: 0
     isBossWave: 0
   - waveName: 2
+    rowCount: 2
     normalEnemyCount: 3
     tankEnemyCount: 2
     enableKamikazes: 1
@@ -294,6 +296,7 @@ MonoBehaviour:
     spawnDroneCarrier: 0
     isBossWave: 0
   - waveName: 3
+    rowCount: 2
     normalEnemyCount: 6
     tankEnemyCount: 2
     enableKamikazes: 1
@@ -305,6 +308,7 @@ MonoBehaviour:
     spawnDroneCarrier: 0
     isBossWave: 0
   - waveName: 4
+    rowCount: 2
     normalEnemyCount: 8
     tankEnemyCount: 2
     enableKamikazes: 1

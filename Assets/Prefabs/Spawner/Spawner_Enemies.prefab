@@ -55,3 +55,4 @@ MonoBehaviour:
   _warningIndicatorPrefab: {fileID: 7221447311367440422, guid: 297116ad00b6b8d4ea7724a37b288698, type: 3}
   _rowSpawnY: 4
   _spacingBetweenEnemies: 2.5
+  _rowSpacingY: 2.5

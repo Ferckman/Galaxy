@@ -10,7 +10,9 @@ public class WaveManager : MonoBehaviour
         [Header("Información General")]
         public string waveName = "Oleada 1";
 
-        [Header("1. Composición del Bloque (Fila)")]
+        [Header("1. Composición del Bloque (Filas y Columnas)")]
+        [Tooltip("Número de filas en las que se distribuirán los enemigos del bloque.")]
+        public int rowCount = 2; // <--- NUEVO: Por defecto 2 filas
         [Tooltip("Cantidad de enemigos comunes en el bloque.")]
         public int normalEnemyCount = 6;
         [Tooltip("Cantidad de enemigos Tanque (más vida, disparo lento) en el bloque.")]
