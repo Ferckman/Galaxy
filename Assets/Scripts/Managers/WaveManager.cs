@@ -25,6 +25,14 @@ public class WaveManager : MonoBehaviour
         public int minKamikazesPerSpawn = 1;
         public int maxKamikazesPerSpawn = 1;
 
+        [Header("Configuración de Asteroides")]
+        public bool enableAsteroids = false;
+        public int asteroidCount = 4;
+        public float asteroidSpawnInterval = 5f;
+        [Tooltip("Tamaño mínimo y máximo aleatorio para los asteroides de esta oleada.")]
+        public float minAsteroidScale = 0.6f;
+        public float maxAsteroidScale = 1.8f;
+
         [Header("3. Patrón de Movimiento del Bloque")]
         [Tooltip("Si está activo, el bloque se moverá haciendo una onda senoidal vertical mientras va de lado a lado.")]
         public bool useSineWave = false;

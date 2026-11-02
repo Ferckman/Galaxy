@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1032245561
   m_SortingLayer: 2
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7e746fd3d2a905742a25795578cc4468, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -115,6 +115,7 @@ MonoBehaviour:
   _generalPowerUpPrefabs:
   - {fileID: 5220409471985605202, guid: dca54250a0a7521418dde29a4b1ce1b6, type: 3}
   - {fileID: 724511469982859614, guid: d5d7000cf9ce8474c9a78a86d8787afd, type: 3}
+  _animator: {fileID: 0}
   _explosionScaleMultiplier: 1.5
   _diveSpeed: 20
 --- !u!60 &5402265300397123139

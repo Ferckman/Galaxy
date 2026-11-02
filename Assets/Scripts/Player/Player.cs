@@ -153,15 +153,19 @@ public class Player : MonoBehaviour
 
     private void Movement()
     {
-        if(!_disabled)
+        if (!_disabled)
         {
-            float horizontalInput = Input.GetAxis("Horizontal");
-            float verticalInput = Input.GetAxis("Vertical");
+            // Usamos GetAxisRaw para eliminar cualquier inercia o retraso artificial de Unity
+            float horizontalInput = Input.GetAxisRaw("Horizontal");
+            float verticalInput = Input.GetAxisRaw("Vertical");
 
             Vector3 direction = new Vector3(horizontalInput, verticalInput, 0f);
             transform.Translate(_speed * Time.deltaTime * direction);
 
-            if (_playerAnimation != null) _playerAnimation.UpdateAnimation(horizontalInput);
+            if (_playerAnimation != null) 
+            {
+                _playerAnimation.UpdateAnimation(horizontalInput);
+            }
         }
     }
 

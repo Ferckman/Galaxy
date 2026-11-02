@@ -12,6 +12,9 @@ public class SpawnerEnemies : Spawner
     [SerializeField] private GameObject _kamikazePrefab;       
     [SerializeField] private GameObject _warningIndicatorPrefab;
 
+    [Header("Asteroid Prefabs")]
+    [SerializeField] private GameObject _asteroidPrefab;
+
     [Header("Formation Settings")]
     [SerializeField] private float _rowSpawnY;              
     [SerializeField] private float _spacingBetweenEnemies; 
@@ -19,6 +22,7 @@ public class SpawnerEnemies : Spawner
 
     private List<GameObject> _blockEnemies = new List<GameObject>();
     private List<GameObject> _kamikazeEnemies = new List<GameObject>();
+    private List<GameObject> _asteroidEnemies = new List<GameObject>();
 
     private bool _isWaveSpawningInProgress = false;
     private int _kamikazesRemainingToSpawn = 0;
@@ -60,6 +64,11 @@ public class SpawnerEnemies : Spawner
         {
             _isWaveSpawningInProgress = false;
             _kamikazesRemainingToSpawn = 0;
+        }
+
+        if (wave.enableAsteroids && wave.asteroidCount > 0)
+        {
+            StartCoroutine(SpawnAsteroidsRoutine(wave));
         }
 
         // 3. Esperamos a que terminen de salir todos los kamikazes programados
@@ -290,11 +299,61 @@ public class SpawnerEnemies : Spawner
         _isWaveSpawningInProgress = false; 
     }
 
+    private IEnumerator SpawnAsteroidsRoutine(WaveManager.Wave wave)
+    {
+        if (_asteroidPrefab == null) yield break;
+
+        Camera cam = Camera.main;
+        if (cam == null) yield break;
+
+        float spawnY = cam.orthographicSize + 2.0f;
+        Vector3 leftLimit = cam.ViewportToWorldPoint(new Vector3(0f, 0f, cam.nearClipPlane));
+        Vector3 rightLimit = cam.ViewportToWorldPoint(new Vector3(1f, 0f, cam.nearClipPlane));
+        float margin = 1.5f;
+
+        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
+
+        yield return new WaitForSeconds(1.0f);
+
+        int spawnedAsteroids = 0;
+        while (spawnedAsteroids < wave.asteroidCount)
+        {
+            float randomX = Random.Range(leftLimit.x + margin, rightLimit.x - margin);
+            Vector3 spawnPos = new Vector3(randomX, spawnY, 0f);
+
+            GameObject asteroidObj = Instantiate(_asteroidPrefab, spawnPos, Quaternion.identity, container);
+
+            // ==========================================
+            // 👇 AQUÍ ESTÁ EL CAMBIO CLAVE QUE FALTABA 👇
+            // ==========================================
+            if (asteroidObj != null)
+            {
+                _asteroidEnemies.Add(asteroidObj);
+            }
+            // ==========================================
+
+            if (asteroidObj.TryGetComponent<Asteroid>(out Asteroid asteroidScript))
+            {
+                // Asignamos un tamaño aleatorio dentro del rango de la oleada
+                float randomScale = Random.Range(wave.minAsteroidScale, wave.maxAsteroidScale);
+                asteroidScript.Initialize(randomScale);
+            }
+
+            spawnedAsteroids++;
+
+            if (spawnedAsteroids < wave.asteroidCount)
+            {
+                yield return new WaitForSeconds(wave.asteroidSpawnInterval);
+            }
+        }
+    }
+
     public int GetActiveEnemyCount()
     {
         _blockEnemies.RemoveAll(enemy => enemy == null);
         _kamikazeEnemies.RemoveAll(enemy => enemy == null);
+        _asteroidEnemies.RemoveAll(enemy => enemy == null); // <--- NUEVO
         
-        return _blockEnemies.Count + _kamikazeEnemies.Count;
+        return _blockEnemies.Count + _kamikazeEnemies.Count + _asteroidEnemies.Count; // <--- INCLUIDO EN LA SUMA
     }
 }

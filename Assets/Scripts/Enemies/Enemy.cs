@@ -200,7 +200,6 @@ public class Enemy : MonoBehaviour
 
             if (selectedPowerUp != null)
             {
-                Debug.Log("instancie");
                 Instantiate(selectedPowerUp, transform.position, Quaternion.identity);
             }
         }
@@ -208,10 +207,8 @@ public class Enemy : MonoBehaviour
 
     public void SetFacingDirection(int direction)
     {
-        Debug.Log("entro");
         if (_animator != null)
         {
-            Debug.Log("cambio direccion");
             _animator.SetInteger("TurnDir", direction);
         }
     }

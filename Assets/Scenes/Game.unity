@@ -273,13 +273,18 @@ MonoBehaviour:
   _waves:
   - waveName: 1
     rowCount: 3
-    normalEnemyCount: 6
-    tankEnemyCount: 2
-    enableKamikazes: 1
+    normalEnemyCount: 10
+    tankEnemyCount: 0
+    enableKamikazes: 0
     kamikazeCount: 10
     kamikazeSpawnInterval: 3
     minKamikazesPerSpawn: 1
     maxKamikazesPerSpawn: 2
+    enableAsteroids: 1
+    asteroidCount: 14
+    asteroidSpawnInterval: 5
+    minAsteroidScale: 0.6
+    maxAsteroidScale: 1.8
     useSineWave: 0
     spawnDroneCarrier: 0
     isBossWave: 0
@@ -292,6 +297,11 @@ MonoBehaviour:
     kamikazeSpawnInterval: 0
     minKamikazesPerSpawn: 1
     maxKamikazesPerSpawn: 1
+    enableAsteroids: 0
+    asteroidCount: 4
+    asteroidSpawnInterval: 5
+    minAsteroidScale: 0.6
+    maxAsteroidScale: 1.8
     useSineWave: 1
     spawnDroneCarrier: 0
     isBossWave: 0
@@ -304,6 +314,11 @@ MonoBehaviour:
     kamikazeSpawnInterval: 0
     minKamikazesPerSpawn: 1
     maxKamikazesPerSpawn: 2
+    enableAsteroids: 0
+    asteroidCount: 4
+    asteroidSpawnInterval: 5
+    minAsteroidScale: 0.6
+    maxAsteroidScale: 1.8
     useSineWave: 1
     spawnDroneCarrier: 0
     isBossWave: 0
@@ -316,6 +331,11 @@ MonoBehaviour:
     kamikazeSpawnInterval: 4
     minKamikazesPerSpawn: 1
     maxKamikazesPerSpawn: 3
+    enableAsteroids: 0
+    asteroidCount: 4
+    asteroidSpawnInterval: 5
+    minAsteroidScale: 0.6
+    maxAsteroidScale: 1.8
     useSineWave: 1
     spawnDroneCarrier: 0
     isBossWave: 0

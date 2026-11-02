@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d440fbda70a7a7842adc16b9190b6ca1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _anim: {fileID: 0}
+  _anim: {fileID: 4000258144191624199}
 --- !u!60 &6348546687382737829
 PolygonCollider2D:
   m_ObjectHideFlags: 0
