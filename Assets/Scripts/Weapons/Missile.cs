@@ -112,20 +112,48 @@ public class Missile : Shots
         _rb.velocity = (Vector2)(transform.up * _speed);
     }
 
+/*
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Aquí se delegaría en un sistema de impactos/daño (Eventos o IDamageable)
-        TerminateMissile();
+        //TerminateMissile();
     }
+    */
+/*
+    private void TerminateMissile()
+    {
+        // 1. Buscamos el TrailRenderer en los objetos hijos
+        TrailRenderer trail = GetComponentInChildren<TrailRenderer>();
+        
+        if (trail != null)
+        {
+            // Desvinculamos la estela del misil para que pase a la raíz de la escena
+            trail.transform.SetParent(null);
+            
+            // Destruimos el objeto de la estela exactamente cuando termine su tiempo de vida (trail.time)
+            Destroy(trail.gameObject, trail.time);
+        }
+
+        // 2. Destruimos el misil original al instante
+        Destroy(gameObject);
+    }*/
 
     private void TerminateMissile()
     {
-        // Punto centralizado de destrucción para futuras implementaciones de Object Pooling
+        // Buscamos el componente de fundido en los hijos
+        FadeOutTrail fadeTrail = GetComponentInChildren<FadeOutTrail>();
+        if (fadeTrail != null)
+        {
+            fadeTrail.BeginFade(); // Activa el desvanecimiento global
+        }
+
+        // Destruimos el misil original al instante
         Destroy(gameObject);
     }
 
     private void OnDestroy()
     {
+        TerminateMissile();
         // MUY IMPORTANTE: Cuando el misil impacta o se destruye, borramos la retícula del enemigo
         if (_spawnedReticle != null) Destroy(_spawnedReticle);
     }
