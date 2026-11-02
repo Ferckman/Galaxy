@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class Asteroid : Entity
 {
-    [SerializeField] private float _speed = 2f;
+    [SerializeField] private float _speed;
+    [SerializeField] private GameObject _crystalPrefab;
     private Vector3 _moveDirection;
 
     public void Initialize(float scale)
@@ -66,6 +67,6 @@ public class Asteroid : Entity
 
     protected override void DropLoot()
     {
-        
+        if (_crystalPrefab != null) Instantiate(_crystalPrefab, transform.position, Quaternion.identity);
     }
 }

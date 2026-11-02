@@ -160,6 +160,7 @@ MonoBehaviour:
   _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _shouldDestroyOnPlayerHit: 1
   _speed: 2
+  _crystalPrefab: {fileID: 1216068580844279988, guid: 8ecf105894904964d91b4b6ed3419ee0, type: 3}
 --- !u!60 &2359420878414477104
 PolygonCollider2D:
   m_ObjectHideFlags: 0
