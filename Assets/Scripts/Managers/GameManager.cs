@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
 
         if (element.CompareTag("Enemy")) targetSpawner = _spawnerEnemies;
         else if (element.CompareTag("Collectible")) targetSpawner = _spawnerPowerups;
-        else if (element.CompareTag("Asteroid")) targetSpawner = _spawnerAsteroids;
+        //else if (element.CompareTag("Asteroid")) targetSpawner = _spawnerAsteroids;
 
         if (targetSpawner != null) targetSpawner.DestroyConcreteObstacle(element);
     }

@@ -162,13 +162,13 @@ public class MissileSpawner : MonoBehaviour
     private List<Transform> FindActiveTargets()
     {
         List<Transform> validTargets = new List<Transform>();
-        Enemy[] foundEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+        Entity[] foundEntities = FindObjectsByType<Entity>(FindObjectsSortMode.None);
 
-        foreach (Enemy enemy in foundEnemies)
+        foreach (Entity entity in foundEntities)
         {
-            if (enemy != null && enemy.gameObject.activeInHierarchy)
+            if (entity != null && entity.gameObject.activeInHierarchy)
             {
-                validTargets.Add(enemy.transform);
+                validTargets.Add(entity.transform);
             }
         }
 

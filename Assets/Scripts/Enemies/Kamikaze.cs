@@ -8,7 +8,7 @@ public class Kamikaze : Enemy
 
     private bool _isDiving = true; // Nace y desciende directamente al terreno de juego
 
-    private void Update()
+    protected override void Update()
     {
         // En lugar de quedarse esperando en una formación, el kamikaze se lanza en picado vertical
         if (_isDiving)

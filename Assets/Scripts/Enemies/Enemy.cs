@@ -2,21 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Entity
 {
-    [Header("Enemy Stats")]
-    [SerializeField] private int _health;
-    [SerializeField] private int _damage;
-    [SerializeField] private int _score;
-    [SerializeField] private bool _shouldDestroyOnPlayerHit = true;
-
     [Header("Combat & Shooting")]
     [SerializeField] private GameObject _enemyBulletPrefab;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private float _fireRate = 2f;
-
-    [Header("Visuals & Effects")]
-    [SerializeField] private protected GameObject _explosionPrefab;
 
     [Header("Movement & Formation")]
     [SerializeField] private float _formationSpeed = 5f;
@@ -31,22 +22,14 @@ public class Enemy : MonoBehaviour
     private bool _isMovingToFormation = false;
     private bool _isCombatActive = false;
 
-    // Referencias a controladores (puedes adaptarlas a tu GameManager/UIManager existente)
-    protected GameManager _gameManager;
-    protected UIManager _uiManager;
-
-    protected virtual bool ShouldDestroyOnPlayerHit => _shouldDestroyOnPlayerHit;
-
-    private void Start()
+    // Obligatorio por heredar de Entity, aunque el enemigo use su propia lógica de formación
+    protected override void Movement()
     {
-        _gameManager = FindFirstObjectByType<GameManager>();
-        _uiManager = FindFirstObjectByType<UIManager>();
-        
-        // ¡OJO! Ya no ponemos StartCoroutine(ShootRoutine()) aquí, 
-        // porque queremos que esperen a estar formados.
+        // El movimiento del enemigo se gestiona mediante _isMovingToFormation 
+        // y el FormationController externo. Lo dejamos vacío o implementamos lo que necesites.
     }
 
-    private void Update()
+    protected override void Update()
     {
         // FASE 1: Descenso inicial desde arriba hasta la posición de la fila
         if (_isMovingToFormation)
@@ -118,62 +101,8 @@ public class Enemy : MonoBehaviour
         // Si en el futuro quieres añadir movimiento de ataque en zig-zag o persecución, va aquí.
     }
 
-    protected virtual void CheckBounds()
-    {
-        Camera cam = Camera.main;
-        if (cam == null) return;
-
-        float screenHeight = cam.orthographicSize;
-        float screenWidth = cam.orthographicSize * cam.aspect;
-        float margin = 5.0f; 
-
-        if (transform.position.y < (-screenHeight - margin) || 
-            transform.position.y > (screenHeight + margin) || 
-            transform.position.x < (-screenWidth - margin) || 
-            transform.position.x > (screenWidth + margin))
-        {
-            if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
-            Destroy(gameObject);
-        }
-    }
-
-    public virtual void IncreaseScore()
-    {
-        if (_uiManager != null) _uiManager.UpdateScore(_score);
-    }
-
-    public virtual void DestroyMyself()
-    {
-        SpawnExplosion();
-
-        if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
-
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
-        enabled = false;
-
-        Destroy(gameObject);
-    }
-
-    protected virtual void SpawnExplosion()
-    {
-        if (_explosionPrefab != null) 
-        {
-            // Añadimos un pequeño desfase aleatorio en el eje Z (-0.1f a -0.5f) 
-            // para que una explosión siempre esté matemáticamente "delante" de la otra.
-            Vector3 explosionPos = transform.position + new Vector3(0f, 0f, Random.Range(-0.1f, -0.5f));
-            
-            GameObject explosion = Instantiate(_explosionPrefab, explosionPos, Quaternion.identity);
-
-            // OPCIONAL EXTRA: Si tu explosión usa un SpriteRenderer, puedes forzar 
-            // un Order in Layer dinámico para evitar parpadeos de orden.
-            if (explosion.TryGetComponent<SpriteRenderer>(out SpriteRenderer sr)) sr.sortingOrder = 10; // Ponlo por encima de los enemigos normales
-            DropLoot();
-        }
-    }
-
     // Marcamos el método como virtual para permitir polimorfismo
-    protected virtual void DropLoot()
+    protected override void DropLoot()
     {
         float roll = Random.Range(0f, 100f);
 
@@ -212,7 +141,8 @@ public class Enemy : MonoBehaviour
             _animator.SetInteger("TurnDir", direction);
         }
     }
-
+}
+/*
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -249,4 +179,4 @@ public class Enemy : MonoBehaviour
             //DestroyMyself();
         }
     }
-}
+    */
