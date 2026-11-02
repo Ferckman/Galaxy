@@ -303,14 +303,6 @@ public class SpawnerEnemies : Spawner
     {
         if (_asteroidPrefab == null) yield break;
 
-        Camera cam = Camera.main;
-        if (cam == null) yield break;
-
-        float spawnY = cam.orthographicSize + 2.0f;
-        Vector3 leftLimit = cam.ViewportToWorldPoint(new Vector3(0f, 0f, cam.nearClipPlane));
-        Vector3 rightLimit = cam.ViewportToWorldPoint(new Vector3(1f, 0f, cam.nearClipPlane));
-        float margin = 1.5f;
-
         Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
 
         yield return new WaitForSeconds(1.0f);
@@ -318,23 +310,16 @@ public class SpawnerEnemies : Spawner
         int spawnedAsteroids = 0;
         while (spawnedAsteroids < wave.asteroidCount)
         {
-            float randomX = Random.Range(leftLimit.x + margin, rightLimit.x - margin);
-            Vector3 spawnPos = new Vector3(randomX, spawnY, 0f);
+            // Lo instanciamos en Vector3.zero; el propio asteroide se colocará en su borde aleatorio al inicializarse
+            GameObject asteroidObj = Instantiate(_asteroidPrefab, Vector3.zero, Quaternion.identity, container);
 
-            GameObject asteroidObj = Instantiate(_asteroidPrefab, spawnPos, Quaternion.identity, container);
-
-            // ==========================================
-            // 👇 AQUÍ ESTÁ EL CAMBIO CLAVE QUE FALTABA 👇
-            // ==========================================
             if (asteroidObj != null)
             {
                 _asteroidEnemies.Add(asteroidObj);
             }
-            // ==========================================
 
             if (asteroidObj.TryGetComponent<Asteroid>(out Asteroid asteroidScript))
             {
-                // Asignamos un tamaño aleatorio dentro del rango de la oleada
                 float randomScale = Random.Range(wave.minAsteroidScale, wave.maxAsteroidScale);
                 asteroidScript.Initialize(randomScale);
             }

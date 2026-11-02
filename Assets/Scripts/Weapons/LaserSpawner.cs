@@ -80,7 +80,11 @@ public class LaserSpawner : MonoBehaviour
 
     private void SpawnSingleLaser(Transform spawnPoint, Collider2D playerCollider)
     {
-        GameObject laserInstance = Instantiate(_laserPrefab, spawnPoint.position, spawnPoint.rotation);
+        // Buscamos el contenedor de proyectiles (puedes usar BulletsContainer o un contenedor específico)
+        Transform lasersContainer = LasersContainer.Instance != null ? LasersContainer.Instance.transform : null;
+
+        // Instanciamos el láser pasando el contenedor como cuarto parámetro para que nazca ordenado
+        GameObject laserInstance = Instantiate(_laserPrefab, spawnPoint.position, spawnPoint.rotation, lasersContainer);
         
         if (laserInstance.TryGetComponent<Laser>(out Laser laserScript))
         {

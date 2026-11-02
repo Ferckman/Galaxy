@@ -547,11 +547,11 @@ MonoBehaviour:
   _health: 50
   _damage: 20
   _score: 100
+  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _shouldDestroyOnPlayerHit: 1
-  _enemyBulletPrefab: {fileID: 2412712189689930603, guid: 5a4e78238f9bbfc4d960dd20c546f760, type: 3}
+  _enemyLaserPrefab: {fileID: 2412712189689930603, guid: 5a4e78238f9bbfc4d960dd20c546f760, type: 3}
   _firePoint: {fileID: 8409003648034495450}
   _fireRate: 2
-  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _formationSpeed: 5
   _missileAmmoPrefab: {fileID: 5220409471985605202, guid: 6d7d32bf6ef37994799d5b63925c1a6f, type: 3}
   _generalPowerUpPrefabs:
@@ -647,7 +647,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_SortingOrder
-      value: -2
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Name
@@ -733,7 +733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_SortingOrder
-      value: -2
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Name
@@ -819,7 +819,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_SortingOrder
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Name

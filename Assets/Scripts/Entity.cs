@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public abstract class Entity : MonoBehaviour
 {
@@ -55,14 +56,27 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void DestroyMyself()
     {
+        // 1. Spawneamos la explosión al instante para que aparezca ya mismo
         SpawnExplosion();
 
         if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
 
+        // 2. Desactivamos el colisionador y el script para que deje de disparar o moverse
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
         enabled = false;
 
+        // 3. En lugar de destruir al instante, iniciamos una corrutina para mantener 
+        // la nave visible unos milisegundos mientras la explosión ya está reproduciéndose encima.
+        StartCoroutine(DelayedDestroyRoutine(0.15f)); // Puedes ajustar este tiempo (ej. 0.15s o 0.2s)
+    }
+
+    private IEnumerator DelayedDestroyRoutine(float delay)
+    {
+        // Esperamos el tiempo indicado manteniendo la nave en pantalla junto a la explosión
+        yield return new WaitForSeconds(delay);
+
+        // Ahora sí, eliminamos el objeto por completo
         Destroy(gameObject);
     }
 
@@ -116,9 +130,11 @@ public abstract class Entity : MonoBehaviour
 
             Destroy(other.gameObject);
         }
+        /*
         else if (other.TryGetComponent<Kamikaze>(out var kamikaze))
         {
             //DestroyMyself();
         }
+        */
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : Entity
 {
     [Header("Combat & Shooting")]
-    [SerializeField] private GameObject _enemyBulletPrefab;
+    [SerializeField] private GameObject _enemyLaserPrefab;
     [SerializeField] private Transform _firePoint;
     [SerializeField] private float _fireRate = 2f;
 
@@ -79,13 +79,17 @@ public class Enemy : Entity
         // Pequeño retardo aleatorio inicial para que no disparen todos milimétricamente a la vez
         yield return new WaitForSeconds(Random.Range(0.5f, 1.5f));
 
+        // Buscamos el contenedor de proyectiles (puedes crear un LasersContainer singleton idéntico al de los enemigos)
+        Transform lasersContainer = LasersContainer.Instance != null ? LasersContainer.Instance.transform : null;
+
         while (_isCombatActive && enabled)
         {
-            if (_enemyBulletPrefab != null)
+            if (_enemyLaserPrefab != null)
             {
                 Vector3 spawnPos = _firePoint != null ? _firePoint.position : transform.position;
                 
-                GameObject bullet = Instantiate(_enemyBulletPrefab, spawnPos, Quaternion.identity);
+                // Instanciamos el láser asignándole directamente el contenedor como padre (cuarto parámetro)
+                GameObject bullet = Instantiate(_enemyLaserPrefab, spawnPos, Quaternion.identity, lasersContainer);
                 
                 Laser laserScript = bullet.GetComponent<Laser>();
                 
@@ -142,41 +146,3 @@ public class Enemy : Entity
         }
     }
 }
-/*
-    protected virtual void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            if (other.TryGetComponent<Player>(out var player))
-            {
-                if (!player.IsDisabled)
-                {
-                    player.GetDamage(_damage);
-                    if (ShouldDestroyOnPlayerHit)
-                    {
-                        DestroyMyself();
-                        IncreaseScore();
-                    }
-                }
-            }
-        }
-        else if (other.CompareTag("Shots"))
-        {
-            if (other.TryGetComponent<Shots>(out var shot))
-            {
-                _health -= shot.Damage;
-                if (_health <= 0)
-                {
-                    DestroyMyself();
-                    IncreaseScore();
-                }
-            }
-
-            Destroy(other.gameObject);
-        }
-        else if (other.TryGetComponent<Kamikaze>(out var kamikaze))
-        {
-            //DestroyMyself();
-        }
-    }
-    */

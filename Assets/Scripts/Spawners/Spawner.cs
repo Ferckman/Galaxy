@@ -32,27 +32,4 @@ public abstract class Spawner : MonoBehaviour
         }
         list.Clear();
     }
-
-    /*public Transform LookForNearest(Transform target)
-    {
-        if (target == null || list == null || list.Count == 0) return null;
-
-        Transform trans = null;
-        float distNearest = Mathf.Infinity;
-
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i] == null) continue;
-
-            float distance = Vector3.Distance(list[i].transform.position, target.position);
-            if (distance < distNearest)
-            {
-                trans = list[i].transform;
-                distNearest = distance;
-            }
-        }
-        
-        return trans;
-    }
-    */
 }

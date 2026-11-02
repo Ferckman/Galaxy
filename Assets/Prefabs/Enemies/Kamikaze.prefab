@@ -78,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1032245561
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: -4
   m_Sprite: {fileID: 21300000, guid: 7e746fd3d2a905742a25795578cc4468, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -102,14 +102,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c26265ecf208756438a4c23cb5455cef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 400
-  _damage: 100
+  _health: 500
+  _damage: 200
   _score: 2000
+  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _shouldDestroyOnPlayerHit: 1
-  _enemyBulletPrefab: {fileID: 0}
+  _enemyLaserPrefab: {fileID: 0}
   _firePoint: {fileID: 0}
   _fireRate: 2
-  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _formationSpeed: 5
   _missileAmmoPrefab: {fileID: 5220409471985605202, guid: 6d7d32bf6ef37994799d5b63925c1a6f, type: 3}
   _generalPowerUpPrefabs:
@@ -409,7 +409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_SortingOrder
-      value: -1
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Name
@@ -495,7 +495,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_SortingOrder
-      value: -1
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Name
@@ -581,7 +581,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5869636383916087229, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_SortingOrder
-      value: -1
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Name

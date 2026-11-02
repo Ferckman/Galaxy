@@ -60,22 +60,4 @@ public class Kamikaze : Enemy
             SpawnRandomGeneralPowerUp();
         }
     }
-
-    protected override void OnTriggerEnter2D(Collider2D other)
-    {
-        /*
-        // Regla específica para ignorar colisiones con otros obstáculos que no sea él mismo
-        if (other.TryGetComponent<Obstacles>(out var obstacle))
-        {
-            if (obstacle.gameObject != this.gameObject)
-            {
-                return;
-            }
-        }
-        */
-
-
-
-        base.OnTriggerEnter2D(other);
-    }
 }

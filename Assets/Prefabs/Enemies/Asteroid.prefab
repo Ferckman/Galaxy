@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1032245561
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: -3
   m_Sprite: {fileID: 21300000, guid: 6691643d9d08ede40bc93504dc8acb2e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -154,9 +154,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feecdc2f1f4ad04429290156555699e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 2
+  _health: 100
+  _damage: 50
+  _score: 20
   _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _shouldDestroyOnPlayerHit: 1
+  _speed: 2
 --- !u!60 &2359420878414477104
 PolygonCollider2D:
   m_ObjectHideFlags: 0

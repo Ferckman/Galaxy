@@ -22,10 +22,12 @@ public class PowerUp : Collectible
                 
             case "Shield":
                 // Si ya tiene el escudo activo, quizás no quieras que gaste el power-up:
+                /*
                 if (player.ShieldActivated)
                 {
                     return false; // El power-up se queda en el suelo porque ya tiene escudo
                 }
+                */
                 player.ShieldActivated = true;
                 player.ShieldPowerupOn();
                 break;
