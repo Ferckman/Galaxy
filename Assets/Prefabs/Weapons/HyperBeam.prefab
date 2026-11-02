@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6686784237724184116}
   - component: {fileID: 8459617718088307116}
   m_Layer: 0
-  m_Name: Hyperlaser
+  m_Name: HyperBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
