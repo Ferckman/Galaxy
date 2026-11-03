@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
     private MissileSpawner _missileSpawner;
     private LaserSpawner _laserSpawner;
+    private HyperBeamController _hyperBeamController;
 
     private void Awake()
     {
@@ -64,6 +65,7 @@ public class Player : MonoBehaviour
 
         _missileSpawner = GetComponent<MissileSpawner>();
         _laserSpawner = GetComponent<LaserSpawner>();
+        _hyperBeamController = GetComponent<HyperBeamController>();
         
         if (_missileSpawner == null) Debug.LogError("Falta el componente MissileSpawner en el Player.", this);
 
@@ -81,7 +83,7 @@ public class Player : MonoBehaviour
 
     private void ResetValues()
     {
-        _health = 100;
+        _health = 200;
         _speed = 8;
         _shieldActivated = false;
         _canTripleShoot = false;
@@ -196,6 +198,10 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(1))
         {
             if (_missileSpawner != null) _missileSpawner.TryFireSalvo();
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _hyperBeamController.TryFireHyperBeam();
         }
     }
 

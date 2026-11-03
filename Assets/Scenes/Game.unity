@@ -273,8 +273,8 @@ MonoBehaviour:
   _waves:
   - waveName: 1
     rowCount: 3
-    normalEnemyCount: 10
-    tankEnemyCount: 0
+    normalEnemyCount: 12
+    tankEnemyCount: 3
     enableKamikazes: 1
     kamikazeCount: 20
     kamikazeSpawnInterval: 2
@@ -288,55 +288,89 @@ MonoBehaviour:
     useSineWave: 0
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 2
-    rowCount: 2
-    normalEnemyCount: 3
-    tankEnemyCount: 2
+  - waveName: 1
+    rowCount: 3
+    normalEnemyCount: 12
+    tankEnemyCount: 3
     enableKamikazes: 1
-    kamikazeCount: 1
-    kamikazeSpawnInterval: 0
-    minKamikazesPerSpawn: 1
-    maxKamikazesPerSpawn: 1
-    enableAsteroids: 0
-    asteroidCount: 4
-    asteroidSpawnInterval: 5
-    minAsteroidScale: 0.6
-    maxAsteroidScale: 1.8
-    useSineWave: 1
-    spawnDroneCarrier: 0
-    isBossWave: 0
-  - waveName: 3
-    rowCount: 2
-    normalEnemyCount: 6
-    tankEnemyCount: 2
-    enableKamikazes: 1
-    kamikazeCount: 6
-    kamikazeSpawnInterval: 0
+    kamikazeCount: 20
+    kamikazeSpawnInterval: 2
     minKamikazesPerSpawn: 1
     maxKamikazesPerSpawn: 2
-    enableAsteroids: 0
-    asteroidCount: 4
-    asteroidSpawnInterval: 5
+    enableAsteroids: 1
+    asteroidCount: 14
+    asteroidSpawnInterval: 2
     minAsteroidScale: 0.6
     maxAsteroidScale: 1.8
-    useSineWave: 1
+    useSineWave: 0
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 4
-    rowCount: 2
-    normalEnemyCount: 8
-    tankEnemyCount: 2
+  - waveName: 1
+    rowCount: 3
+    normalEnemyCount: 12
+    tankEnemyCount: 3
     enableKamikazes: 1
-    kamikazeCount: 10
-    kamikazeSpawnInterval: 4
+    kamikazeCount: 20
+    kamikazeSpawnInterval: 2
     minKamikazesPerSpawn: 1
-    maxKamikazesPerSpawn: 3
-    enableAsteroids: 0
-    asteroidCount: 4
-    asteroidSpawnInterval: 5
+    maxKamikazesPerSpawn: 2
+    enableAsteroids: 1
+    asteroidCount: 14
+    asteroidSpawnInterval: 2
     minAsteroidScale: 0.6
     maxAsteroidScale: 1.8
-    useSineWave: 1
+    useSineWave: 0
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 1
+    rowCount: 3
+    normalEnemyCount: 12
+    tankEnemyCount: 3
+    enableKamikazes: 1
+    kamikazeCount: 20
+    kamikazeSpawnInterval: 2
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 2
+    enableAsteroids: 1
+    asteroidCount: 14
+    asteroidSpawnInterval: 2
+    minAsteroidScale: 0.6
+    maxAsteroidScale: 1.8
+    useSineWave: 0
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 1
+    rowCount: 3
+    normalEnemyCount: 12
+    tankEnemyCount: 3
+    enableKamikazes: 1
+    kamikazeCount: 20
+    kamikazeSpawnInterval: 2
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 2
+    enableAsteroids: 1
+    asteroidCount: 14
+    asteroidSpawnInterval: 2
+    minAsteroidScale: 0.6
+    maxAsteroidScale: 1.8
+    useSineWave: 0
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 1
+    rowCount: 3
+    normalEnemyCount: 12
+    tankEnemyCount: 3
+    enableKamikazes: 1
+    kamikazeCount: 20
+    kamikazeSpawnInterval: 2
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 2
+    enableAsteroids: 1
+    asteroidCount: 14
+    asteroidSpawnInterval: 2
+    minAsteroidScale: 0.6
+    maxAsteroidScale: 1.8
+    useSineWave: 0
     spawnDroneCarrier: 0
     isBossWave: 0
   _enemySpawnerPrefab: {fileID: 6385797332734183782, guid: 85c908d0913cadc4ea810afe1a1fbdbf, type: 3}
@@ -421,6 +455,10 @@ PrefabInstance:
     - target: {fileID: 2746898132733632424, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
       propertyPath: m_Name
       value: LimitShotsPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 2746898132733632424, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2746898132733632424, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
       propertyPath: m_IsActive
@@ -2005,6 +2043,10 @@ PrefabInstance:
     - target: {fileID: 2746898132733632424, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
       propertyPath: m_Name
       value: Limit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2746898132733632424, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2746898132733632424, guid: 3a8a83bbe7c27144b88ceb326e81432c, type: 3}
       propertyPath: m_IsActive

@@ -120,6 +120,7 @@ public abstract class Entity : MonoBehaviour
         {
             if (other.TryGetComponent<Shots>(out var shot))
             {
+                Debug.Log("shoot");
                 _health -= shot.Damage;
                 if (_health <= 0)
                 {
@@ -127,8 +128,8 @@ public abstract class Entity : MonoBehaviour
                     IncreaseScore();
                 }
             }
-
-            Destroy(other.gameObject);
+            if (!other.TryGetComponent<HyperBeam>(out var hyperBam))
+                Destroy(other.gameObject);
         }
         /*
         else if (other.TryGetComponent<Kamikaze>(out var kamikaze))
