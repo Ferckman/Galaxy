@@ -2,10 +2,10 @@ using UnityEngine;
 
 public abstract class Collectible : MonoBehaviour
 {
-    [SerializeField] private float _speed = 4f;
+    [SerializeField] private protected float _speed = 4f;
     [SerializeField] private AudioClip _pickupSound;
 
-    private void Update()
+    protected virtual void Update()
     {
         transform.Translate(_speed * Time.deltaTime * Vector3.down);
     }

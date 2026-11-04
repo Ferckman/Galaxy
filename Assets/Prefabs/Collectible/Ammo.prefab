@@ -259,6 +259,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c652fde97ad688c41981ea7e74db1f02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1
+  _speed: 2
   _pickupSound: {fileID: 8300000, guid: ac8d92658632c1c43a2d012e9e0f1c36, type: 3}
   _ammoAmount: 2

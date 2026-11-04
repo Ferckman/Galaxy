@@ -214,6 +214,9 @@ public class Player : MonoBehaviour
             _numLives--;
             ResetValues();
 
+            // ¡Un buen terremoto al morir la nave!
+            if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.4f, 0.3f);
+
             if (_uiManager != null) _uiManager.UpdateLives(_numLives);
 
             if (_numLives > 0)
@@ -235,6 +238,9 @@ public class Player : MonoBehaviour
         }
         else if (_health <= 40)
         {
+            // ¡Impacto fuerte y seco porque la nave está al borde del colapso!
+            if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.2f, 0.25f);
+
             if (_engines.Length >= 2)
             {
                 _engines[0].SetActive(true);
@@ -251,6 +257,9 @@ public class Player : MonoBehaviour
         }
         else if (_health <= 60)
         {
+            // ¡Sacudida media y rápida al romperse el primer motor!
+            if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.15f, 0.15f);
+
             if (_engines.Length > 0)
             {
                 int randomIndex = Random.Range(0, _engines.Length);

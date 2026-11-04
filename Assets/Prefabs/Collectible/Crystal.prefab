@@ -215,6 +215,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee232555e72f77f48b21cc10390bd8fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 0
+  _speed: 3
   _pickupSound: {fileID: 0}
-  _energyAmount: 5
+  _flySpeed: 20

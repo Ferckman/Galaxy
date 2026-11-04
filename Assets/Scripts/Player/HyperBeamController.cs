@@ -94,6 +94,13 @@ public class HyperBeamController : MonoBehaviour
             _audioSource.PlayOneShot(_laserSoundClip);
         }
 
+        // 2. ACTIVAMOS EL CAMERA SHAKE AL INSTANTE DE DISPARAR
+        //StartCoroutine(CameraShakeRoutine(_shakeDuration, _shakeMagnitude));
+        if (CameraShake.Instance != null)
+        {
+            CameraShake.Instance.Shake(12.5f, 0.2f);
+        }
+
         // 2. Activamos el contenedor del rayo (si lo tenías con SetActive)
         if (_hyperBeam != null)
         {
@@ -161,7 +168,33 @@ public class HyperBeamController : MonoBehaviour
         // 7. Liberamos el cerrojo
         _isFiring = false;
     }
+/*
+    // --- CORRUTINA AUXILIAR PARA LA VIBRACIÓN DE LA CÁMARA ---
+    private IEnumerator CameraShakeRoutine(float duration, float magnitude)
+    {
+        // Buscamos la cámara principal de la escena
+        Transform camTransform = Camera.main.transform;
+        Vector3 originalPosition = camTransform.localPosition;
 
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            // Generamos un desplazamiento aleatorio dentro de un radio
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
+
+            camTransform.localPosition = new Vector3(originalPosition.x + x, originalPosition.y + y, originalPosition.z);
+
+            elapsed += Time.deltaTime;
+
+            yield return null; // Esperamos al siguiente fotograma
+        }
+
+        // Al terminar, devolvemos la cámara exactamente a su sitio original
+        camTransform.localPosition = originalPosition;
+    }
+*/
     private void UpdateUI()
     {
         if (_beamSlider != null)
