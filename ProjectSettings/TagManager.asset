@@ -8,6 +8,7 @@ TagManager:
   - Asteroid
   - Shots
   - Collectible
+  - Spaceship
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - HyperBeam
   - Limit
   - Shield
-  - 
+  - Spaceship
   - 
   - 
   - 

@@ -5,7 +5,7 @@ public class AmmoPickup : Collectible
     [SerializeField] private int _ammoAmount = 2; // Cantidad de misiles que otorga
 
     // En tu clase de Collectible de Munición (ej. AmmoCollectible.cs)
-    protected override bool ApplyEffect(Player player)
+    protected override bool ApplyEffect(PlayerController playerController)
     {
         MissileSpawner missileSpawner = Object.FindFirstObjectByType<MissileSpawner>();
         if (missileSpawner != null)

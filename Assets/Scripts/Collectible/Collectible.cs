@@ -13,14 +13,15 @@ public abstract class Collectible : MonoBehaviour
     // En tu Collectible.cs base
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Spaceship"))
         {
-            if (other.TryGetComponent<Player>(out var player))
+            if (other.TryGetComponent<Spaceship>(out var spaceship))
             {
-                if (!player.IsDisabled)
+                if (!spaceship.IsDisabled)
                 {
+                    var playerController = other.GetComponent<PlayerController>();
                     // Intentamos aplicar el efecto. Solo si devuelve true se destruye.
-                    if (ApplyEffect(player))
+                    if (ApplyEffect(playerController))
                     {
                         // Reproducimos sonido si existe
                         if (_pickupSound != null && Camera.main != null)
@@ -37,7 +38,7 @@ public abstract class Collectible : MonoBehaviour
     }
 
     // Cambiamos el tipo de retorno a bool en el base (por defecto devuelve true para otros coleccionables como PowerUps)
-    protected virtual bool ApplyEffect(Player player)
+    protected virtual bool ApplyEffect(PlayerController playerController)
     {
         return true;
     }

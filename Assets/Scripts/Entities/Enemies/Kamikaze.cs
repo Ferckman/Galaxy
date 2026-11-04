@@ -36,8 +36,8 @@ public class Kamikaze : Enemy
     {
         get
         {
-            Player player = Object.FindAnyObjectByType<Player>();
-            return player != null && player.ShieldActivated;
+            Spaceship spaceship = Object.FindAnyObjectByType<Spaceship>();
+            return spaceship != null && spaceship.ShieldActivated;
         }
     }
 

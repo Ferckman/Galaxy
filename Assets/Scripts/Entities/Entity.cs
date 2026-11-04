@@ -101,13 +101,13 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Spaceship"))
         {
-            if (other.TryGetComponent<Player>(out var player))
+            if (other.TryGetComponent<Spaceship>(out var spaceship))
             {
-                if (!player.IsDisabled)
+                if (!spaceship.IsDisabled)
                 {
-                    player.GetDamage(_damage);
+                    spaceship.GetDamage(_damage);
                     if (ShouldDestroyOnPlayerHit)
                     {
                         DestroyMyself();
@@ -120,7 +120,6 @@ public abstract class Entity : MonoBehaviour
         {
             if (other.TryGetComponent<Shots>(out var shot))
             {
-                Debug.Log("shoot");
                 _health -= shot.Damage;
                 if (_health <= 0)
                 {

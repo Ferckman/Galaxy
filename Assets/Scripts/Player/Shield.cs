@@ -6,15 +6,15 @@ public class Shield : MonoBehaviour
     [SerializeField] private float _timeLife;
 
     private SpriteRenderer _spriteRenderer;
-    private Player _player;
+    private Spaceship spaceship;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
 
-        _player = Object.FindFirstObjectByType<Player>();
+        spaceship = Object.FindFirstObjectByType<Spaceship>();
 
-        if (_player == null) Debug.LogError("Player component not found in the scene!", this);
+        if (spaceship == null) Debug.LogError("Spaceship component not found in the scene!", this);
 
         StartCoroutine(BlinkRoutine());
     }
@@ -41,7 +41,7 @@ public class Shield : MonoBehaviour
 
     private void DisableShield()
     {
-        if (_player != null) _player.ShieldActivated = false;
+        if (spaceship != null) spaceship.ShieldActivated = false;
     }
 
     public void WeakenShield()

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3011367901540041845}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Laser_Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7408339960077679485}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Spawn_Left_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 729620502232108106}
   - component: {fileID: 4162437254071500000}
   - component: {fileID: 8282776261640182881}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Left_Engine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 4079141995567631933}
   - component: {fileID: 1954024389105939883}
   - component: {fileID: 5874698844219056630}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Right_Engine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -285,7 +285,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1305252224893291265}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Missile_Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -561,7 +561,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3305045897597729263}
   - component: {fileID: 8237912230697455578}
-  - component: {fileID: 5405348053808909348}
   - component: {fileID: 4222306668032712400}
   - component: {fileID: 4000258144191624199}
   - component: {fileID: 1552975383025721539}
@@ -569,9 +568,11 @@ GameObject:
   - component: {fileID: 2658501869200757892}
   - component: {fileID: 141889329132939550}
   - component: {fileID: 4577692957049706697}
-  m_Layer: 3
+  - component: {fileID: -7499809160672573808}
+  - component: {fileID: 5879208234037653248}
+  m_Layer: 13
   m_Name: Spaceship
-  m_TagString: Player
+  m_TagString: Spaceship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -651,38 +652,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5405348053808909348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4020655129601044511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a91766f986e727f49b639f2a09e32188, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _health: 200
-  _speed: 8
-  _numLives: 3
-  _shieldActivated: 0
-  _canTripleShoot: 0
-  _disabled: 1
-  _cooldownTripleShoot: 0
-  _cooldownMoreSpeed: 0
-  _engines:
-  - {fileID: 1450337396320514970}
-  - {fileID: 1526048132105706825}
-  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
-  _shieldPrefab: {fileID: 4698021216099563794, guid: 73da00e6450403445aa9babdad311dff, type: 3}
-  _uiManager: {fileID: 0}
-  _gameManager: {fileID: 0}
-  _thrusterSprites:
-  - {fileID: 8626221071193457681}
-  - {fileID: 7563998300212266717}
-  - {fileID: 696194555348720215}
-  _playerAnimation: {fileID: 1552975383025721539}
 --- !u!50 &4222306668032712400
 Rigidbody2D:
   serializedVersion: 4
@@ -1002,6 +971,50 @@ MonoBehaviour:
   - {fileID: 8626221071193457681}
   - {fileID: 7563998300212266717}
   _activeBlueColor: {r: 0, g: 0.43529412, b: 1, a: 1}
+--- !u!114 &-7499809160672573808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4020655129601044511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0920653e2b94b043bbd05ea169561ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _numLives: 3
+  _shieldActivated: 0
+  _canTripleShoot: 0
+  _cooldownTripleShoot: 10
+  _cooldownMoreSpeed: 10
+  _shieldPrefab: {fileID: 4698021216099563794, guid: 73da00e6450403445aa9babdad311dff, type: 3}
+  _uiManager: {fileID: 0}
+  _gameManager: {fileID: 0}
+--- !u!114 &5879208234037653248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4020655129601044511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 139f1923167d9c14793298a112062d0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 200
+  _speed: 8
+  _disabled: 1
+  _engines:
+  - {fileID: 1450337396320514970}
+  - {fileID: 1526048132105706825}
+  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
+  _thrusterSprites:
+  - {fileID: 8626221071193457681}
+  - {fileID: 7563998300212266717}
+  - {fileID: 696194555348720215}
+  _playerAnimation: {fileID: 1552975383025721539}
 --- !u!1 &5355299249700631904
 GameObject:
   m_ObjectHideFlags: 0
@@ -1011,7 +1024,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5214679000779264469}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Shoots_Points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1045,7 +1058,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7656280747552431472}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Spawn_Left_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1076,7 +1089,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4065170705754594760}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Laser_Point_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1107,7 +1120,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7442599166052561750}
-  m_Layer: 3
+  m_Layer: 13
   m_Name: Laser_Point_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1310,7 +1323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_IsActive
@@ -1413,7 +1426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_IsActive
@@ -1528,7 +1541,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 9041200049275483302, guid: 1f5e6b82b02adbf4daa63d38e1b8d50e, type: 3}
       propertyPath: m_IsActive

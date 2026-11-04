@@ -29,12 +29,14 @@ public class HyperBeamController : MonoBehaviour
     [SerializeField] private Color _activeBlueColor; // Elige el tono azul en el Inspector
     private Color[] _originalColors; // Array interno para guardar el color original (FFFFFF)
 
-    private Player player;
+    private PlayerController _playerController;
+    private Spaceship spaceship;
 
     private void Awake()
     {
-        player = Object.FindFirstObjectByType<Player>();
-        if (player == null) Debug.LogError("Player component not found in the scene!", this);
+        _playerController = Object.FindFirstObjectByType<PlayerController>();
+        spaceship = Object.FindFirstObjectByType<Spaceship>();
+        if (_playerController == null) Debug.LogError("Player component not found in the scene!", this);
 
         if (_audioSource == null)
         {
@@ -119,12 +121,11 @@ public class HyperBeamController : MonoBehaviour
             }
         }
 
-        if (player != null)
+        if (_playerController != null)
         {
-            player.Speed = 16;
-            player.SpeedBoostPowerupOn();
-            player.ShieldActivated = true;
-            player.ShieldPowerupOn();
+            _playerController.SpeedBoostPowerupOn();
+            spaceship.ShieldActivated = true;
+            _playerController.ShieldPowerupOn();
         }
 
         // Añade esto justo antes del SetTrigger para que Unity te diga la verdad a la cara:

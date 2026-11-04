@@ -12,7 +12,7 @@ public class Crystal : Collectible
 
     private void Start()
     {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Spaceship");
         if (playerObj != null)
         {
             _playerTransform = playerObj.transform;
@@ -48,11 +48,11 @@ public class Crystal : Collectible
         }
     }
 
-    protected override bool ApplyEffect(Player player)
+    protected override bool ApplyEffect(PlayerController playerController)
     {
         // 1. Buscamos el gestor del hiperrayo en el jugador o en la escena
         // (Asumiendo que tienes un script que controla la barra, ej: HyperBeamController)
-        HyperBeamController beamController = player.GetComponent<HyperBeamController>();
+        HyperBeamController beamController = playerController.GetComponent<HyperBeamController>();
 
         if (beamController != null)
         {
