@@ -82,6 +82,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+                // Le decimos a la nave que apague sus gráficos al instante de morir del todo
+            if (_spaceship != null)
+            {
+                _spaceship.HideSpaceshipVisuals();
+            }
             StartCoroutine(EndGameRoutine());
         }
     }

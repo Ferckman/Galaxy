@@ -190,6 +190,29 @@ public class Spaceship : MonoBehaviour
         }
     }
 
+    // Método para ocultar la nave inmediatamente al perder la última vida
+    public void HideSpaceshipVisuals()
+    {
+        if (_spriteRenderer != null) _spriteRenderer.enabled = false;
+        
+        if (_thrusterSprites != null)
+        {
+            foreach (var thruster in _thrusterSprites)
+            {
+                if (thruster != null) thruster.enabled = false;
+            }
+        }
+
+        // Por si acaso quedan motores rotos encendidos, los apagamos también
+        if (_engines != null)
+        {
+            foreach (var engine in _engines)
+            {
+                if (engine != null) engine.SetActive(false);
+            }
+        }
+    }
+
     // Método público para que PlayerController u otros le ordenen iniciar la reaparición
     public void StartRespawnSequence()
     {

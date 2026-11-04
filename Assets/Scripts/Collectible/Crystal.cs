@@ -25,8 +25,15 @@ public class Crystal : Collectible
 
     protected override void Update()
     {
-        // Si tenemos al jugador y la barra NO está llena, volamos hacia él
-        if (_playerTransform != null && _beamController != null && !_beamController.IsFull)
+        // Intentamos obtener el componente Spaceship del transform del jugador si no lo teníamos guardado
+        Spaceship playerSpaceship = null;
+        if (_playerTransform != null)
+        {
+            playerSpaceship = _playerTransform.GetComponent<Spaceship>();
+        }
+
+        // Comprobamos: Hay jugador + Hay controlador de barra + Barra no llena + ¡LA NAVE NO ESTÁ DESHABILITADA!
+        if (_playerTransform != null && _beamController != null && !_beamController.IsFull && playerSpaceship != null && !playerSpaceship.IsDisabled)
         {
             // 1. Incrementamos la velocidad cada frame (aceleración magnética)
             _currentSpeed += _acceleration * Time.deltaTime;
