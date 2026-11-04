@@ -17,7 +17,7 @@ public class Limit : MonoBehaviour
         }
         else if (other.CompareTag("Collectible"))
         {
-            if (_gameManager != null) _gameManager.DestroyConcreteElement(other.gameObject);
+            //if (_gameManager != null) _gameManager.DestroyConcreteElement(other.gameObject);
             Destroy(other.gameObject);
         }
     }

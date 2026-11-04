@@ -292,7 +292,7 @@ MonoBehaviour:
     rowCount: 3
     normalEnemyCount: 12
     tankEnemyCount: 3
-    enableKamikazes: 1
+    enableKamikazes: 0
     kamikazeCount: 20
     kamikazeSpawnInterval: 2
     minKamikazesPerSpawn: 1
@@ -305,72 +305,72 @@ MonoBehaviour:
     useSineWave: 0
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 1
+  - waveName: 2
     rowCount: 3
     normalEnemyCount: 12
     tankEnemyCount: 3
     enableKamikazes: 1
-    kamikazeCount: 20
+    kamikazeCount: 10
     kamikazeSpawnInterval: 2
     minKamikazesPerSpawn: 1
-    maxKamikazesPerSpawn: 2
-    enableAsteroids: 1
+    maxKamikazesPerSpawn: 3
+    enableAsteroids: 0
     asteroidCount: 14
     asteroidSpawnInterval: 2
     minAsteroidScale: 0.6
     maxAsteroidScale: 1.8
-    useSineWave: 0
+    useSineWave: 1
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 1
+  - waveName: 3
     rowCount: 3
-    normalEnemyCount: 12
+    normalEnemyCount: 10
     tankEnemyCount: 3
     enableKamikazes: 1
-    kamikazeCount: 20
+    kamikazeCount: 5
     kamikazeSpawnInterval: 2
     minKamikazesPerSpawn: 1
     maxKamikazesPerSpawn: 2
     enableAsteroids: 1
-    asteroidCount: 14
+    asteroidCount: 7
     asteroidSpawnInterval: 2
     minAsteroidScale: 0.6
     maxAsteroidScale: 1.8
-    useSineWave: 0
+    useSineWave: 1
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 1
-    rowCount: 3
-    normalEnemyCount: 12
+  - waveName: 4
+    rowCount: 2
+    normalEnemyCount: 10
     tankEnemyCount: 3
     enableKamikazes: 1
-    kamikazeCount: 20
+    kamikazeCount: 5
     kamikazeSpawnInterval: 2
     minKamikazesPerSpawn: 1
     maxKamikazesPerSpawn: 2
     enableAsteroids: 1
-    asteroidCount: 14
+    asteroidCount: 4
     asteroidSpawnInterval: 2
     minAsteroidScale: 0.6
     maxAsteroidScale: 1.8
-    useSineWave: 0
+    useSineWave: 1
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 1
-    rowCount: 3
-    normalEnemyCount: 12
+  - waveName: 6
+    rowCount: 1
+    normalEnemyCount: 8
     tankEnemyCount: 3
     enableKamikazes: 1
-    kamikazeCount: 20
+    kamikazeCount: 4
     kamikazeSpawnInterval: 2
-    minKamikazesPerSpawn: 1
-    maxKamikazesPerSpawn: 2
+    minKamikazesPerSpawn: 3
+    maxKamikazesPerSpawn: 4
     enableAsteroids: 1
-    asteroidCount: 14
-    asteroidSpawnInterval: 2
+    asteroidCount: 20
+    asteroidSpawnInterval: 1
     minAsteroidScale: 0.6
     maxAsteroidScale: 1.8
-    useSineWave: 0
+    useSineWave: 1
     spawnDroneCarrier: 0
     isBossWave: 0
   _enemySpawnerPrefab: {fileID: 6385797332734183782, guid: 85c908d0913cadc4ea810afe1a1fbdbf, type: 3}

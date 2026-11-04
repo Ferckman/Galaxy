@@ -194,4 +194,9 @@ public class PlayerController : MonoBehaviour
             if (shieldSprite != null) shieldSprite.enabled = true;
         }
     }
+
+    public void Invincibility(bool value)
+    {
+        _spaceship.InvincibilityActivated = value;
+    }
 }

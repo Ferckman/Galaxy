@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnerEnemies : Spawner
+public class SpawnerEnemies : MonoBehaviour
 {
     private const int MaxEnemies = 60;
 
@@ -27,16 +27,11 @@ public class SpawnerEnemies : Spawner
     private bool _isWaveSpawningInProgress = false;
     private int _kamikazesRemainingToSpawn = 0;
 
-    protected override List<GameObject> list 
+    /*private List<GameObject> list 
     { 
         get => _blockEnemies; 
         set => _blockEnemies = value; 
-    }
-
-    private void Awake()
-    {
-        FindGameManager();
-    }
+    }*/
 
     public IEnumerator RunCompleteWaveSequenceRoutine(WaveManager.Wave wave)
     {

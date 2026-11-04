@@ -9,14 +9,21 @@ public class Spaceship : MonoBehaviour
     [Header("Spaceship Stats")]
     [SerializeField] protected int _health = 200;
     [SerializeField] protected int _speed = 8;
-    [SerializeField] protected bool _disabled = false;
     [SerializeField] private bool _shieldActivated;
+    private bool _disabled = true;
+    private bool _invincibility = false;
 
     // Propiedad para que PlayerController pueda encenderlo/apagarlo
     public bool ShieldActivated 
     { 
         get => _shieldActivated; 
         set => _shieldActivated = value; 
+    }
+
+    public bool InvincibilityActivated 
+    { 
+        get => _invincibility; 
+        set => _invincibility = value; 
     }
 
     [Header("Visuals & Effects")]
@@ -100,6 +107,7 @@ public class Spaceship : MonoBehaviour
     public virtual void GetDamage(int damage)
     {
         if (_disabled) return;
+        if (_invincibility) return;
 
         // ¡RECUPERAMOS LA LÓGICA DEL ESCUDO!
         if (_shieldActivated)
@@ -172,8 +180,9 @@ public class Spaceship : MonoBehaviour
     {
         _health = 200;
         _speed = 8;
-        _disabled = true;
         _shieldActivated = false;
+        _disabled = true;
+        _invincibility = false;
 
         if (_engines.Length >= 2)
         {

@@ -44,7 +44,7 @@ public abstract class Entity : MonoBehaviour
             transform.position.x < (-screenWidth - margin) || 
             transform.position.x > (screenWidth + margin))
         {
-            if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
+            //if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
             Destroy(gameObject);
         }
     }
@@ -59,7 +59,7 @@ public abstract class Entity : MonoBehaviour
         // 1. Spawneamos la explosión al instante para que aparezca ya mismo
         SpawnExplosion();
 
-        if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
+        //if (_gameManager != null) _gameManager.DestroyConcreteElement(gameObject);
 
         // 2. Desactivamos el colisionador y el script para que deje de disparar o moverse
         Collider2D col = GetComponent<Collider2D>();
