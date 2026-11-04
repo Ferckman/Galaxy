@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8779077107501322208}
   - component: {fileID: 6385797332734183782}
+  - component: {fileID: 2349589833145974946}
+  - component: {fileID: 3269650160309645769}
+  - component: {fileID: -7394193757038111333}
   m_Layer: 0
   m_Name: Spawner_Enemies
   m_TagString: Untagged
@@ -44,16 +47,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 117f021986535fe43a5ef4ffe6aae0c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cooldown: 5
-  gameManager: {fileID: 0}
+--- !u!114 &2349589833145974946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377965531099496437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23eeb3ef6a57e4d4bbd9abed610c4204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _normalEnemyPrefabs:
   - {fileID: 8914735942681161970, guid: b99eb31088500cc4fbad7eea49915a13, type: 3}
   - {fileID: 8914735942681161970, guid: b725a6c9176b71641a6baa74893af090, type: 3}
   _tankEnemyPrefabs:
   - {fileID: 8914735942681161970, guid: dd710cd67a2c54b42a20b48953e8d070, type: 3}
-  _kamikazePrefab: {fileID: 8914735942681161970, guid: 3edc691bfe6ecd944b512f09ccede16b, type: 3}
-  _warningIndicatorPrefab: {fileID: 7221447311367440422, guid: 297116ad00b6b8d4ea7724a37b288698, type: 3}
-  _asteroidPrefab: {fileID: 8201745531269559489, guid: 509bb4a472890a14ea09c8ea7dcce4a0, type: 3}
-  _rowSpawnY: 4
+  _rowSpawnY: 4.5
   _spacingBetweenEnemies: 2.5
   _rowSpacingY: 2.5
+--- !u!114 &3269650160309645769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377965531099496437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b02752765d6e8d8438de985ad630edb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _kamikazePrefab: {fileID: 8914735942681161970, guid: 3edc691bfe6ecd944b512f09ccede16b, type: 3}
+  _warningIndicatorPrefab: {fileID: 7221447311367440422, guid: 297116ad00b6b8d4ea7724a37b288698, type: 3}
+--- !u!114 &-7394193757038111333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377965531099496437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7f03b1bb2003764a883cb94145df9d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _asteroidPrefab: {fileID: 8201745531269559489, guid: 509bb4a472890a14ea09c8ea7dcce4a0, type: 3}

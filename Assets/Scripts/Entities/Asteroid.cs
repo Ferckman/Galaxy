@@ -17,7 +17,7 @@ public class Asteroid : Entity
         transform.localScale = new Vector3(scale, scale, scale);
         _speed = _speed * (1f / scale);
         _health = Mathf.RoundToInt(scale * 60f);
-        _damage = Mathf.RoundToInt(scale * 60f);
+        _damage = Mathf.RoundToInt(scale * 120f);
         _score = Mathf.RoundToInt(scale * 20f);
     }
 

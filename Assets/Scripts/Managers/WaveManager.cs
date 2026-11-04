@@ -37,6 +37,9 @@ public class WaveManager : MonoBehaviour
         [Tooltip("Si está activo, el bloque se moverá haciendo una onda senoidal vertical mientras va de lado a lado.")]
         public bool useSineWave = false;
 
+        [Tooltip("Dirección desde donde entrará esta oleada.")]
+        public EnemySpawnDirection spawnDirection = EnemySpawnDirection.Top;
+
         [Header("3. Eventos Especiales (Opcionales por Oleada)")]
         [Tooltip("¿Esta oleada incluye un Emisor de Drones pesado que baja del cielo?")]
         public bool spawnDroneCarrier = false;
