@@ -111,33 +111,7 @@ public class Missile : Shots
         // Propulsión constante hacia adelante en su propio eje local
         _rb.velocity = (Vector2)(transform.up * _speed);
     }
-
-/*
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Aquí se delegaría en un sistema de impactos/daño (Eventos o IDamageable)
-        //TerminateMissile();
-    }
-    */
-/*
-    private void TerminateMissile()
-    {
-        // 1. Buscamos el TrailRenderer en los objetos hijos
-        TrailRenderer trail = GetComponentInChildren<TrailRenderer>();
-        
-        if (trail != null)
-        {
-            // Desvinculamos la estela del misil para que pase a la raíz de la escena
-            trail.transform.SetParent(null);
-            
-            // Destruimos el objeto de la estela exactamente cuando termine su tiempo de vida (trail.time)
-            Destroy(trail.gameObject, trail.time);
-        }
-
-        // 2. Destruimos el misil original al instante
-        Destroy(gameObject);
-    }*/
-
+    
     private void TerminateMissile()
     {
         // Buscamos el componente de fundido en los hijos

@@ -77,12 +77,12 @@ public class WaveManager : MonoBehaviour
             Wave currentWave = _waves[_currentWaveIndex];
             _isWaveActive = true;
 
-            //Debug.Log($"Iniciando: {currentWave.waveName}");
-
             if (_activeSpawnerInstance != null)
             {
-                // Delegamos toda la ejecución compleja al Spawner pasando la configuración completa de la oleada
-                yield return StartCoroutine(_activeSpawnerInstance.RunCompleteWaveSequenceRoutine(currentWave));
+                // AQUÍ ESTABA EL CAMBIO DE NOMBRE: Llamamos a SpawnWaveRoutine (o el nombre que tenga en tu SpawnerEnemies)
+                yield return StartCoroutine(_activeSpawnerInstance.SpawnWaveRoutine(currentWave, (formationController) => {
+                    // Si pasabas un callback opcional para la formación, lo puedes gestionar aquí
+                }));
             }
 
             _isWaveActive = false;

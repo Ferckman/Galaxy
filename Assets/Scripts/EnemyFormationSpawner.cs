@@ -14,17 +14,20 @@ public class EnemyFormationSpawner : MonoBehaviour
 {
     private const int MaxEnemies = 60;
 
-    [Header("Prefabs")]
+    [Header("Prefabs de Enemigos")]
     [SerializeField] private GameObject[] _normalEnemyPrefabs; 
     [SerializeField] private GameObject[] _tankEnemyPrefabs;
 
-    [Header("Formation Settings")]
+    [Header("Configuración de Formación (Top / Bottom)")]
     [SerializeField] private float _rowSpawnY = 4.5f;              
     [SerializeField] private float _spacingBetweenEnemies = 2.5f; 
     [SerializeField] private float _rowSpacingY = 2.5f;
 
+    [Header("Configuración de Formación (Left / Right)")]
+    [SerializeField] private float _columnSpacingX = 2.0f; // Profundidad escalonada entre filas laterales
+
     /// <summary>
-    /// Spawnea la oleada en filas, los baraja, los coloca en grid y crea el FormationController para moverlos.
+    /// Gestiona estrictamente la creación del grid de la oleada y devuelve el controlador de formación.
     /// </summary>
     public IEnumerator SpawnWaveInRowRoutine(WaveManager.Wave wave, List<GameObject> blockEnemiesList, System.Action<FormationController> onFormationCreated)
     {
@@ -37,38 +40,16 @@ public class EnemyFormationSpawner : MonoBehaviour
         float screenHeight = cam.orthographicSize;
         float screenWidth = screenHeight * camAspect;
 
-        // Comprobamos la dirección usando el Enum limpio
-        bool comeFromBottom = (wave.spawnDirection == EnemySpawnDirection.Bottom);
-        bool comeFromLeft = (wave.spawnDirection == EnemySpawnDirection.Left);
-        bool comeFromRight = (wave.spawnDirection == EnemySpawnDirection.Right);
-
-        // Posiciones base fuera de la pantalla según la dirección elegida
-        float baseOffScreenY = comeFromBottom ? (-screenHeight - 2.0f) : (screenHeight + 2.0f);
-        float baseOffScreenX = comeFromLeft ? (-screenWidth - 3.0f) : (screenWidth + 3.0f);
-
-        List<Enemy> currentWaveEnemyScripts = new List<Enemy>();
-        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
-
-        // 1. Creamos la lista temporal de todos los prefabs a spawnear
+        // 1. Recopilar y barajar los enemigos de la oleada (Normales + Tanques)
         List<GameObject> rowPrefabsToSpawn = new List<GameObject>();
 
         for (int i = 0; i < wave.normalEnemyCount; i++)
-        {
-            if (_normalEnemyPrefabs.Length > 0)
-            {
-                rowPrefabsToSpawn.Add(_normalEnemyPrefabs[Random.Range(0, _normalEnemyPrefabs.Length)]);
-            }
-        }
+            if (_normalEnemyPrefabs.Length > 0) rowPrefabsToSpawn.Add(_normalEnemyPrefabs[Random.Range(0, _normalEnemyPrefabs.Length)]);
 
         for (int i = 0; i < wave.tankEnemyCount; i++)
-        {
-            if (_tankEnemyPrefabs.Length > 0)
-            {
-                rowPrefabsToSpawn.Add(_tankEnemyPrefabs[Random.Range(0, _tankEnemyPrefabs.Length)]);
-            }
-        }
+            if (_tankEnemyPrefabs.Length > 0) rowPrefabsToSpawn.Add(_tankEnemyPrefabs[Random.Range(0, _tankEnemyPrefabs.Length)]);
 
-        // 2. Barajamos la lista completa (Fisher-Yates) para mezclar normales y tanques
+        // Barajado Fisher-Yates
         for (int i = 0; i < rowPrefabsToSpawn.Count; i++)
         {
             GameObject temp = rowPrefabsToSpawn[i];
@@ -77,74 +58,121 @@ public class EnemyFormationSpawner : MonoBehaviour
             rowPrefabsToSpawn[randomIndex] = temp;
         }
 
-        // 3. Distribuimos los enemigos en múltiples filas (Grid)
+        List<Enemy> currentWaveEnemyScripts = new List<Enemy>();
+        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
+
         int numRows = Mathf.Max(1, wave.rowCount);
         int totalEnemies = rowPrefabsToSpawn.Count;
         int enemiesPerBaseRow = Mathf.CeilToInt((float)totalEnemies / numRows);
         int prefabIndex = 0;
 
-        for (int r = 0; r < numRows; r++)
+        bool isVerticalEntry = (wave.spawnDirection == EnemySpawnDirection.Top || wave.spawnDirection == EnemySpawnDirection.Bottom);
+
+        // ==========================================
+        // CASO A: ENTRADA DESDE ARRIBA O ABAJO (Grid Horizontal Tradicional)
+        // ==========================================
+        if (isVerticalEntry)
         {
-            int enemiesInThisRow = Mathf.Min(enemiesPerBaseRow, totalEnemies - prefabIndex);
-            if (enemiesInThisRow <= 0) break;
-
-            float totalWidth = (enemiesInThisRow - 1) * _spacingBetweenEnemies;
-            float startX = -totalWidth / 2f;
-            
-            float currentTargetY = _rowSpawnY - (r * _rowSpacingY);
-
-            for (int i = 0; i < enemiesInThisRow; i++)
+            for (int r = 0; r < numRows; r++)
             {
-                if (blockEnemiesList.Count >= MaxEnemies) break;
-                if (prefabIndex >= totalEnemies) break;
+                int enemiesInThisRow = Mathf.Min(enemiesPerBaseRow, totalEnemies - prefabIndex);
+                if (enemiesInThisRow <= 0) break;
 
-                float posX = startX + (i * _spacingBetweenEnemies);
-                Vector3 targetPosition = new Vector3(posX, currentTargetY, 0f);
-                Vector3 spawnPos;
+                float totalWidth = (enemiesInThisRow - 1) * _spacingBetweenEnemies;
+                float startX = -totalWidth / 2f;
 
-                // Cálculo de la posición inicial según la dirección de entrada
-                if (comeFromLeft || comeFromRight)
+                for (int i = 0; i < enemiesInThisRow; i++)
                 {
-                    float offScreenX = comeFromLeft ? (baseOffScreenX - (r * 1.5f)) : (baseOffScreenX + (r * 1.5f));
-                    spawnPos = new Vector3(offScreenX, currentTargetY, 0f);
-                }
-                else if (comeFromBottom)
-                {
-                    float invR = numRows - 1 - r;
-                    float currentOffScreenY = baseOffScreenY - (invR * _rowSpacingY);
-                    currentTargetY = _rowSpawnY - (invR * _rowSpacingY); // Reajuste de destino ordenado
-                    targetPosition = new Vector3(posX, currentTargetY, 0f);
-                    spawnPos = new Vector3(posX, currentOffScreenY, 0f);
-                }
-                else
-                {
-                    // Por defecto: Top (Arriba)
-                    float currentOffScreenY = baseOffScreenY - (r * _rowSpacingY);
-                    spawnPos = new Vector3(posX, currentOffScreenY, 0f);
-                }
+                    if (blockEnemiesList.Count >= MaxEnemies) break;
+                    if (prefabIndex >= totalEnemies) break;
 
-                GameObject selectedPrefab = rowPrefabsToSpawn[prefabIndex];
-                prefabIndex++;
+                    float posX = startX + (i * _spacingBetweenEnemies);
+                    float targetY = _rowSpawnY - (r * _rowSpacingY);
+                    Vector3 targetPosition = new Vector3(posX, targetY, 0f);
 
-                if (selectedPrefab != null)
-                {
-                    GameObject enemyObj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, container);
-                    blockEnemiesList.Add(enemyObj);
-
-                    if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
+                    Vector3 spawnPos;
+                    if (wave.spawnDirection == EnemySpawnDirection.Bottom)
                     {
-                        enemyScript.SetupFormation(targetPosition);
-                        currentWaveEnemyScripts.Add(enemyScript);
+                        float invR = numRows - 1 - r;
+                        float bottomOffScreenY = -screenHeight - 3.0f;
+                        targetY = _rowSpawnY - (invR * _rowSpacingY);
+                        targetPosition = new Vector3(posX, targetY, 0f);
+                        spawnPos = new Vector3(posX, bottomOffScreenY - (invR * _rowSpacingY), 0f);
                     }
-                }
+                    else // Top
+                    {
+                        spawnPos = new Vector3(posX, screenHeight + 3.0f - (r * _rowSpacingY), 0f);
+                    }
 
-                yield return new WaitForSeconds(0.02f);
+                    GameObject selectedPrefab = rowPrefabsToSpawn[prefabIndex++];
+                    if (selectedPrefab != null)
+                    {
+                        GameObject enemyObj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, container);
+                        blockEnemiesList.Add(enemyObj);
+
+                        if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
+                        {
+                            enemyScript.SetupFormation(targetPosition, wave.spawnDirection);
+                            currentWaveEnemyScripts.Add(enemyScript);
+                        }
+                    }
+
+                    yield return new WaitForSeconds(0.02f);
+                }
+            }
+        }
+        // ==========================================
+        // CASO B: ENTRADA DESDE LA IZQUIERDA O DERECHA (Grid Lateral Específico)
+        // ==========================================
+        else
+        {
+            for (int r = 0; r < numRows; r++)
+            {
+                int enemiesInThisRow = Mathf.Min(enemiesPerBaseRow, totalEnemies - prefabIndex);
+                if (enemiesInThisRow <= 0) break;
+
+                float totalHeight = (numRows - 1) * _rowSpacingY;
+                float startY = (totalHeight / 2f) - (r * _rowSpacingY);
+
+                for (int i = 0; i < enemiesInThisRow; i++)
+                {
+                    if (blockEnemiesList.Count >= MaxEnemies) break;
+                    if (prefabIndex >= totalEnemies) break;
+
+                    float targetX = -((enemiesInThisRow * _spacingBetweenEnemies) / 2f) + (i * _spacingBetweenEnemies);
+                    float targetY = _rowSpawnY - startY; 
+                    Vector3 targetPosition = new Vector3(targetX, targetY, 0f);
+
+                    Vector3 spawnPos;
+                    float offScreenBaseX = wave.spawnDirection == EnemySpawnDirection.Left ? -screenWidth - 4.0f : screenWidth + 4.0f;
+                    
+                    float depthOffset = i * _columnSpacingX;
+                    if (wave.spawnDirection == EnemySpawnDirection.Left)
+                        spawnPos = new Vector3(offScreenBaseX - depthOffset, targetY, 0f);
+                    else
+                        spawnPos = new Vector3(offScreenBaseX + depthOffset, targetY, 0f);
+
+                    GameObject selectedPrefab = rowPrefabsToSpawn[prefabIndex++];
+                    if (selectedPrefab != null)
+                    {
+                        GameObject enemyObj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, container);
+                        blockEnemiesList.Add(enemyObj);
+
+                        if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
+                        {
+                            enemyScript.SetupFormation(targetPosition, wave.spawnDirection);
+                            currentWaveEnemyScripts.Add(enemyScript);
+                        }
+                    }
+
+                    yield return new WaitForSeconds(0.02f);
+                }
             }
         }
 
         yield return new WaitForSeconds(1.5f); 
 
-        // 4. Creamos el bloque de formación global utilizando tu FormationController
+        // 3. Inicializar y devolver el controlador del bloque de formación global
         if (currentWaveEnemyScripts.Count > 0)
         {
             GameObject formationObj = new GameObject("WaveFormationBlock");

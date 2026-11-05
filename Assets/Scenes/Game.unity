@@ -271,146 +271,146 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waves:
-  - waveName: 1
-    rowCount: 3
-    normalEnemyCount: 12
-    tankEnemyCount: 3
-    enableKamikazes: 1
-    kamikazeCount: 20
-    kamikazeSpawnInterval: 1.5
-    minKamikazesPerSpawn: 1
-    maxKamikazesPerSpawn: 5
-    enableAsteroids: 0
-    asteroidCount: 14
-    asteroidSpawnInterval: 2
-    minAsteroidScale: 0.6
-    maxAsteroidScale: 1.8
-    useSineWave: 0
-    spawnDirection: 0
-    spawnDroneCarrier: 0
-    isBossWave: 0
-  - waveName: 2
-    rowCount: 3
-    normalEnemyCount: 12
-    tankEnemyCount: 3
-    enableKamikazes: 0
-    kamikazeCount: 20
-    kamikazeSpawnInterval: 2
-    minKamikazesPerSpawn: 1
-    maxKamikazesPerSpawn: 2
-    enableAsteroids: 0
-    asteroidCount: 14
-    asteroidSpawnInterval: 2
-    minAsteroidScale: 0.6
-    maxAsteroidScale: 1.8
-    useSineWave: 1
-    spawnDirection: 0
-    spawnDroneCarrier: 0
-    isBossWave: 0
-  - waveName: 3
-    rowCount: 3
-    normalEnemyCount: 12
-    tankEnemyCount: 3
-    enableKamikazes: 0
-    kamikazeCount: 10
-    kamikazeSpawnInterval: 2
-    minKamikazesPerSpawn: 1
-    maxKamikazesPerSpawn: 3
-    enableAsteroids: 0
-    asteroidCount: 14
-    asteroidSpawnInterval: 2
-    minAsteroidScale: 0.6
-    maxAsteroidScale: 1.8
-    useSineWave: 0
-    spawnDirection: 1
-    spawnDroneCarrier: 0
-    isBossWave: 0
-  - waveName: 4
-    rowCount: 3
-    normalEnemyCount: 10
-    tankEnemyCount: 3
-    enableKamikazes: 1
-    kamikazeCount: 5
-    kamikazeSpawnInterval: 2
-    minKamikazesPerSpawn: 1
-    maxKamikazesPerSpawn: 2
-    enableAsteroids: 0
-    asteroidCount: 7
-    asteroidSpawnInterval: 2
-    minAsteroidScale: 0.6
-    maxAsteroidScale: 1.8
-    useSineWave: 1
-    spawnDirection: 1
-    spawnDroneCarrier: 0
-    isBossWave: 0
-  - waveName: 5
+  - waveName: "1. Descenso B\xE1sico"
     rowCount: 2
-    normalEnemyCount: 10
-    tankEnemyCount: 3
+    normalEnemyCount: 6
+    tankEnemyCount: 0
+    enableKamikazes: 0
+    kamikazeCount: 0
+    kamikazeSpawnInterval: 0
+    minKamikazesPerSpawn: 0
+    maxKamikazesPerSpawn: 0
+    enableAsteroids: 0
+    asteroidCount: 0
+    asteroidSpawnInterval: 0
+    minAsteroidScale: 0
+    maxAsteroidScale: 0
+    useSineWave: 0
+    spawnDirection: 0
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 2. Descenso Lluvia de Asteroides
+    rowCount: 2
+    normalEnemyCount: 8
+    tankEnemyCount: 1
+    enableKamikazes: 0
+    kamikazeCount: 0
+    kamikazeSpawnInterval: 0
+    minKamikazesPerSpawn: 0
+    maxKamikazesPerSpawn: 0
+    enableAsteroids: 1
+    asteroidCount: 3
+    asteroidSpawnInterval: 5
+    minAsteroidScale: 0.6
+    maxAsteroidScale: 1.5
+    useSineWave: 1
+    spawnDirection: 0
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 3. Emboscada Subida
+    rowCount: 2
+    normalEnemyCount: 6
+    tankEnemyCount: 1
     enableKamikazes: 1
-    kamikazeCount: 5
-    kamikazeSpawnInterval: 2
+    kamikazeCount: 2
+    kamikazeSpawnInterval: 4
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 1
+    enableAsteroids: 0
+    asteroidCount: 0
+    asteroidSpawnInterval: 0
+    minAsteroidScale: 0
+    maxAsteroidScale: 0
+    useSineWave: 0
+    spawnDirection: 1
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: 4. Flanco Bajo con Onda
+    rowCount: 2
+    normalEnemyCount: 8
+    tankEnemyCount: 2
+    enableKamikazes: 1
+    kamikazeCount: 3
+    kamikazeSpawnInterval: 3.5
     minKamikazesPerSpawn: 1
     maxKamikazesPerSpawn: 2
-    enableAsteroids: 0
+    enableAsteroids: 1
     asteroidCount: 4
-    asteroidSpawnInterval: 2
-    minAsteroidScale: 0.6
+    asteroidSpawnInterval: 4
+    minAsteroidScale: 0.8
     maxAsteroidScale: 1.8
+    useSineWave: 1
+    spawnDirection: 1
+    spawnDroneCarrier: 0
+    isBossWave: 0
+  - waveName: "5. Asalto Izquierdo S\xF3lido"
+    rowCount: 2
+    normalEnemyCount: 8
+    tankEnemyCount: 2
+    enableKamikazes: 0
+    kamikazeCount: 0
+    kamikazeSpawnInterval: 0
+    minKamikazesPerSpawn: 0
+    maxKamikazesPerSpawn: 2
+    enableAsteroids: 1
+    asteroidCount: 5
+    asteroidSpawnInterval: 4
+    minAsteroidScale: 0.5
+    maxAsteroidScale: 1.5
     useSineWave: 0
     spawnDirection: 2
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 6
-    rowCount: 1
-    normalEnemyCount: 8
-    tankEnemyCount: 3
+  - waveName: 6. Acoso Izquierdo
+    rowCount: 3
+    normalEnemyCount: 10
+    tankEnemyCount: 2
     enableKamikazes: 1
     kamikazeCount: 4
-    kamikazeSpawnInterval: 2
-    minKamikazesPerSpawn: 3
-    maxKamikazesPerSpawn: 4
+    kamikazeSpawnInterval: 3
+    minKamikazesPerSpawn: 1
+    maxKamikazesPerSpawn: 2
     enableAsteroids: 0
-    asteroidCount: 20
-    asteroidSpawnInterval: 1
-    minAsteroidScale: 0.6
-    maxAsteroidScale: 1.8
+    asteroidCount: 0
+    asteroidSpawnInterval: 0
+    minAsteroidScale: 0
+    maxAsteroidScale: 0
     useSineWave: 1
     spawnDirection: 2
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 7
-    rowCount: 1
-    normalEnemyCount: 8
+  - waveName: "7. Presi\xF3n Derecha Pesada"
+    rowCount: 3
+    normalEnemyCount: 10
     tankEnemyCount: 3
     enableKamikazes: 1
-    kamikazeCount: 4
-    kamikazeSpawnInterval: 2
-    minKamikazesPerSpawn: 3
-    maxKamikazesPerSpawn: 4
-    enableAsteroids: 0
-    asteroidCount: 20
-    asteroidSpawnInterval: 1
-    minAsteroidScale: 0.6
-    maxAsteroidScale: 1.8
+    kamikazeCount: 5
+    kamikazeSpawnInterval: 3
+    minKamikazesPerSpawn: 2
+    maxKamikazesPerSpawn: 2
+    enableAsteroids: 1
+    asteroidCount: 6
+    asteroidSpawnInterval: 3.5
+    minAsteroidScale: 0.7
+    maxAsteroidScale: 2
     useSineWave: 0
     spawnDirection: 3
     spawnDroneCarrier: 0
     isBossWave: 0
-  - waveName: 8
-    rowCount: 1
-    normalEnemyCount: 8
-    tankEnemyCount: 3
+  - waveName: "8. Gran Cl\xEDmax Final"
+    rowCount: 3
+    normalEnemyCount: 12
+    tankEnemyCount: 4
     enableKamikazes: 1
-    kamikazeCount: 4
-    kamikazeSpawnInterval: 2
-    minKamikazesPerSpawn: 3
-    maxKamikazesPerSpawn: 4
-    enableAsteroids: 0
-    asteroidCount: 20
-    asteroidSpawnInterval: 1
-    minAsteroidScale: 0.6
-    maxAsteroidScale: 1.8
+    kamikazeCount: 6
+    kamikazeSpawnInterval: 2.5
+    minKamikazesPerSpawn: 2
+    maxKamikazesPerSpawn: 3
+    enableAsteroids: 1
+    asteroidCount: 8
+    asteroidSpawnInterval: 3
+    minAsteroidScale: 0.8
+    maxAsteroidScale: 2.2
     useSineWave: 1
     spawnDirection: 3
     spawnDroneCarrier: 0

@@ -130,11 +130,5 @@ public abstract class Entity : MonoBehaviour
             if (!other.TryGetComponent<HyperBeam>(out var hyperBam))
                 Destroy(other.gameObject);
         }
-        /*
-        else if (other.TryGetComponent<Kamikaze>(out var kamikaze))
-        {
-            //DestroyMyself();
-        }
-        */
     }
 }
