@@ -120,14 +120,25 @@ public abstract class Entity : MonoBehaviour
         {
             if (other.TryGetComponent<Shots>(out var shot))
             {
-                _health -= shot.Damage;
+                // 1. Obtenemos el daño calculado del disparo del jugador (con min, max y crítico)
+                int finalDamage = shot.GetCalculatedDamage(out bool isCrit);
+
+                // 2. Restamos el daño a la vida de la entidad (enemigo, asteroide, etc.)
+                _health -= finalDamage;
+
+                if (isCrit)
+                    Debug.Log($"<color=orange>¡CRÍTICO AL ENEMIGO! -{finalDamage}</color>");
+
+                // 3. Comprobamos si la entidad ha muerto
                 if (_health <= 0)
                 {
                     DestroyMyself();
                     IncreaseScore();
                 }
             }
-            if (!other.TryGetComponent<HyperBeam>(out var hyperBam))
+
+            // Si no es un HyperBeam, destruimos el láser al impactar
+            if (!other.TryGetComponent<HyperBeam>(out var hyperBeam))
                 Destroy(other.gameObject);
         }
     }

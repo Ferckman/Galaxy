@@ -16,7 +16,7 @@ public class PowerUp : Collectible
                 break;
                 
             case "SpeedBoost":
-                playerController.SpeedBoostPowerupOn();
+                playerController.SpeedBoostPowerupOn(8);
                 break;
                 
             case "Shield":

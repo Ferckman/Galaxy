@@ -91,19 +91,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private IEnumerator StartGameRoutine()
-    {
-        while (_spaceship != null && _spaceship.IsDisabled)
-        {
-            transform.position = new Vector3(0, -4.0f, 0);
-
-            yield return new WaitForSeconds(4.0f);
-
-            _spaceship.IsDisabled = false;
-            if (_spriteRenderer != null) _spriteRenderer.enabled = true;
-        }
-    }
-
     private IEnumerator EndGameRoutine()
     {
         yield return new WaitForSeconds(4.0f);
@@ -139,7 +126,7 @@ public class PlayerController : MonoBehaviour
 
         if (_cooldownTripleShoot > 0f)
         {
-            _cooldownTripleShieldTimer(); // (o lógica de triple shoot si aplica)
+            //_cooldownTripleShieldTimer(); // (o lógica de triple shoot si aplica)
             _cooldownTripleShoot -= Time.deltaTime;
             if (_cooldownTripleShoot <= 0f)
             {
@@ -154,24 +141,37 @@ public class PlayerController : MonoBehaviour
             if (_cooldownMoreSpeed <= 0f)
             {
                 _cooldownMoreSpeed = 0f;
-                if (_spaceship != null) _spaceship.Speed = 8; // Restaura la velocidad normal en Spaceship
+                if (_spaceship != null) 
+                {
+                    _spaceship.Speed -= 10; // Restaura exactamente los 10 que sumamos al principio
+                    Debug.Log("Velocidad normalizada");
+                }
             }
         }
 
         _numLives = Mathf.Clamp(_numLives, 0, 3);
     }
 
-    private void _cooldownTripleShieldTimer() { /* Método auxiliar o mantén tu lógica original */ }
+    private void _cooldownTripleShieldTimer() { }
 
     public void TripleShotPowerupOn()
     {
         if (_laserSpawner != null) _laserSpawner.SetTripleShoot(true);
     }
 
-    public void SpeedBoostPowerupOn()
+    public void SpeedBoostPowerupOn(int speedBoostDuration)
     {
-        _cooldownMoreSpeed = 10.0f;
-        if (_spaceship != null) _spaceship.Speed = 16;
+        if (_spaceship == null) return;
+
+        // Si el power-up YA estaba activo, NO sumamos velocidad de nuevo, 
+        // simplemente extendemos/reiniciamos el tiempo.
+        if (_cooldownMoreSpeed <= 0f)
+        {
+            _spaceship.Speed += 10; // Solo sumamos si partíamos de velocidad normal
+        }
+
+        // Reiniciamos el temporizador al máximo valor (sea nuevo o ya estuviera activo)
+        _cooldownMoreSpeed = speedBoostDuration;
     }
 
     public void ShieldPowerupOn()

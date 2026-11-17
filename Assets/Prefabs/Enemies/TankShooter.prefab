@@ -62,7 +62,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8347301777522372697}
@@ -367,20 +367,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 400
-  _damage: 100
+  _damage: 3000
   _score: 400
   _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
   _shouldDestroyOnPlayerHit: 1
   _enemyLaserPrefab: {fileID: 2412712189689930603, guid: 5a4e78238f9bbfc4d960dd20c546f760, type: 3}
   _firePoint: {fileID: 8409003648034495450}
   _fireRate: 2
-  _formationSpeed: 5
   _missileAmmoPrefab: {fileID: 5220409471985605202, guid: 6d7d32bf6ef37994799d5b63925c1a6f, type: 3}
   _generalPowerUpPrefabs:
   - {fileID: 724511469982859614, guid: 41caeb75911d1be4d9d038fbc4d1efdc, type: 3}
   - {fileID: 5220409471985605202, guid: dca54250a0a7521418dde29a4b1ce1b6, type: 3}
   - {fileID: 724511469982859614, guid: d5d7000cf9ce8474c9a78a86d8787afd, type: 3}
   _animator: {fileID: 4982223297995351155}
+  _entryDuration: 1.5
 --- !u!95 &4982223297995351155
 Animator:
   serializedVersion: 7

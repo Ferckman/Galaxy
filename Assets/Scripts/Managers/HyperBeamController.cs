@@ -24,36 +24,18 @@ public class HyperBeamController : MonoBehaviour
     [Header("Configuración")]
     private float _beamDuration = 12.5f;   // El tiempo que se queda el rayo disparando
 
-    [Header("Configuración de Turbinas (Color Azul)")]
-    [SerializeField] private SpriteRenderer[] _turbines; // Arrastra aquí tus 3 turbinas
-    [SerializeField] private Color _activeBlueColor; // Elige el tono azul en el Inspector
-    private Color[] _originalColors; // Array interno para guardar el color original (FFFFFF)
-
     private PlayerController _playerController;
     private Spaceship spaceship;
 
     private void Awake()
     {
-        _playerController = Object.FindFirstObjectByType<PlayerController>();
-        spaceship = Object.FindFirstObjectByType<Spaceship>();
+        _playerController = GetComponent<PlayerController>();
+        spaceship = GetComponent<Spaceship>();
         if (_playerController == null) Debug.LogError("Player component not found in the scene!", this);
 
         if (_audioSource == null)
         {
             Debug.LogWarning("No se encontró ningún AudioSource en el Player. Asegúrate de añadir uno.");
-        }
-
-        // Guardamos los colores originales de las turbinas al arrancar el juego
-        if (_turbines != null && _turbines.Length > 0)
-        {
-            _originalColors = new Color[_turbines.Length];
-            for (int i = 0; i < _turbines.Length; i++)
-            {
-                if (_turbines[i] != null)
-                {
-                    _originalColors[i] = _turbines[i].color;
-                }
-            }
         }
     }
 
@@ -109,22 +91,10 @@ public class HyperBeamController : MonoBehaviour
             _hyperBeam.SetActive(true);
         }
 
-        // 3. CAMBIAMOS LAS TURBINAS AL COLOR AZUL (lo que añadimos antes)
-        if (_turbines != null)
-        {
-            for (int i = 0; i < _turbines.Length; i++)
-            {
-                if (_turbines[i] != null)
-                {
-                    _turbines[i].color = _activeBlueColor;
-                }
-            }
-        }
-
         if (_playerController != null)
         {
             _playerController.Invincibility(true);
-            _playerController.SpeedBoostPowerupOn();
+            _playerController.SpeedBoostPowerupOn(8);
             spaceship.ShieldActivated = true;
             _playerController.ShieldPowerupOn();
         }
@@ -147,21 +117,10 @@ public class HyperBeamController : MonoBehaviour
             beamAnimator.SetBool("IsFiring", false); 
         }
 
-        // 6. Apagamos el contenedor y devolvemos las turbinas a su color original
+        // 6. Apagamos el contenedor
         if (_hyperBeam != null)
         {
             _hyperBeam.SetActive(false);
-
-            if (_turbines != null && _originalColors != null)
-            {
-                for (int i = 0; i < _turbines.Length; i++)
-                {
-                    if (_turbines[i] != null)
-                    {
-                        _turbines[i].color = _originalColors[i];
-                    }
-                }
-            }
 
             _currentEnergy = 0; 
             UpdateUI(); 

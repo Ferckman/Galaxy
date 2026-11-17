@@ -7,11 +7,21 @@ using System.Collections;
 public class Spaceship : MonoBehaviour
 {
     [Header("Spaceship Stats")]
-    [SerializeField] protected int _health = 200;
-    [SerializeField] protected int _speed = 8;
+    [SerializeField] protected int _health;
+    [SerializeField] protected int _speed;
     [SerializeField] private bool _shieldActivated;
     private bool _disabled = true;
     private bool _invincibility = false;
+
+    private int _initialHealth;
+    private int _initialSpeed;
+
+    [Header("Visuals & Effects")]
+    [SerializeField] private GameObject[] _engines;
+    [SerializeField] private GameObject _explosionPrefab;
+    [SerializeField] private PlayerAnimation _playerAnimation;
+
+    private SpriteRenderer _spriteRenderer;
 
     // Propiedad para que PlayerController pueda encenderlo/apagarlo
     public bool ShieldActivated 
@@ -25,14 +35,6 @@ public class Spaceship : MonoBehaviour
         get => _invincibility; 
         set => _invincibility = value; 
     }
-
-    [Header("Visuals & Effects")]
-    [SerializeField] private GameObject[] _engines;
-    [SerializeField] private GameObject _explosionPrefab;
-    [SerializeField] private SpriteRenderer[] _thrusterSprites;
-    [SerializeField] private PlayerAnimation _playerAnimation;
-
-    private SpriteRenderer _spriteRenderer;
 
     // Propiedades públicas para que el PlayerController o los Power-ups puedan consultarlas/modificarlas
     public int Speed 
@@ -59,6 +61,8 @@ public class Spaceship : MonoBehaviour
     protected virtual void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _initialHealth = _health;
+        _initialSpeed = _speed;
 
         // Al arrancar el juego por primera vez, la nave inicia su secuencia de aparición
         StartRespawnSequence(); 
@@ -94,9 +98,9 @@ public class Spaceship : MonoBehaviour
         float verticalLimit = Camera.main.orthographicSize;
         float horizontalLimit = verticalLimit * Camera.main.aspect;
 
-        float marginX = 0.6f; 
-        float bottomMargin = 1.2f;
-        float topMargin = 1.0f;
+        float marginX = 2.5f; 
+        float bottomMargin = 4.0f;
+        float topMargin = 4.0f;
 
         pos.y = Mathf.Clamp(pos.y, -verticalLimit + bottomMargin, verticalLimit - topMargin);
         pos.x = Mathf.Clamp(pos.x, -horizontalLimit + marginX, horizontalLimit - marginX);
@@ -109,7 +113,6 @@ public class Spaceship : MonoBehaviour
         if (_disabled) return;
         if (_invincibility) return;
 
-        // ¡RECUPERAMOS LA LÓGICA DEL ESCUDO!
         if (_shieldActivated)
         {
             Debug.Log("¡El escudo ha absorbido el impacto!");
@@ -142,7 +145,7 @@ public class Spaceship : MonoBehaviour
             // Avisamos al PlayerController de que hemos muerto
             OnSpaceshipDestroyed?.Invoke();
         }
-        else if (_health <= 40)
+        else if (_health <= (_initialHealth * 0.4f)) // 40% de vida
         {
             if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.2f, 0.25f);
 
@@ -150,66 +153,44 @@ public class Spaceship : MonoBehaviour
             {
                 _engines[0].SetActive(true);
                 _engines[1].SetActive(true);
-
-                if (_thrusterSprites != null)
-                {
-                    if (_thrusterSprites.Length > 0 && _thrusterSprites[0] != null) 
-                        _thrusterSprites[0].enabled = false;
-                    if (_thrusterSprites.Length > 1 && _thrusterSprites[1] != null) 
-                        _thrusterSprites[1].enabled = false;
-                }
             }
         }
-        else if (_health <= 60)
+        else if (_health <= (_initialHealth * 0.6f)) // 60% de vida
         {
             if (CameraShake.Instance != null) CameraShake.Instance.Shake(0.15f, 0.15f);
 
             if (_engines.Length > 0)
             {
                 int randomIndex = Random.Range(0, _engines.Length);
-                
                 _engines[randomIndex].SetActive(true);
-                
-                if (_thrusterSprites != null && randomIndex < _thrusterSprites.Length && _thrusterSprites[randomIndex] != null) 
-                    _thrusterSprites[randomIndex].enabled = false;
             }
         }
     }
 
     public void ResetSpaceshipState()
     {
-        _health = 200;
-        _speed = 8;
+        _health = _initialHealth;
+        _speed = _initialSpeed;
         _shieldActivated = false;
         _disabled = true;
         _invincibility = false;
 
-        if (_engines.Length >= 2)
+        if (_engines != null)
         {
-            _engines[0].SetActive(false);
-            _engines[1].SetActive(false);
-        }
-
-        if (_thrusterSprites != null)
-        {
-            foreach (var thrusterSprite in _thrusterSprites)
+            foreach (var engine in _engines)
             {
-                if (thrusterSprite != null) thrusterSprite.enabled = true;
+                if (engine != null) engine.SetActive(false);
             }
         }
     }
 
-    // Método para ocultar la nave inmediatamente al perder la última vida
     public void HideSpaceshipVisuals()
     {
-        if (_spriteRenderer != null) _spriteRenderer.enabled = false;
-        
-        if (_thrusterSprites != null)
+        // Ocultamos todos los SpriteRenderer de la nave y sus hijos
+        SpriteRenderer[] allRenderers = GetComponentsInChildren<SpriteRenderer>();
+        foreach (var renderer in allRenderers)
         {
-            foreach (var thruster in _thrusterSprites)
-            {
-                if (thruster != null) thruster.enabled = false;
-            }
+            if (renderer != null) renderer.enabled = false;
         }
 
         // Por si acaso quedan motores rotos encendidos, los apagamos también
@@ -238,30 +219,28 @@ public class Spaceship : MonoBehaviour
             yield return new WaitForSeconds(4.0f);
 
             _disabled = false;
-            if (_spriteRenderer != null) _spriteRenderer.enabled = true;
             
-            if (_thrusterSprites != null)
+            // Reactivamos todos los SpriteRenderer al terminar la reaparición
+            SpriteRenderer[] allRenderers = GetComponentsInChildren<SpriteRenderer>();
+            foreach (var renderer in allRenderers)
             {
-                foreach (var thruster in _thrusterSprites)
-                {
-                    if (thruster != null) thruster.enabled = true;
-                }
+                if (renderer != null) renderer.enabled = true;
             }
         }
     }
 
     private IEnumerator BlinkRoutine()
     {
+        // Obtenemos el de la nave y los de todos sus hijos (como el propulsor)
+        SpriteRenderer[] allRenderers = GetComponentsInChildren<SpriteRenderer>();
+        bool state = true;
+
         while (_disabled)
         {
-            if (_spriteRenderer != null) _spriteRenderer.enabled = !_spriteRenderer.enabled;
-            
-            if (_thrusterSprites != null)
+            state = !state;
+            foreach (var renderer in allRenderers)
             {
-                foreach (var thruster in _thrusterSprites)
-                {
-                    if (thruster != null) thruster.enabled = !thruster.enabled;
-                }
+                if (renderer != null) renderer.enabled = state;
             }
 
             yield return new WaitForSeconds(0.2f);
@@ -276,8 +255,15 @@ public class Spaceship : MonoBehaviour
             {
                 if (other.TryGetComponent<Shots>(out var shot))
                 {
-                    Debug.Log($"La nave recibió {shot.Damage} de daño. Vida restante: {_health}");
-                    GetDamage(shot.Damage);
+                    // Obtenemos el daño real calculado (con mínimo, máximo y crítico)
+                    int finalDamage = shot.GetCalculatedDamage(out bool isCrit);
+
+                    if (isCrit)
+                        Debug.Log($"<color=red>¡CRÍTICOS CONTRA TI! -{finalDamage}</color>");
+                    else
+                        Debug.Log($"La nave recibió {finalDamage} de daño. Vida restante: {_health}");
+
+                    GetDamage(finalDamage);
                 }
 
                 Destroy(other.gameObject);
