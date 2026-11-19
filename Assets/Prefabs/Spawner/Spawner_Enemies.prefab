@@ -60,13 +60,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _normalEnemyPrefabs:
-  - {fileID: 8914735942681161970, guid: b99eb31088500cc4fbad7eea49915a13, type: 3}
-  - {fileID: 8914735942681161970, guid: b725a6c9176b71641a6baa74893af090, type: 3}
+  - {fileID: 8914735942681161970, guid: 083d05e4edd89014daf983a497056d5a, type: 3}
   _tankEnemyPrefabs:
   - {fileID: 8914735942681161970, guid: dd710cd67a2c54b42a20b48953e8d070, type: 3}
-  _rowSpawnY: 4.5
-  _spacingBetweenEnemies: 2.5
-  _rowSpacingY: 2.5
+  _rowSpawnY: 12
+  _spacingBetweenEnemies: 4
+  _rowSpacingY: 8
+  _columnSpacingX: 2
 --- !u!114 &3269650160309645769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b02752765d6e8d8438de985ad630edb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _kamikazePrefab: {fileID: 8914735942681161970, guid: 3edc691bfe6ecd944b512f09ccede16b, type: 3}
+  _kamikazePrefab: {fileID: 8914735942681161970, guid: 52bb7d249d04c8547bc93d822b4cc19e, type: 3}
   _warningIndicatorPrefab: {fileID: 7221447311367440422, guid: 297116ad00b6b8d4ea7724a37b288698, type: 3}
 --- !u!114 &-7394193757038111333
 MonoBehaviour:
