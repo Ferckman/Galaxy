@@ -71,23 +71,34 @@ public class PlayerController : MonoBehaviour
     private void HandleSpaceshipDestroyed()
     {
         _numLives--;
-        _spaceship.ResetSpaceshipState(); 
+        _spaceship.ResetSpaceshipState();
+        ResetPowerUps(); // <-- Limpia cooldowns y estados activos
 
         if (_uiManager != null) _uiManager.UpdateLives(_numLives);
 
         if (_numLives > 0)
         {
-            // Llamamos a la secuencia de reaparición que ahora gestiona Spaceship
             _spaceship.StartRespawnSequence();
         }
         else
         {
-                // Le decimos a la nave que apague sus gráficos al instante de morir del todo
             if (_spaceship != null)
             {
                 _spaceship.HideSpaceshipVisuals();
             }
             StartCoroutine(EndGameRoutine());
+        }
+    }
+
+    private void ResetPowerUps()
+    {
+        _cooldownMoreSpeed = 0f;
+        _cooldownTripleShoot = 0f;
+        _canTripleShoot = false;
+
+        if (_laserSpawner != null)
+        {
+            _laserSpawner.SetTripleShoot(false);
         }
     }
 
@@ -126,12 +137,15 @@ public class PlayerController : MonoBehaviour
 
         if (_cooldownTripleShoot > 0f)
         {
-            //_cooldownTripleShieldTimer(); // (o lógica de triple shoot si aplica)
             _cooldownTripleShoot -= Time.deltaTime;
             if (_cooldownTripleShoot <= 0f)
             {
                 _cooldownTripleShoot = 0f;
                 _canTripleShoot = false;
+                if (_laserSpawner != null)
+                {
+                    _laserSpawner.SetTripleShoot(false);
+                }
             }
         }
 

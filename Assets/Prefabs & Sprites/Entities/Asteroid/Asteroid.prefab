@@ -159,7 +159,7 @@ MonoBehaviour:
   _score: 20
   _explosionPrefab: {fileID: 8701413913682876637, guid: f6c1a3d41c122af4c819f479577d3c21, type: 3}
   _shouldDestroyOnPlayerHit: 1
-  _speed: 2
+  _speed: 10
   _crystalPrefab: {fileID: 1216068580844279988, guid: 8ecf105894904964d91b4b6ed3419ee0, type: 3}
 --- !u!60 &2359420878414477104
 PolygonCollider2D:

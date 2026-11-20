@@ -15,8 +15,9 @@ public class WaveManager : MonoBehaviour
         public int rowCount = 2; // <--- NUEVO: Por defecto 2 filas
         [Tooltip("Cantidad de enemigos comunes en el bloque.")]
         public int normalEnemyCount = 6;
-        [Tooltip("Cantidad de enemigos Tanque (más vida, disparo lento) en el bloque.")]
-        public int tankEnemyCount = 2;
+        //[Tooltip("Cantidad de enemigos Tanque (más vida, disparo lento) en el bloque.")]
+        //public int tankEnemyCount = 2;
+        public bool tanksInFirstRow = false;
 
         [Header("2. Configuración de Kamikazes")]
         public bool enableKamikazes = false;

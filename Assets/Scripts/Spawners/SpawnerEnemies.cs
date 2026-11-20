@@ -41,7 +41,7 @@ public class SpawnerEnemies : MonoBehaviour
         _isSpawningFinished = false;
 
         // 2. Gestionar la formación principal en bloque
-        if (_formationSpawner != null && (wave.normalEnemyCount > 0 || wave.tankEnemyCount > 0))
+        if (_formationSpawner != null && (wave.normalEnemyCount > 0))
         {
             yield return StartCoroutine(_formationSpawner.SpawnWaveInRowRoutine(wave, _currentWaveEnemies, onFormationCreated));
         }

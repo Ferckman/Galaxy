@@ -1,4 +1,4 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -190,6 +190,153 @@ public class EnemyFormationSpawner : MonoBehaviour
                 }
             }
             
+            controller.Initialize(activeEnemiesForBlock, 2.5f, 7f, wave.useSineWave);
+            onFormationCreated?.Invoke(controller);
+        }
+    }
+}
+*/
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum EnemySpawnDirection
+{
+    Top,
+    Bottom,
+    Left,
+    Right
+}
+
+public class EnemyFormationSpawner : MonoBehaviour
+{
+    private const int MaxEnemies = 60;
+
+    [Header("Prefabs de Enemigos")]
+    [SerializeField] private GameObject[] _normalEnemyPrefabs;
+    [SerializeField] private GameObject[] _tankEnemyPrefabs;
+
+    [Header("Configuración de Formación")]
+    [SerializeField] private float _spacingBetweenEnemies = 4f;
+    [SerializeField] private float _columnSpacingX = 3f;
+
+    [Header("Límites de Fila según Cámara")]
+    [SerializeField] private float _topMarginFromCamera = 4.5f;
+    [SerializeField] private float _bottomMarginFromCamera = 8f;
+    [SerializeField] private float _maxRowSpacingY = 5f;
+
+    public IEnumerator SpawnWaveInRowRoutine(WaveManager.Wave wave, List<GameObject> blockEnemiesList, System.Action<FormationController> onFormationCreated)
+    {
+        if (_normalEnemyPrefabs.Length == 0 && _tankEnemyPrefabs.Length == 0) yield break;
+
+        Camera cam = Camera.main;
+        if (cam == null) yield break;
+
+        float camAspect = cam.aspect;
+        float screenHeight = cam.orthographicSize;
+        float screenWidth = screenHeight * camAspect;
+
+        List<Enemy> currentWaveEnemyScripts = new List<Enemy>();
+        Transform container = EnemiesContainer.Instance != null ? EnemiesContainer.Instance.transform : null;
+
+        int totalToSpawn = Mathf.Min(MaxEnemies, Mathf.Max(0, wave.normalEnemyCount));
+        if (totalToSpawn <= 0) yield break;
+
+        int numRows = Mathf.Max(1, wave.rowCount);
+        int enemiesPerBaseRow = Mathf.CeilToInt((float)totalToSpawn / numRows);
+        int spawnedCount = 0;
+
+        float topY = screenHeight - _topMarginFromCamera;
+        float bottomY = -screenHeight + _bottomMarginFromCamera;
+        float availableHeight = Mathf.Max(0f, topY - bottomY);
+
+        float effectiveRowSpacing = 0f;
+        if (numRows > 1)
+        {
+            effectiveRowSpacing = Mathf.Min(_maxRowSpacingY, availableHeight / (numRows - 1));
+        }
+
+        bool isVerticalEntry = (wave.spawnDirection == EnemySpawnDirection.Top || wave.spawnDirection == EnemySpawnDirection.Bottom);
+
+        for (int r = 0; r < numRows; r++)
+        {
+            int enemiesInThisRow = Mathf.Min(enemiesPerBaseRow, totalToSpawn - spawnedCount);
+            if (enemiesInThisRow <= 0) break;
+
+            // Fila más baja del bloque (o única fila si numRows == 1) actúa como vanguardia de tanques
+            bool isFrontShieldRow = (r == numRows - 1);
+            bool useTankPoolForRow = (wave.tanksInFirstRow && isFrontShieldRow && _tankEnemyPrefabs.Length > 0);
+            GameObject[] activePool = useTankPoolForRow ? _tankEnemyPrefabs : _normalEnemyPrefabs;
+            if (activePool == null || activePool.Length == 0) activePool = _normalEnemyPrefabs;
+
+            float totalWidth = (enemiesInThisRow - 1) * _spacingBetweenEnemies;
+            float startX = -totalWidth / 2f;
+            float targetY = topY - (r * effectiveRowSpacing);
+
+            for (int i = 0; i < enemiesInThisRow; i++)
+            {
+                if (blockEnemiesList.Count >= MaxEnemies) break;
+
+                float posX = startX + (i * _spacingBetweenEnemies);
+                Vector3 targetPosition = new Vector3(posX, targetY, 0f);
+                Vector3 spawnPos;
+
+                if (isVerticalEntry)
+                {
+                    spawnPos = wave.spawnDirection == EnemySpawnDirection.Bottom
+                        ? new Vector3(posX, -screenHeight - 3.0f - (r * effectiveRowSpacing), 0f)
+                        : new Vector3(posX, screenHeight + 3.0f + (r * effectiveRowSpacing), 0f);
+                }
+                else
+                {
+                    float offScreenBaseX = wave.spawnDirection == EnemySpawnDirection.Left ? -screenWidth - 4.0f : screenWidth + 4.0f;
+                    float depthOffset = i * _columnSpacingX;
+                    spawnPos = wave.spawnDirection == EnemySpawnDirection.Left
+                        ? new Vector3(offScreenBaseX - depthOffset, targetY, 0f)
+                        : new Vector3(offScreenBaseX + depthOffset, targetY, 0f);
+                }
+
+                GameObject selectedPrefab = (activePool != null && activePool.Length > 0)
+                    ? activePool[Random.Range(0, activePool.Length)]
+                    : null;
+
+                if (selectedPrefab != null)
+                {
+                    GameObject enemyObj = Instantiate(selectedPrefab, spawnPos, Quaternion.identity, container);
+                    blockEnemiesList.Add(enemyObj);
+                    spawnedCount++;
+
+                    if (enemyObj.TryGetComponent<Enemy>(out Enemy enemyScript))
+                    {
+                        enemyScript.SetupFormation(targetPosition, wave.spawnDirection);
+                        currentWaveEnemyScripts.Add(enemyScript);
+                    }
+                }
+
+                yield return new WaitForSeconds(0.02f);
+            }
+        }
+
+        yield return new WaitForSeconds(1.5f);
+
+        if (currentWaveEnemyScripts.Count > 0)
+        {
+            GameObject formationObj = new GameObject("WaveFormationBlock");
+            formationObj.transform.position = Vector3.zero;
+            FormationController controller = formationObj.AddComponent<FormationController>();
+
+            List<Enemy> activeEnemiesForBlock = new List<Enemy>();
+            foreach (Enemy enemy in currentWaveEnemyScripts)
+            {
+                if (enemy != null)
+                {
+                    enemy.transform.SetParent(formationObj.transform, true);
+                    activeEnemiesForBlock.Add(enemy);
+                    enemy.ActivateCombatBehavior();
+                }
+            }
+
             controller.Initialize(activeEnemiesForBlock, 2.5f, 7f, wave.useSineWave);
             onFormationCreated?.Invoke(controller);
         }

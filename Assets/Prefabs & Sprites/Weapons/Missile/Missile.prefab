@@ -448,7 +448,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1170bb948e8e8a45a1eca06fbf78fd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 500
+  _baseMinDamage: 450
+  _baseMaxDamage: 700
+  _baseCritChance: 15
+  _critMultiplier: 2
   _speed: 45
   _rotateSpeed: 450
   _lifespanTime: 8

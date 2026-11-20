@@ -12,13 +12,33 @@ public class Asteroid : Entity
         SetupRandomSpawnAndTrajectory();
     }
 
-    public void SetAsteroidProperties(float scale)
+    /*public void SetAsteroidProperties(float scale)
     {
         transform.localScale = new Vector3(scale, scale, scale);
         _speed = _speed * (1f / scale);
         _health = Mathf.RoundToInt(scale * 60f);
         _damage = Mathf.RoundToInt(scale * 120f);
         _score = Mathf.RoundToInt(scale * 20f);
+    }*/
+
+    public void SetAsteroidProperties(float scale)
+    {
+        float safeScale = Mathf.Max(0.2f, scale);
+        transform.localScale = new Vector3(safeScale, safeScale, safeScale);
+
+        // Velocidad base más viva
+        // Los pequeños van más rápidos y los grandes más pesados, sin perder ritmo
+        float speedFactor = Mathf.Lerp(1.35f, 0.65f, Mathf.Clamp01((safeScale - 0.5f) / 2.5f));
+        _speed = _speed * speedFactor;
+
+        // Vida: que los pequeños aguanten 1-2 láseres y los grandes exijan ráfagas o un misil
+        _health = Mathf.RoundToInt(safeScale * 260f);
+
+        // Daño por choque contra 4000 de vida: molesta y obliga a esquivar sin ser instant-kill
+        _damage = Mathf.RoundToInt(safeScale * 350f);
+
+        // Puntuación proporcional al riesgo y dureza
+        _score = Mathf.RoundToInt(safeScale * 50f);
     }
 
     private void SetupRandomSpawnAndTrajectory()
