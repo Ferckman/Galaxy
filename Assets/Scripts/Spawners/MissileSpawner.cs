@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class MissileSpawner : MonoBehaviour
 {
@@ -7,10 +7,10 @@ public class MissileSpawner : MonoBehaviour
     [SerializeField] private GameObject _missilePrefab;
 
     [Header("Missile Economy & Cooldown")]
-    [SerializeField] private int _maxMissileAmmo;      // Munición máxima
-    [SerializeField] private int _currentMissileAmmo;     // Munición actual
-    [SerializeField] private float _bigFireRate;     // Enfriamiento de 2 segundos
-    private float _canBigFire = 0f;                       // Temporizador de control
+    [SerializeField] private int _maxMissileAmmo;
+    [SerializeField] private int _currentMissileAmmo;
+    [SerializeField] private float _bigFireRate;
+    private float _canBigFire = 0f;
 
     private List<Transform> _leftSpawnPoints = new List<Transform>();
     private List<Transform> _rightSpawnPoints = new List<Transform>();
@@ -36,7 +36,6 @@ public class MissileSpawner : MonoBehaviour
         }
     }
 
-    // NUEVO: Método público que intenta disparar controlando cooldown y munición
     public bool TryFireSalvo()
     {
         if (Time.time < _canBigFire) return false;
@@ -50,10 +49,8 @@ public class MissileSpawner : MonoBehaviour
         List<Transform> activeTargets = FindActiveTargets();
         if (activeTargets.Count == 0) return false;
 
-        // Ejecutamos la lógica y capturamos cuántos misiles se han disparado en total
         int missilesFired = FireMissileSalvoLogic(activeTargets);
 
-        // Restamos exactamente la munición gastada y aplicamos el cooldown de 2 segundos
         _currentMissileAmmo -= missilesFired;
         _canBigFire = Time.time + _bigFireRate;
 
@@ -61,7 +58,6 @@ public class MissileSpawner : MonoBehaviour
         return true;
     }
 
-    // Método para recargar munición (lo usaremos luego con los Power-Ups)
     public void AddAmmo(int amount)
     {
         _currentMissileAmmo += amount;
@@ -71,30 +67,22 @@ public class MissileSpawner : MonoBehaviour
 
     public bool TryAddAmmo(int amount)
     {
-        // Si ya estamos al máximo, no recogemos nada y devolvemos false
-        if (_currentMissileAmmo >= _maxMissileAmmo) 
+        if (_currentMissileAmmo >= _maxMissileAmmo)
         {
-            return false; 
+            return false;
         }
 
-        // Si no está al máximo, sumamos (sin pasarnos del límite) y devolvemos true
         _currentMissileAmmo = Mathf.Min(_currentMissileAmmo + amount, _maxMissileAmmo);
-        
-        // Aquí actualizas tu UI de munición si la tienes...
-        //UpdateAmmoUI(); 
-
         return true;
     }
 
     private int FireMissileSalvoLogic(List<Transform> activeTargets)
     {
-        if (_missilePrefab == null) return 0;
+        if (ProjectilePool.Instance == null && _missilePrefab == null) return 0;
 
-        // Separamos los objetivos por la izquierda y derecha respecto a la posición del spawner
         List<Transform> leftSideTargets = activeTargets.FindAll(t => t.position.x < transform.position.x);
         List<Transform> rightSideTargets = activeTargets.FindAll(t => t.position.x >= transform.position.x);
 
-        // Ordenamos cada bando por DISTANCIA al lanzador (el más cercano primero)
         leftSideTargets.Sort((a, b) => Vector3.Distance(transform.position, a.position).CompareTo(Vector3.Distance(transform.position, b.position)));
         rightSideTargets.Sort((a, b) => Vector3.Distance(transform.position, a.position).CompareTo(Vector3.Distance(transform.position, b.position)));
 
@@ -127,7 +115,6 @@ public class MissileSpawner : MonoBehaviour
             rightTarget = activeTargets[0];
         }
 
-        // DISPARAMOS Y CONTAMOS: Sumamos los misiles que salgan del bando izquierdo y derecho
         int leftFired = SpawnPair(_leftSpawnPoints, leftTarget);
         int rightFired = SpawnPair(_rightSpawnPoints, rightTarget);
 
@@ -138,16 +125,24 @@ public class MissileSpawner : MonoBehaviour
     {
         if (spawnPoints == null || target == null) return 0;
 
-        Transform containerTransform = MissilesContainer.Instance != null ? MissilesContainer.Instance.transform : null;
         int count = 0;
 
         foreach (Transform sp in spawnPoints)
         {
             if (sp == null) continue;
 
-            GameObject missileInstance = Instantiate(_missilePrefab, sp.position, sp.rotation, containerTransform);
-            
-            if (missileInstance.TryGetComponent<Missile>(out Missile missileScript))
+            GameObject missileInstance = null;
+
+            if (ProjectilePool.Instance != null)
+            {
+                missileInstance = ProjectilePool.Instance.SpawnMissile(sp.position, sp.rotation);
+            }
+            else if (_missilePrefab != null)
+            {
+                missileInstance = Instantiate(_missilePrefab, sp.position, sp.rotation);
+            }
+
+            if (missileInstance != null && missileInstance.TryGetComponent<Missile>(out Missile missileScript))
             {
                 IMissileGuidance arcStrategy = new SmoothArcGuidance();
                 missileScript.Initialize(target, arcStrategy);

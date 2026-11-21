@@ -266,7 +266,10 @@ public class Spaceship : MonoBehaviour
                     GetDamage(finalDamage);
                 }
 
-                Destroy(other.gameObject);
+                if (ProjectilePool.Instance != null)
+                    ProjectilePool.Instance.ReturnToPool(other.gameObject);
+                else
+                    Destroy(other.gameObject);
             }
         }
     }

@@ -15,8 +15,7 @@ public class Limit : MonoBehaviour
         else if (other.CompareTag("Collectible"))
         {
             if (LootPool.Instance != null) LootPool.Instance.ReturnToPool(other.gameObject);
-            else
-                Destroy(other.gameObject);
+            else Destroy(other.gameObject);
         }
     }
 
@@ -28,6 +27,7 @@ public class Limit : MonoBehaviour
     private void ReturnShot(GameObject shotObj)
     {
         if (ProjectilePool.Instance != null) ProjectilePool.Instance.ReturnToPool(shotObj);
-        else Destroy(shotObj);
+        else
+            Destroy(shotObj);
     }
 }

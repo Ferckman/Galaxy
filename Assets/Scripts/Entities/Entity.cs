@@ -10,6 +10,9 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected GameObject _explosionPrefab;
     [SerializeField] protected bool _shouldDestroyOnPlayerHit = true;
 
+    [Header("Target Reticle")]
+    [SerializeField] private GameObject _targetReticle;
+
     protected GameManager _gameManager;
     protected UIManager _uiManager;
 
@@ -19,6 +22,11 @@ public abstract class Entity : MonoBehaviour
     {
         _gameManager = FindFirstObjectByType<GameManager>();
         _uiManager = FindFirstObjectByType<UIManager>();
+    }
+
+    protected virtual void OnDisable()
+    {
+        SetTargetReticle(false);
     }
 
     // Método virtual para que cada hijo lo mueva como quiera (el asteroide baja recto, el enemigo puede hacer otra cosa)
@@ -80,7 +88,7 @@ public abstract class Entity : MonoBehaviour
         Destroy(gameObject);
     }
 
-    protected virtual void SpawnExplosion()
+    /*protected virtual void SpawnExplosion()
     {
         if (_explosionPrefab != null) 
         {
@@ -95,9 +103,36 @@ public abstract class Entity : MonoBehaviour
             if (explosion.TryGetComponent<SpriteRenderer>(out SpriteRenderer sr)) sr.sortingOrder = 10; // Ponlo por encima de los enemigos normales
             DropLoot();
         }
+    }*/
+
+    protected virtual void SpawnExplosion()
+    {
+        if (_explosionPrefab != null)
+        {
+            Vector3 explosionPos = transform.position + new Vector3(0f, 0f, Random.Range(-0.1f, -0.5f));
+
+            GameObject explosion = ExplosionPool.Instance != null
+                ? ExplosionPool.Instance.SpawnExplosion(explosionPos, Quaternion.identity)
+                : Instantiate(_explosionPrefab, explosionPos, Quaternion.identity);
+
+            if (explosion != null && explosion.TryGetComponent<SpriteRenderer>(out SpriteRenderer sr))
+            {
+                sr.sortingOrder = 10;
+            }
+
+            DropLoot();
+        }
     }
 
     protected abstract void DropLoot();
+
+    public virtual void SetTargetReticle(bool active)
+    {
+        if (_targetReticle != null && _targetReticle.activeSelf != active)
+        {
+            _targetReticle.SetActive(active);
+        }
+    }
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
@@ -137,9 +172,13 @@ public abstract class Entity : MonoBehaviour
                 }
             }
 
-            // Si no es un HyperBeam, destruimos el láser al impactar
             if (!other.TryGetComponent<HyperBeam>(out var hyperBeam))
-                Destroy(other.gameObject);
+            {
+                if (ProjectilePool.Instance != null)
+                    ProjectilePool.Instance.ReturnToPool(other.gameObject);
+                else
+                    Destroy(other.gameObject);
+            }
         }
     }
 }

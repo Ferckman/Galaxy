@@ -2,10 +2,28 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    [SerializeField] private float _lifeTime;
+    [SerializeField] private float _lifeTime = 5.0f;
 
-    private void Awake()
+    private float _timer;
+
+    private void OnEnable()
     {
-        Destroy(gameObject, _lifeTime);
+        _timer = _lifeTime;
+    }
+
+    private void Update()
+    {
+        _timer -= Time.deltaTime;
+        if (_timer <= 0f)
+        {
+            if (ExplosionPool.Instance != null)
+            {
+                ExplosionPool.Instance.ReturnToPool(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }
