@@ -1,10 +1,10 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnerEnemies : MonoBehaviour
 {
-    private EnemyFormationSpawner _formationSpawner;
+    //private EnemyFormationSpawner _formationSpawner;
     private KamikazeSpawner _kamikazeSpawner;
     private AsteroidSpawner _asteroidSpawner;
 
@@ -18,12 +18,12 @@ public class SpawnerEnemies : MonoBehaviour
     private void Awake()
     {
         // Como están en el mismo GameObject, los cogemos automáticamente al arrancar
-        _formationSpawner = GetComponent<EnemyFormationSpawner>();
+        //_formationSpawner = GetComponent<EnemyFormationSpawner>();
         _kamikazeSpawner = GetComponent<KamikazeSpawner>();
         _asteroidSpawner = GetComponent<AsteroidSpawner>();
 
         // Una comprobación por seguridad por si a alguno se le olvidó ponerse el componente
-        if (_formationSpawner == null) Debug.LogError("Falta el componente EnemyFormationSpawner en este objeto.", this);
+        //if (_formationSpawner == null) Debug.LogError("Falta el componente EnemyFormationSpawner en este objeto.", this);
         if (_kamikazeSpawner == null) Debug.LogError("Falta el componente KamikazeSpawner en este objeto.", this);
         if (_asteroidSpawner == null) Debug.LogError("Falta el componente AsteroidSpawner en este objeto.", this);
     }
@@ -41,11 +41,11 @@ public class SpawnerEnemies : MonoBehaviour
         _isSpawningFinished = false;
 
         // 2. Gestionar la formación principal en bloque
-        if (_formationSpawner != null && (wave.normalEnemyCount > 0))
+        /*if (_formationSpawner != null && (wave.normalEnemyCount > 0))
         {
             yield return StartCoroutine(_formationSpawner.SpawnWaveInRowRoutine(wave, _currentWaveEnemies, onFormationCreated));
-        }
-
+        }*/
+/*
         // 3. Lanzar Kamikazes (Guardamos la referencia para esperarla)
         Coroutine kamikazeCoroutine = null;
         if (_kamikazeSpawner != null && wave.enableKamikazes && wave.kamikazeCount > 0)
@@ -91,3 +91,5 @@ public class SpawnerEnemies : MonoBehaviour
                _currentAsteroids.Count == 0;
     }
 }
+
+*/

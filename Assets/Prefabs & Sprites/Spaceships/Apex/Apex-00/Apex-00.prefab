@@ -137,10 +137,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3570880124264357680}
   - component: {fileID: 8772852344939117599}
-  - component: {fileID: -8538439939280276718}
-  - component: {fileID: 3147746996625665743}
   - component: {fileID: 5468323022899979443}
   - component: {fileID: 2207970536147585815}
+  - component: {fileID: 805209744032763554}
   m_Layer: 9
   m_Name: Apex-00
   m_TagString: Enemy
@@ -158,7 +157,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8409003648034495450}
@@ -219,60 +218,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &-8538439939280276718
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8914735942681161970}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &3147746996625665743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8914735942681161970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc5bd0648f41531408e98a2559014471, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _health: 600
-  _damage: 2000
-  _score: 100
-  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
-  _shouldDestroyOnPlayerHit: 1
-  _enemyLaserPrefab: {fileID: 2412712189689930603, guid: 5a4e78238f9bbfc4d960dd20c546f760, type: 3}
-  _firePoint: {fileID: 8409003648034495450}
-  _fireRate: 2
-  _missileAmmoPrefab: {fileID: 5220409471985605202, guid: 6d7d32bf6ef37994799d5b63925c1a6f, type: 3}
-  _generalPowerUpPrefabs:
-  - {fileID: 724511469982859614, guid: 41caeb75911d1be4d9d038fbc4d1efdc, type: 3}
-  - {fileID: 5220409471985605202, guid: dca54250a0a7521418dde29a4b1ce1b6, type: 3}
-  - {fileID: 724511469982859614, guid: d5d7000cf9ce8474c9a78a86d8787afd, type: 3}
-  _animator: {fileID: 5468323022899979443}
-  _entryDuration: 1.5
 --- !u!95 &5468323022899979443
 Animator:
   serializedVersion: 7
@@ -332,6 +277,36 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 1}
   m_Size: {x: 7, y: 7}
   m_Direction: 0
+--- !u!114 &805209744032763554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914735942681161970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876fb53488f3630408c46c5d1e02cc64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 600
+  _damage: 2000
+  _score: 100
+  _explosionPrefab: {fileID: 8701413913682876637, guid: 6868e2632812191448d37094ac9c5578, type: 3}
+  _shouldDestroyOnPlayerHit: 1
+  _enemyLaserPrefab: {fileID: 2412712189689930603, guid: 5a4e78238f9bbfc4d960dd20c546f760, type: 3}
+  _firePoint: {fileID: 8409003648034495450}
+  _fireRate: 2
+  _moveSpeed: 6
+  _missileAmmoPrefab: {fileID: 5220409471985605202, guid: 6d7d32bf6ef37994799d5b63925c1a6f, type: 3}
+  _generalPowerUpPrefabs:
+  - {fileID: 724511469982859614, guid: 41caeb75911d1be4d9d038fbc4d1efdc, type: 3}
+  - {fileID: 5220409471985605202, guid: dca54250a0a7521418dde29a4b1ce1b6, type: 3}
+  - {fileID: 724511469982859614, guid: d5d7000cf9ce8474c9a78a86d8787afd, type: 3}
+  _animator: {fileID: 5468323022899979443}
+  _arriveThreshold: 0.2
+  _minActionInterval: 4
+  _maxActionInterval: 8
 --- !u!1001 &5389966100322722534
 PrefabInstance:
   m_ObjectHideFlags: 0

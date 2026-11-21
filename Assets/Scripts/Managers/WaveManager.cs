@@ -38,8 +38,8 @@ public class WaveManager : MonoBehaviour
         [Tooltip("Si está activo, el bloque se moverá haciendo una onda senoidal vertical mientras va de lado a lado.")]
         public bool useSineWave = false;
 
-        [Tooltip("Dirección desde donde entrará esta oleada.")]
-        public EnemySpawnDirection spawnDirection = EnemySpawnDirection.Top;
+        //[Tooltip("Dirección desde donde entrará esta oleada.")]
+        //public EnemySpawnDirection spawnDirection = EnemySpawnDirection.Top;
 
         [Header("3. Eventos Especiales (Opcionales por Oleada)")]
         [Tooltip("¿Esta oleada incluye un Emisor de Drones pesado que baja del cielo?")]
@@ -50,9 +50,9 @@ public class WaveManager : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private List<Wave> _waves;
-    [SerializeField] private SpawnerEnemies _enemySpawnerPrefab; 
+    //[SerializeField] private SpawnerEnemies _enemySpawnerPrefab; 
 
-    private SpawnerEnemies _activeSpawnerInstance; 
+    //private SpawnerEnemies _activeSpawnerInstance; 
     private int _currentWaveIndex = 0;
     private bool _isWaveActive = false;
 
@@ -60,12 +60,12 @@ public class WaveManager : MonoBehaviour
     {
         if (_isWaveActive) return; 
 
-        if (_activeSpawnerInstance == null && _enemySpawnerPrefab != null)
+        /*if (_activeSpawnerInstance == null && _enemySpawnerPrefab != null)
         {
             GameObject spawnedObj = Instantiate(_enemySpawnerPrefab.gameObject);
             _activeSpawnerInstance = spawnedObj.GetComponent<SpawnerEnemies>();
             _activeSpawnerInstance.gameObject.SetActive(true);
-        }
+        }*/
 
         _currentWaveIndex = 0;
         StartCoroutine(RunWavesSequence());
@@ -78,13 +78,13 @@ public class WaveManager : MonoBehaviour
             Wave currentWave = _waves[_currentWaveIndex];
             _isWaveActive = true;
 
-            if (_activeSpawnerInstance != null)
+            /*if (_activeSpawnerInstance != null)
             {
                 // AQUÍ ESTABA EL CAMBIO DE NOMBRE: Llamamos a SpawnWaveRoutine (o el nombre que tenga en tu SpawnerEnemies)
                 yield return StartCoroutine(_activeSpawnerInstance.SpawnWaveRoutine(currentWave, (formationController) => {
                     // Si pasabas un callback opcional para la formación, lo puedes gestionar aquí
                 }));
-            }
+            }*/
 
             _isWaveActive = false;
             

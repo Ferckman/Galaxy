@@ -197,6 +197,7 @@ public class EnemyFormationSpawner : MonoBehaviour
 }
 */
 
+/*
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -337,8 +338,9 @@ public class EnemyFormationSpawner : MonoBehaviour
                 }
             }
 
-            controller.Initialize(activeEnemiesForBlock, 2.5f, 7f, wave.useSineWave);
+            controller.Initialize(activeEnemiesForBlock, 6f, 10f, wave.useSineWave);
             onFormationCreated?.Invoke(controller);
         }
     }
 }
+*/

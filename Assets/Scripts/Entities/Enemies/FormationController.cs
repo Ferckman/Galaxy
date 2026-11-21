@@ -1,10 +1,10 @@
-using UnityEngine;
+/*using UnityEngine;
 using System.Collections.Generic;
 
 public class FormationController : MonoBehaviour
 {
     [Header("Movement Settings")]
-    private float _moveSpeed = 3f;      
+    private float _moveSpeed = 3.0f;      
     private float _maxXLimit = 7f;      
     private int _movementDirection = 1; // 1 = Derecha, -1 = Izquierda
 
@@ -111,3 +111,4 @@ public class FormationController : MonoBehaviour
         }
     }
 }
+*/

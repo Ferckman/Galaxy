@@ -11,19 +11,23 @@ public class Limit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Shots"))
-        {
-            if (other.TryGetComponent<Shots>(out var shot)) Destroy(other.gameObject);
-        }
+        if (other.CompareTag("Shots")) ReturnShot(other.gameObject);
         else if (other.CompareTag("Collectible"))
         {
-            //if (_gameManager != null) _gameManager.DestroyConcreteElement(other.gameObject);
-            Destroy(other.gameObject);
+            if (LootPool.Instance != null) LootPool.Instance.ReturnToPool(other.gameObject);
+            else
+                Destroy(other.gameObject);
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Shots")) Destroy(other.gameObject);
+        if (other.CompareTag("Shots")) ReturnShot(other.gameObject);
+    }
+
+    private void ReturnShot(GameObject shotObj)
+    {
+        if (ProjectilePool.Instance != null) ProjectilePool.Instance.ReturnToPool(shotObj);
+        else Destroy(shotObj);
     }
 }

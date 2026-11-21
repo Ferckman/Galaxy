@@ -35,7 +35,7 @@ public class Asteroid : Entity
         _health = Mathf.RoundToInt(safeScale * 260f);
 
         // Daño por choque contra 4000 de vida: molesta y obliga a esquivar sin ser instant-kill
-        _damage = Mathf.RoundToInt(safeScale * 350f);
+        _damage = Mathf.RoundToInt(safeScale * 2000f);
 
         // Puntuación proporcional al riesgo y dureza
         _score = Mathf.RoundToInt(safeScale * 50f);

@@ -20,22 +20,22 @@ public abstract class Collectible : MonoBehaviour
                 if (!spaceship.IsDisabled)
                 {
                     var playerController = other.GetComponent<PlayerController>();
-                    // Intentamos aplicar el efecto. Solo si devuelve true se destruye.
+
                     if (ApplyEffect(playerController))
                     {
-                        // Reproducimos sonido si existe
                         if (_pickupSound != null && Camera.main != null)
-                        {
                             AudioSource.PlayClipAtPoint(_pickupSound, Camera.main.transform.position, 1f);
-                        }
 
-                        // Destrucción del objeto
-                        Destroy(gameObject);
+                        if (LootPool.Instance != null)
+                            LootPool.Instance.ReturnToPool(gameObject);
+                        else
+                            Destroy(gameObject);
                     }
                 }
             }
         }
     }
+    
 
     // Cambiamos el tipo de retorno a bool en el base (por defecto devuelve true para otros coleccionables como PowerUps)
     protected virtual bool ApplyEffect(PlayerController playerController)
