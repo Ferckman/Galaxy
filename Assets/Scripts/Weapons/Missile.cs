@@ -14,11 +14,20 @@ public class Missile : Shots
     private IMissileGuidance _guidanceStrategy;
     private float _spawnTime;
     private bool _isInitialized;
+    private FadeOutTrail _fadeTrail;
 
     public void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _rb.gravityScale = 0f;
+        _fadeTrail = GetComponentInChildren<FadeOutTrail>(true);
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+
+        if (_fadeTrail != null) _fadeTrail.ResetTrail();
     }
 
     private void OnDisable()
@@ -83,11 +92,7 @@ public class Missile : Shots
     {
         if (!gameObject.activeInHierarchy) return;
 
-        FadeOutTrail fadeTrail = GetComponentInChildren<FadeOutTrail>();
-        if (fadeTrail != null)
-        {
-            fadeTrail.BeginFade();
-        }
+        if (_fadeTrail != null) _fadeTrail.BeginFade();
 
         ClearTargetReticle();
 

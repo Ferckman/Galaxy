@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -65,7 +65,7 @@ public class WaveManager : MonoBehaviour
             GameObject spawnedObj = Instantiate(_enemySpawnerPrefab.gameObject);
             _activeSpawnerInstance = spawnedObj.GetComponent<SpawnerEnemies>();
             _activeSpawnerInstance.gameObject.SetActive(true);
-        }*/
+        }
 
         _currentWaveIndex = 0;
         StartCoroutine(RunWavesSequence());
@@ -84,7 +84,7 @@ public class WaveManager : MonoBehaviour
                 yield return StartCoroutine(_activeSpawnerInstance.SpawnWaveRoutine(currentWave, (formationController) => {
                     // Si pasabas un callback opcional para la formación, lo puedes gestionar aquí
                 }));
-            }*/
+            }
 
             _isWaveActive = false;
             
@@ -96,5 +96,133 @@ public class WaveManager : MonoBehaviour
         }
 
         Debug.Log("¡Todas las oleadas completadas! ¡Victoria!");
+    }
+}
+*/
+
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WaveManager : MonoBehaviour
+{
+    [Serializable]
+    public class WaveEntry
+    {
+        public Entity enemyPrefab;
+        public int count = 8;
+        public float spawnInterval = 0.2f;
+        public float delayBeforeEntry = 0f;
+    }
+
+    [Serializable]
+    public class WaveDefinition
+    {
+        public string waveName = "Oleada 1";
+        public float spawnY = 23.5f;
+        public float delayAfterWave = 2.0f;
+        public List<WaveEntry> entries = new List<WaveEntry>();
+    }
+
+    [Header("Configuración de Oleadas")]
+    [SerializeField] private List<WaveDefinition> _waves = new List<WaveDefinition>();
+    [SerializeField] private bool _autoStart = true;
+
+    public int CurrentWaveIndex { get; private set; } = -1;
+    public bool IsWaveActive { get; private set; }
+
+    private int _aliveEnemiesCount;
+
+    private void Start()
+    {
+        if (_autoStart)
+        {
+            StartWaves();
+        }
+    }
+
+    public void StartWaves()
+    {
+        StopAllCoroutines();
+        StartCoroutine(RunWavesRoutine());
+    }
+
+    private IEnumerator RunWavesRoutine()
+    {
+        for (int i = 0; i < _waves.Count; i++)
+        {
+            CurrentWaveIndex = i;
+            IsWaveActive = true;
+            WaveDefinition wave = _waves[i];
+
+            yield return StartCoroutine(SpawnWaveRoutine(wave));
+
+            while (_aliveEnemiesCount > 0)
+            {
+                yield return null;
+            }
+
+            IsWaveActive = false;
+
+            if (wave.delayAfterWave > 0f)
+            {
+                yield return new WaitForSeconds(wave.delayAfterWave);
+            }
+        }
+    }
+
+    private IEnumerator SpawnWaveRoutine(WaveDefinition wave)
+    {
+        foreach (WaveEntry entry in wave.entries)
+        {
+            if (entry.enemyPrefab == null || EntityPool.Instance == null || EnemySlotManager.Instance == null)
+                continue;
+
+            if (entry.delayBeforeEntry > 0f)
+            {
+                yield return new WaitForSeconds(entry.delayBeforeEntry);
+            }
+
+            for (int i = 0; i < entry.count; i++)
+            {
+                if (!EnemySlotManager.Instance.TryReserveSlot(out Vector3 targetSlot))
+                {
+                    yield return new WaitForSeconds(0.25f);
+                    i--;
+                    continue;
+                }
+
+                Vector3 spawnPos = new Vector3(targetSlot.x, wave.spawnY, 0f);
+                Entity entity = EntityPool.Instance.Get(entry.enemyPrefab, spawnPos, Quaternion.identity);
+
+                if (entity != null)
+                {
+                    _aliveEnemiesCount++;
+                    entity.OnDespawned += HandleEntityDespawned;
+
+                    if (entity.TryGetComponent<GruntEnemy>(out GruntEnemy grunt))
+                    {
+                        grunt.SetAnchorPoint(targetSlot);
+                    }
+                }
+
+                if (entry.spawnInterval > 0f)
+                {
+                    yield return new WaitForSeconds(entry.spawnInterval);
+                }
+            }
+        }
+    }
+
+    private void HandleEntityDespawned(Entity entity)
+    {
+        if (entity != null)
+        {
+            entity.OnDespawned -= HandleEntityDespawned;
+        }
+
+        _aliveEnemiesCount = Mathf.Max(0, _aliveEnemiesCount - 1);
     }
 }

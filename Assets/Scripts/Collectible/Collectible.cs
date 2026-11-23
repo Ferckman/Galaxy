@@ -23,8 +23,8 @@ public abstract class Collectible : MonoBehaviour
 
                     if (ApplyEffect(playerController))
                     {
-                        if (_pickupSound != null && Camera.main != null)
-                            AudioSource.PlayClipAtPoint(_pickupSound, Camera.main.transform.position, 1f);
+                        if (_pickupSound != null && spaceship != null)
+                            playerController.PlayPickupSound(_pickupSound);
 
                         if (LootPool.Instance != null)
                             LootPool.Instance.ReturnToPool(gameObject);

@@ -25,6 +25,9 @@ public class PlayerController : MonoBehaviour
     private HyperBeamController _hyperBeamController;
     private SpriteRenderer _spriteRenderer;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource _pickupAudioSource;
+
     public bool CanTripleShoot 
     { 
         get => _canTripleShoot; 
@@ -38,6 +41,9 @@ public class PlayerController : MonoBehaviour
         _missileSpawner = GetComponent<MissileSpawner>();
         _laserSpawner = GetComponent<LaserSpawner>();
         _hyperBeamController = GetComponent<HyperBeamController>();
+
+        if (_pickupAudioSource == null)
+            _pickupAudioSource = GetComponent<AudioSource>();
 
         // Buscamos los gestores globales si no están asignados en el Inspector
         if (_uiManager == null) _uiManager = Object.FindFirstObjectByType<UIManager>();
@@ -212,5 +218,11 @@ public class PlayerController : MonoBehaviour
     public void Invincibility(bool value)
     {
         _spaceship.InvincibilityActivated = value;
+    }
+
+    public void PlayPickupSound(AudioClip clip)
+    {
+        if (clip != null && _pickupAudioSource != null)
+            _pickupAudioSource.PlayOneShot(clip);
     }
 }
