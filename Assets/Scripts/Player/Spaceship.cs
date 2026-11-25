@@ -58,14 +58,16 @@ public class Spaceship : MonoBehaviour
     // Evento para avisar al PlayerController cuando la nave explota (vida llega a 0)
     public event Action OnSpaceshipDestroyed;
 
+    private Camera _mainCamera;
+
     protected virtual void Awake()
     {
+        _mainCamera = Camera.main;
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _initialHealth = _health;
         _initialSpeed = _speed;
 
-        // Al arrancar el juego por primera vez, la nave inicia su secuencia de aparición
-        StartRespawnSequence(); 
+        StartRespawnSequence();
     }
 
     protected virtual void Update()
@@ -93,12 +95,15 @@ public class Spaceship : MonoBehaviour
 
     protected virtual void Limit()
     {
+        Camera cam = _mainCamera != null ? _mainCamera : Camera.main;
+        if (cam == null) return;
+
         Vector3 pos = transform.position;
 
-        float verticalLimit = Camera.main.orthographicSize;
-        float horizontalLimit = verticalLimit * Camera.main.aspect;
+        float verticalLimit = cam.orthographicSize;
+        float horizontalLimit = verticalLimit * cam.aspect;
 
-        float marginX = 2.5f; 
+        float marginX = 2.5f;
         float bottomMargin = 4.0f;
         float topMargin = 4.0f;
 
@@ -214,7 +219,7 @@ public class Spaceship : MonoBehaviour
     {
         while (_disabled)
         {
-            transform.position = new Vector3(0, -4.0f, 0);
+            transform.position = new Vector3(0, -10.0f, 0);
 
             yield return new WaitForSeconds(4.0f);
 
