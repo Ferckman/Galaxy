@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e023a5af1630e93489812e6ee2445118
+guid: f0e9bdb365c1cc84a8f2766aa363baf8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5208315092099408420
-    second: space_red_nebula_1024_0
+      213: -337536949261293983
+    second: red_nebula_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -134,7 +134,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: space_red_nebula_1024_0
+      name: red_nebula_0
       rect:
         serializedVersion: 2
         x: 0
@@ -148,8 +148,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cdddb11c40958b7b0800000000000000
-      internalID: -5208315092099408420
+      spriteID: 16626b8dee3d05bf0800000000000000
+      internalID: -337536949261293983
       vertices: []
       indices: 
       edges: []
@@ -165,7 +165,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      space_red_nebula_1024_0: -5208315092099408420
+      red_nebula_0: -337536949261293983
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

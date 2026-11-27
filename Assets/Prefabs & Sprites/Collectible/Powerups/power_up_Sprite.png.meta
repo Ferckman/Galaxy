@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 826f3a09202e35f4e88e4f4824ef395b
+guid: 1c2b076b413d29b44801f5d971f77e63
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6594791491000576408
-    second: space_green_nebula_1024_0
+      213: -2092725686814760822
+    second: power_up_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -40,13 +40,13 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -134,13 +134,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: space_green_nebula_1024_0
+      name: power_up_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1024
+        x: 531
+        y: 102
+        width: 347
+        height: 564
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -148,8 +148,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 866542364189a74a0800000000000000
-      internalID: -6594791491000576408
+      spriteID: a802219531525f2e0800000000000000
+      internalID: -2092725686814760822
       vertices: []
       indices: 
       edges: []
@@ -157,7 +157,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -165,7 +165,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      space_green_nebula_1024_0: -6594791491000576408
+      power_up_0: -2092725686814760822
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
