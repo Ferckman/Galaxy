@@ -4,31 +4,44 @@ public class Kamikaze : Enemy
 {
     [Header("Kamikaze Settings")]
     [SerializeField] private float _explosionScaleMultiplier = 1.5f;
-    [SerializeField] private float _diveSpeed = 8f; // Velocidad de inmersión en picado hacia el jugador
 
-    private bool _isDiving = true; // Nace y desciende directamente al terreno de juego
+    private bool _isDiving = true;
 
-    protected override void Update()
+    public override void OnSpawnedFromPool()
     {
-        // En lugar de quedarse esperando en una formación, el kamikaze se lanza en picado vertical
+        base.OnSpawnedFromPool();
+        _isDiving = true;
+    }
+
+    protected override void BehaviorLogic()
+    {
         if (_isDiving)
         {
-            transform.Translate(Vector3.down * _diveSpeed * Time.deltaTime);
-            CheckBounds(); // Se destruye automáticamente si sale de la pantalla por abajo
-            return;
+            transform.Translate(Vector3.down * _moveSpeed * Time.deltaTime);
         }
     }
 
     protected override void SpawnExplosion()
     {
-        if (_explosionPrefab != null) 
+        if (_explosionPrefab != null)
         {
-            // Mantenemos el desfase en Z para evitar z-fighting y aplicamos el multiplicador de escala
             Vector3 explosionPos = transform.position + new Vector3(0f, 0f, Random.Range(-0.1f, -0.5f));
-            GameObject explosion = Instantiate(_explosionPrefab, explosionPos, Quaternion.identity);
-            
-            explosion.transform.localScale *= _explosionScaleMultiplier;
+
+            GameObject explosion = ExplosionPool.Instance != null
+                ? ExplosionPool.Instance.SpawnExplosion(explosionPos, Quaternion.identity)
+                : Instantiate(_explosionPrefab, explosionPos, Quaternion.identity);
+
+            if (explosion != null)
+            {
+                explosion.transform.localScale *= _explosionScaleMultiplier;
+
+                if (explosion.TryGetComponent<SpriteRenderer>(out SpriteRenderer sr))
+                {
+                    sr.sortingOrder = 10;
+                }
+            }
         }
+
         DropLoot();
     }
 
@@ -36,28 +49,28 @@ public class Kamikaze : Enemy
     {
         get
         {
-            Spaceship spaceship = Object.FindAnyObjectByType<Spaceship>();
+            Spaceship spaceship = FindFirstObjectByType<Spaceship>();
             return spaceship != null && spaceship.ShieldActivated;
         }
     }
 
     protected override void DropLoot()
     {
-        // Tiramos los dados de 0 a 100, pero adaptado para el Kamikaze (100% de premio seguro)
         float roll = Random.Range(0f, 100f);
 
-        // 50% de probabilidad para la munición de misiles
         if (roll < 50f)
         {
-            if (_missileAmmoPrefab != null)
-            {
+            if (LootPool.Instance != null)
+                LootPool.Instance.SpawnMissileAmmo(transform.position);
+            else if (_missileAmmoPrefab != null)
                 Instantiate(_missileAmmoPrefab, transform.position, Quaternion.identity);
-            }
         }
         else
         {
-            // 50% restante para un power-up general (Triple, Speed, Shield)
-            SpawnRandomGeneralPowerUp();
+            if (LootPool.Instance != null)
+                LootPool.Instance.SpawnRandomGeneralPowerUp(transform.position);
+            else
+                SpawnRandomGeneralPowerUp();
         }
     }
 }

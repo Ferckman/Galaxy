@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 07b2a456b42c1d94aafb206cdf72976b
+guid: 4562ee01cb3424b4cb6ac290cd2acbba
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -137,10 +137,10 @@ TextureImporter:
       name: Thruster_Idle_00_0
       rect:
         serializedVersion: 2
-        x: 140
-        y: 85
-        width: 751
-        height: 836
+        x: 234
+        y: 75
+        width: 556
+        height: 919
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
